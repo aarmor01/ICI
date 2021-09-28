@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<projectDescription>
+	<name>MrsPacmanEngine_P1</name>
+	<comment></comment>
+	<projects>
+	</projects>
+	<buildSpec>
+		<buildCommand>
+			<name>org.eclipse.jdt.core.javabuilder</name>
+			<arguments>
+			</arguments>
+		</buildCommand>
+		<buildCommand>
+			<name>org.eclipse.m2e.core.maven2Builder</name>
+			<arguments>
+			</arguments>
+		</buildCommand>
+	</buildSpec>
+	<natures>
+		<nature>org.eclipse.m2e.core.maven2Nature</nature>
+		<nature>org.eclipse.jdt.core.javanature</nature>
+	</natures>
+	<linkedResources>
+		<link>
+			<name>src/main/java/es/ucm/fdi/ici/c2122/practica1/grupo02/ExecutorTest.java</name>
+			<type>1</type>
+			<location>D:/Game Dev/Projects/Eclipse/ICI/MrsPacmanEngine/src/main/java/es/ucm/fdi/ici/c2122/practica1/grupo02/ExecutorTest.java</location>
+		</link>
+		<link>
+			<name>src/main/java/es/ucm/fdi/ici/c2122/practica1/grupo02/Ghosts.java</name>
+			<type>1</type>
+			<location>D:/Game Dev/Projects/Eclipse/ICI/MrsPacmanEngine/src/main/java/es/ucm/fdi/ici/c2122/practica1/grupo02/Ghosts.java</location>
+		</link>
+		<link>
+			<name>src/main/java/es/ucm/fdi/ici/c2122/practica1/grupo02/MsPacMan.java</name>
+			<type>1</type>
+			<location>D:/Game Dev/Projects/Eclipse/ICI/MrsPacmanEngine/src/main/java/es/ucm/fdi/ici/c2122/practica1/grupo02/MsPacMan.java</location>
+		</link>
+	</linkedResources>
+</projectDescription>
