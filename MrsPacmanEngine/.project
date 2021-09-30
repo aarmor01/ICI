@@ -24,17 +24,17 @@
 		<link>
 			<name>src/main/java/es/ucm/fdi/ici/c2122/practica1/grupo02/ExecutorTest.java</name>
 			<type>1</type>
-			<location>D:/Game Dev/Projects/Eclipse/ICI/MrsPacmanEngine/src/main/java/es/ucm/fdi/ici/c2122/practica1/grupo02/ExecutorTest.java</location>
+			<locationURI>$%7BPARENT-1-PROJECT_LOC%7D/MrsPacmanEngine/src/main/java/es/ucm/fdi/ici/c2122/practica1/grupo02/ExecutorTest.java</locationURI>
 		</link>
 		<link>
 			<name>src/main/java/es/ucm/fdi/ici/c2122/practica1/grupo02/Ghosts.java</name>
 			<type>1</type>
-			<location>D:/Game Dev/Projects/Eclipse/ICI/MrsPacmanEngine/src/main/java/es/ucm/fdi/ici/c2122/practica1/grupo02/Ghosts.java</location>
+			<locationURI>$%7BPARENT-1-PROJECT_LOC%7D/MrsPacmanEngine/src/main/java/es/ucm/fdi/ici/c2122/practica1/grupo02/Ghosts.java</locationURI>
 		</link>
 		<link>
 			<name>src/main/java/es/ucm/fdi/ici/c2122/practica1/grupo02/MsPacMan.java</name>
 			<type>1</type>
-			<location>D:/Game Dev/Projects/Eclipse/ICI/MrsPacmanEngine/src/main/java/es/ucm/fdi/ici/c2122/practica1/grupo02/MsPacMan.java</location>
+			<locationURI>$%7BPARENT-1-PROJECT_LOC%7D/MrsPacmanEngine/src/main/java/es/ucm/fdi/ici/c2122/practica1/grupo02/MsPacMan.java</locationURI>
 		</link>
 	</linkedResources>
 </projectDescription>
