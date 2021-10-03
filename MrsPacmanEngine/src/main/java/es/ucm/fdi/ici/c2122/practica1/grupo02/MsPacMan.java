@@ -50,8 +50,7 @@ public class MsPacMan extends PacmanController {
 			int distance = game.getShortestPathDistance(pcNode, activePill, game.getPacmanLastMoveMade());
 			//For every PPill we check which one is the nearest and whose path is not
 			//blocked.
-			if (nearestPP == -1 || game.getShortestPathDistance(pcNode, activePill,
-					game.getPacmanLastMoveMade()) < shortestDist) {
+			if (nearestPP == -1 || distance < shortestDist) {
 				if(pathNotBlocked(game, pcNode, activePill, ghostType)) {
 					nearestPP = activePill;
 					shortestDist = distance;
