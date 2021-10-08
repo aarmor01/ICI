@@ -26,7 +26,7 @@ public class MsPacMan extends PacmanController {
 			//If the ghost is edible, we go for it
 			if (game.getGhostEdibleTime(nearestGhostType) > 0)
 				return game.getApproximateNextMoveTowardsTarget(pacmanNode,
-						game.getGhostCurrentNodeIndex(nearestGhostType), game.getPacmanLastMoveMade(), DM.PATH);
+						game.getGhostCurrentNodeIndex( 	nearestGhostType), game.getPacmanLastMoveMade(), DM.PATH);
 			else {
 				//Check nearest Power Pill taking into account if the path is blocked or may be blocked by a ghost 
 				MOVE nextMove = getNextPossibleMoveToPowerPill(game, pacmanNode, nearestGhostType);

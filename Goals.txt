@@ -1,0 +1,40 @@
+if(DEBUG) GameView.addPoints........
+
+FANSTASMAS
+Common: Snake Situation and Different Path from other ghosts.
+
+1. Seer (El mas predicitivo en cuanto a pils	 	 
+2. Predice la interseccion mas probable
+3. Se aproxima al siguiente nodo con respecto a la direccion del PacMan para realizar Pinza Situation con el aggressive
+4. Aggresive basto
+
+
+
+Posible:
+
+
+1. Que se dirija a la siguiente interseccion con respecto a la direccion del PacMan.  
+2. Aplicar la Snake Situation Fix 2021 2.0 a la huida de los fantasma, que se dispersen. (Que si uno ha pillado un camino un fantasma, que los demas no 
+pillen el mismo)
+
+
+PACMAN
+
+Si tiene fantasmas cerca, analiza el camino de huida con más pills y lo elija con respecto a la proporcion de numero de pills, distancia a la PP y si el camino esta bloqueado.
+Que tambien lo haga aun cuando no este siendo perseguido
+
+----------------------------------
+
+Actualmente
+
+Ghost:
+
+1. Van a la pill mas cercana del pacman fuera de un rango con respecto al pacman(Si estan muy lejos)
+2.Si estan cerca van hacia el pacman evitando la SnakeSituation
+3. Si pacman cerca PP, huyen
+
+PacMan
+1. Evita los caminos que esten bloqueados o que puedan estar bloqueados
+2. Va a la pill activa mas cercana 
+3. si tiene PP,  y hay fantasma cercano, va hacia el, sino sigue pillando pills
+4. Si tiene fantasmas cerca, huye a la PP mas cercana. 
