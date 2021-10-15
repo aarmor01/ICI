@@ -8,6 +8,8 @@
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="lib" path="lib/ici.c1920.practica1.jar"/>
 	<classpathentry kind="lib" path="lib/ici.c2021.practica1.jar"/>
+	<classpathentry kind="lib" path="lib/ici-c2021-practica2.jar"/>
+	<classpathentry kind="lib" path="lib/ici-c2122-practica1.jar"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/MrsPacmanEngine_P1"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
