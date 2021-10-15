@@ -4,8 +4,8 @@ FANSTASMAS
 Common: Snake Situation and Different Path from other ghosts.
 
 1. Seer (El mas predicitivo en cuanto a pils	 	 
-2. Predice la interseccion mas probable
-3. Se aproxima al siguiente nodo con respecto a la direccion del PacMan para realizar Pinza Situation con el aggressive
+2. Predice la interseccion mas probable (Mole)
+3. Se aproxima al siguiente nodo con respecto a la direccion del PacMan para realizar Pinza Situation con el aggressive ()
 4. Aggresive basto
 
 

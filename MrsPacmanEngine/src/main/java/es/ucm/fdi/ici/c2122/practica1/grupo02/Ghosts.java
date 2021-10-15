@@ -72,6 +72,22 @@ public class Ghosts extends GhostController {
 
 		return moves;
 	}
+	
+	private void SeerBehaviour() {
+		
+	}
+	
+	private void AntBehaviour() {
+		
+	}
+	
+	private void AggressiveBehaviour() {
+		
+	}
+	
+	private void AmbushBehaviour() {
+		
+	}
 
 	private boolean pacmanCloseToPowerPill(Game game, int pcNode, int limit) {
 		MOVE lMov = game.getPacmanLastMoveMade();
