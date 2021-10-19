@@ -147,9 +147,9 @@ public class PacManParallelEvaluator {
 			Vector<String> list_pacManObj = new Vector<String>(); 
 			Vector<String> list_ghostsObj  = new Vector<String>();
 			for(Class<?> pacManClass: list_pacMan)
-				list_pacManObj.add(pacManClass.getName());
+				list_pacManObj.add(((PacmanController)pacManClass.newInstance()).getName());
 	    	for(Class<?> ghostsClass: list_ghosts)
-	    		list_ghostsObj.add(ghostsClass.getName());
+	    		list_ghostsObj.add(((GhostController)ghostsClass.newInstance()).getName());
 	
 			scores = new Scores(list_pacManObj,list_ghostsObj);
 			List<Task> tasks = new ArrayList<Task>();
@@ -158,10 +158,10 @@ public class PacManParallelEvaluator {
 		    	for(Class<?> ghostsClass: list_ghosts)
 		    	{
 		    		PacmanController pacMan = (PacmanController)pacManClass.newInstance();
-		    		pacMan.setName(pacManClass.getName());
+		    		//pacMan.setName(pacManClass.getCanonicalName());
 		    		
 		    		GhostController ghosts = (GhostController)ghostsClass.newInstance();
-		    		ghosts.setName(ghostsClass.getName());
+		    		//ghosts.setName(ghostsClass.getCanonicalName());
 		           tasks.add(new Task(pacMan,ghosts,trials));
 		    	}
 		    		
@@ -174,6 +174,7 @@ public class PacManParallelEvaluator {
          catch(Exception e)
          {
         	 System.err.println(e.getLocalizedMessage());
+        	 e.printStackTrace();
          } finally {
             exec.shutdown();
         }

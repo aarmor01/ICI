@@ -2,9 +2,6 @@ package es.ucm.fdi.ici;
 import java.util.Collections;
 import java.util.Vector;
 
-import pacman.controllers.Controller;
-import pacman.controllers.GhostController;
-import pacman.controllers.PacmanController;
 import pacman.game.util.Stats;
 
 public class Scores {
@@ -15,19 +12,28 @@ public class Scores {
 	Stats[][] stats;
 	Vector<ScorePair> pacManRanking;
 	Vector<ScorePair> ghostsRanking;
+	Vector<ScorePair> globalRanking;
 
 	public Scores(Vector<String> list_pacMan,Vector<String> list_ghosts)
 	{
 		this.list_pacMan = list_pacMan; 
 		this.list_ghosts = list_ghosts;
 		stats = new Stats[list_pacMan.size()][list_ghosts.size()];
+		for(int pc = 0; pc<list_pacMan.size(); pc++)
+			for(int g=0; g<list_ghosts.size(); g++)
+			{
+				stats[pc][g] = new Stats("empty");
+			}
 	}
 
-	void put(String pacMan, String ghosts, Stats score) {
+	synchronized void put(String pacMan, String ghosts, Stats score) {
 		int posPacMan = list_pacMan.indexOf(pacMan);
 		int posGhosts = list_ghosts.indexOf(ghosts);
+		if((posPacMan ==-1)||(posGhosts==-1))
+			System.err.println("error");
 		stats[posPacMan][posGhosts] = score;	
 		System.out.println(String.format("Scores.put %s, %s, %s",pacMan,ghosts,score.toString()));
+		computeRanking();
 	}
 	
 	public Vector<ScorePair> getMsPacManRanking() {
@@ -36,6 +42,10 @@ public class Scores {
 	
 	public Vector<ScorePair> getGhostsRanking() {
 		return ghostsRanking;
+	}
+
+	public Vector<ScorePair> getGlobalRanking() {
+		return globalRanking;
 	}
 	
 	public void printScoreAndRanking()
@@ -59,7 +69,7 @@ public class Scores {
 
 	}
 	
-	void computeRanking()
+	synchronized void computeRanking()
 	{
 		double[] pacManScores = new double[list_pacMan.size()]; 
 		double[] ghostScores = new double[list_ghosts.size()];
@@ -67,8 +77,12 @@ public class Scores {
 		for(int pc = 0; pc<pacManScores.length; pc++)
 		{
 			double score = 0;
-			for(int g=0; g<ghostScores.length; g++)
-				score+=stats[pc][g].getAverage();
+			for(int g=0; g<ghostScores.length; g++) {
+				double avg = stats[pc][g].getAverage();
+				if(Double.isNaN(avg))
+					avg = 0;
+				score+= avg;
+			}
 			pacManScores[pc] = score/(double)ghostScores.length;
 		}
 		
@@ -76,9 +90,15 @@ public class Scores {
 		{
 			double score = 0;
 			for(int pc=0; pc<pacManScores.length; pc++)
-				score+=stats[pc][g].getAverage();
+			{
+				double avg = stats[pc][g].getAverage();
+				if(Double.isNaN(avg))
+					avg = 0;
+				score+= avg;
+			}			
 			ghostScores[g] = score/(double)pacManScores.length;
 		}
+
 		
 		pacManRanking = new Vector<ScorePair>();
 		int pos = 0;
@@ -90,22 +110,41 @@ public class Scores {
 		for(String c: list_ghosts)
 			ghostsRanking.add(new ScorePair(c,ghostScores[pos++]));
 		
+		globalRanking = new Vector<ScorePair>();
+		if(list_ghosts.size()==list_pacMan.size())
+		{		
+			pos = 0;
+			for(String c: list_pacMan) {
+				globalRanking.add(new ScorePair(c+" & "+list_ghosts.get(pos),pacManScores[pos]-ghostScores[pos]));
+				pos++;
+			}
+		} else {
+			System.err.println("WARNING: Global ranking not computed (#MsPacManTeams != #GhostsTeams)");
+		}
+		
+		
 		Collections.sort(pacManRanking);
 		Collections.sort(ghostsRanking);
 		Collections.reverse(ghostsRanking);
+		Collections.sort(globalRanking);
+
 	}
 	
 	public class ScorePair implements Comparable<ScorePair>{
-		String controller;
+		String name;
 		Double score;
-		public ScorePair(String controller, Double score) {
+		public ScorePair(String name, Double score) {
 			super();
-			this.controller = controller;
+			this.name = name;
 			this.score = score;
 		}
 
 		public Double getScore() {
 			return score;
+		}
+		
+		public String getName() {
+			return name;
 		}
 
 		public int compareTo(ScorePair o) {
@@ -114,8 +153,23 @@ public class Scores {
 		}
 		public String toString()
 		{
-			return this.controller+": "+String.format("%.2f", this.score);
+			return this.name+": "+String.format("%.2f", this.score);
 		}
 		
 	}
+
+	public Vector<String> getList_pacMan() {
+		return list_pacMan;
+	}
+
+	public Vector<String> getList_ghosts() {
+		return list_ghosts;
+	}
+
+	public Stats[][] getStats() {
+		return stats;
+	}
+
+	
+	
 }

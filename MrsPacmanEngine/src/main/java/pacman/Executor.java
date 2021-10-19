@@ -52,7 +52,7 @@ public class Executor {
     private final Function<Game, String> peek;
     private final Logger logger = LoggerFactory.getLogger(Executor.class);
 	private boolean pacmanPOvisual;
-    private static String VERSION = "3.0 (ICI 21-22 major release)";
+    private static String VERSION = "3.1.2 (ICI 21-22 major release + minor bugs)";
 
     public static class Builder {
         private boolean pacmanPO = false;
@@ -249,7 +249,7 @@ public class Executor {
         for (int i = 0; i < trials; ) {
             try {
                 game = setupGame();
-                precompute(pacManController, ghostController);
+                precompute(pacManController, ghostControllerCopy);
                 while (!game.gameOver()) {
                     if (tickLimit != -1 && tickLimit < game.getTotalTime()) {
                         break;

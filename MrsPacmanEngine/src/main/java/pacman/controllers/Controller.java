@@ -126,7 +126,7 @@ public abstract class Controller<T> implements Runnable {
      * @return The name of the controller
      */
     public String getName() {
-        return name;
+        	return name;
     }
 
     /**
@@ -139,7 +139,7 @@ public abstract class Controller<T> implements Runnable {
     }
     
     public String getTeam() {
-		return team;
+        	return team;
 	}
 
 	public void setTeam(String team) {
