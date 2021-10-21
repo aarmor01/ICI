@@ -24,7 +24,4 @@ public class PacManNearPPillTransition implements Transition {
 	public String toString() {
 		return "MsPacman near PPill";
 	}
-
-	
-	
 }
