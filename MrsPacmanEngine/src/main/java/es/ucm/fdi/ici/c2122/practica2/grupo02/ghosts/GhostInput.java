@@ -11,7 +11,14 @@ public class GhostInput extends Input{
 	private boolean INKYedible;
 	private boolean PINKYedible;
 	private boolean SUEedible;
+	
+	private boolean BLINKYoutOfLair;
+	private boolean INKYoutOfLair;
+	private boolean PINKYoutOfLair;
+	private boolean SUEoutOfLair;
+	
 	private double pacmanDistancePowerPill;
+	
 	private int distanceBlinkyToPacman;
 	private int distancePinkyToPacman;
 	private int distanceInkyToPacman;
@@ -28,6 +35,11 @@ public class GhostInput extends Input{
 		this.INKYedible = game.isGhostEdible(GHOST.INKY);
 		this.SUEedible = game.isGhostEdible(GHOST.SUE);
 	
+		this.BLINKYoutOfLair = !(game.getGhostLairTime(GHOST.BLINKY) > 0);
+		this.PINKYedible = !(game.getGhostLairTime(GHOST.PINKY) > 0);
+		this.INKYedible = !(game.getGhostLairTime(GHOST.INKY) > 0);
+		this.SUEedible = !(game.getGhostLairTime(GHOST.SUE) > 0);
+		
 		int pacman = game.getPacmanCurrentNodeIndex();
 		this.pacmanDistancePowerPill = Double.MAX_VALUE;
 		for(int ppill: game.getPowerPillIndices()) {
@@ -59,6 +71,22 @@ public class GhostInput extends Input{
 
 	public boolean isSUEedible() {
 		return SUEedible;
+	}
+	
+	public boolean isBLINKYoutOfLair() {
+		return BLINKYoutOfLair;
+	}
+
+	public boolean isPINKYoutOfLair() {
+		return PINKYoutOfLair;
+	}
+
+	public boolean isINKYoutOfLair() {
+		return INKYoutOfLair;
+	}
+
+	public boolean isSUEoutOfLair() {
+		return SUEoutOfLair;
 	}
 
 	public double getMinPacmanDistancePPill() {

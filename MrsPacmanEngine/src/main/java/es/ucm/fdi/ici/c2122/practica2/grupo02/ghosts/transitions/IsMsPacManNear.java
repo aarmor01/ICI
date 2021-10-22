@@ -5,11 +5,11 @@ import es.ucm.fdi.ici.c2122.practica2.grupo02.ghosts.GhostInput;
 import es.ucm.fdi.ici.fsm.Transition;
 import pacman.game.Constants.GHOST;
 
-public class IsGhostNear implements Transition {
+public class IsMsPacManNear implements Transition {
 	GHOST ghost;
 	int minDistanceToStartChasing;
 	
-	public IsGhostNear(GHOST ghost) {
+	public IsMsPacManNear(GHOST ghost) {
 		super();
 		this.ghost = ghost;
 	}

@@ -3,9 +3,9 @@ package es.ucm.fdi.ici.c2122.practica2.grupo02.ghosts.transitions;
 import es.ucm.fdi.ici.Input;
 import es.ucm.fdi.ici.fsm.Transition;
 
-public class RunAwayDirectTransition implements Transition {
+public class GoToMainRunAway implements Transition {
 
-	public RunAwayDirectTransition() {
+	public GoToMainRunAway() {
 		super();
 	}
 	
@@ -16,6 +16,6 @@ public class RunAwayDirectTransition implements Transition {
 
 	@Override
 	public String toString() {
-		return "Direct transition towards next state";
+		return "Direct transition towards main runaway action";
 	}
 }
