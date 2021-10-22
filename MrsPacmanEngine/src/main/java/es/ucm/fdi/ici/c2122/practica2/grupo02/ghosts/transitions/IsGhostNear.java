@@ -8,6 +8,7 @@ import pacman.game.Constants.GHOST;
 public class IsGhostNear implements Transition {
 	GHOST ghost;
 	int minDistanceToStartChasing;
+	
 	public IsGhostNear(GHOST ghost) {
 		super();
 		this.ghost = ghost;
@@ -31,10 +32,8 @@ public class IsGhostNear implements Transition {
 		
 	}
 
-
-
 	@Override
 	public String toString() {
-		return "Ghost starts chasing";
+		return ghost + " starts chasing";
 	}
 }
