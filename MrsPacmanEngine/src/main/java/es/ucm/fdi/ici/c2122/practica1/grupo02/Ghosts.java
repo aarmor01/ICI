@@ -11,6 +11,9 @@ import pacman.game.Constants.GHOST;
 import pacman.game.Constants.MOVE;
 
 public class Ghosts extends GhostController {
+	
+	
+	
 	private EnumMap<GHOST, MOVE> moves = new EnumMap<GHOST, MOVE>(GHOST.class);
 
 	// Aggresive behaviour data

@@ -26,6 +26,6 @@ public class ChaseGhost implements Action {
 		GHOST nearestGhostType = Tools.nearestGhost(game, pacmanNode, chaseLimit);
 		//Perseguir
 		return game.getApproximateNextMoveTowardsTarget(pacmanNode,
-				game.getGhostCurrentNodeIndex( 	nearestGhostType), game.getPacmanLastMoveMade(), DM.PATH);
+				game.getGhostCurrentNodeIndex(nearestGhostType), game.getPacmanLastMoveMade(), DM.PATH);
 	}
 }

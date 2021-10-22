@@ -1,11 +1,10 @@
-package es.ucm.fdi.ici.practica2.demofsm.mspacman;
+package es.ucm.fdi.ici.c2122.practica2.grupo02.mspacman;
 
 import es.ucm.fdi.ici.Input;
 import pacman.game.Game;
 import pacman.game.Constants.GHOST;
 
-public class MsPacManInput extends Input {
-
+public class MsPacManInput extends Input{
 	private boolean canEatGhost;  
 	
 	public MsPacManInput(Game game) {
@@ -30,5 +29,4 @@ public class MsPacManInput extends Input {
 				return;
 			}
 	}
-
 }
