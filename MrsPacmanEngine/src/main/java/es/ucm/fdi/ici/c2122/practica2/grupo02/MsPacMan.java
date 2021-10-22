@@ -31,6 +31,7 @@ public class MsPacMan extends PacmanController {
 				//Check nearest Power Pill taking into account if the path is blocked or may be blocked by a ghost 
 				MOVE nextMove = getNextPossibleMoveToPowerPill(game, pacmanNode, nearestGhostType);
 				//If there's not PowerPills left, or if the path is block, we ran away
+				//DONE
 				if (nextMove == MOVE.NEUTRAL)
 					return game.getApproximateNextMoveAwayFromTarget(pacmanNode,
 							game.getGhostCurrentNodeIndex(nearestGhostType), game.getPacmanLastMoveMade(), DM.PATH);
@@ -42,6 +43,7 @@ public class MsPacMan extends PacmanController {
 		return moveTowardsPills(game, pacmanNode);
 	}
 	
+	//DONE
 	MOVE getNextPossibleMoveToPowerPill(Game game, int pcNode, GHOST ghostType) {
 		int[] activePowerPills = game.getActivePowerPillsIndices();
 		int nearestPP = -1, shortestDist = -1;
@@ -84,7 +86,8 @@ public class MsPacMan extends PacmanController {
 
 		return ghost;
 	}
-
+	
+	//DONE
 	MOVE moveTowardsPills(Game game, int pcNode) {
 		int[] activePills = game.getActivePillsIndices();
 		int nearestPillNode = -1;

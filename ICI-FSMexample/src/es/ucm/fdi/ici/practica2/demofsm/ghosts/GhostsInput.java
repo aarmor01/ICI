@@ -23,6 +23,7 @@ public class GhostsInput extends Input {
 		this.INKYedible = game.isGhostEdible(GHOST.INKY);
 		this.PINKYedible = game.isGhostEdible(GHOST.PINKY);
 		this.SUEedible = game.isGhostEdible(GHOST.SUE);
+		
 	
 		int pacman = game.getPacmanCurrentNodeIndex();
 		this.minPacmanDistancePPill = Double.MAX_VALUE;

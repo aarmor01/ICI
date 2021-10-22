@@ -14,7 +14,7 @@ public class CleanBottomMap implements Action {
 	@Override
 	public String getActionId() {
 		// TODO Auto-generated method stub
-		return null;
+		return "Clean Bottom Map";
 	}
 
 	@Override

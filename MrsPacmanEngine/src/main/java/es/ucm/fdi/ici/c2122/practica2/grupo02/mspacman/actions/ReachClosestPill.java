@@ -1,11 +1,16 @@
 package es.ucm.fdi.ici.c2122.practica2.grupo02.mspacman.actions;
 
+import java.awt.Color;
+
 import es.ucm.fdi.ici.Action;
+import pacman.game.Constants.DM;
 import pacman.game.Constants.MOVE;
 import pacman.game.Game;
+import pacman.game.GameView;
 
 public class ReachClosestPill implements Action {
-
+	
+	int pcNode = 0;
 	public ReachClosestPill() {
 		// TODO Auto-generated constructor stub
 	}
@@ -18,8 +23,25 @@ public class ReachClosestPill implements Action {
 
 	@Override
 	public MOVE execute(Game game) {
-		// TODO Auto-generated method stub
-		return null;
+		pcNode = game.getPacmanCurrentNodeIndex();
+		int[] activePills = game.getActivePillsIndices();
+		int nearestPillNode = -1;
+		int shortestDistance = -1;
+		
+		//For each active Pill we check which one is the nearest
+		for (int activePill : activePills) {
+			int distance = game.getShortestPathDistance(pcNode, activePill, game.getPacmanLastMoveMade());
+			if (shortestDistance == -1 || distance < shortestDistance) {
+				nearestPillNode = activePill;
+				shortestDistance = distance;
+			}
+		}
+
+		//if there's active pill we draw it's euclidean path
+		if (nearestPillNode != -1)
+			GameView.addLines(game, Color.CYAN, pcNode, nearestPillNode);
+		
+		return game.getApproximateNextMoveTowardsTarget(pcNode, nearestPillNode, game.getPacmanLastMoveMade(), DM.PATH);
 	}
 
 }

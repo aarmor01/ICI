@@ -10,7 +10,7 @@ import pacman.game.Constants.GHOST;
 import pacman.game.Constants.MOVE;
 
 public class MsPacMan extends PacmanController {
-	private Color[] colours = { Color.RED, Color.PINK, Color.CYAN, Color.YELLOW };
+	
 
 	@Override
 	public MOVE getMove(Game game, long timeDue) {

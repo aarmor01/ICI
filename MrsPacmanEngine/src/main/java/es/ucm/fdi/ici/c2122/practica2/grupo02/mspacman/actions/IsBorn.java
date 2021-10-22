@@ -13,7 +13,7 @@ public class IsBorn implements Action {
 	@Override
 	public String getActionId() {
 		// TODO Auto-generated method stub
-		return null;
+		return "Is Born";
 	}
 
 	@Override
