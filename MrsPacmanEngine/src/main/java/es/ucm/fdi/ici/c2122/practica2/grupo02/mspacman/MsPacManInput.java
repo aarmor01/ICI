@@ -33,4 +33,13 @@ public class MsPacManInput extends Input {
 	public int closestGhostDistance() {
 		return nearestGhostDistance;
 	}
+
+	public boolean ExistingBottomPills() {
+		int[] activePills = game.getActivePillsIndices();
+		for (int activePill : activePills)
+			if(game.getNodeYCood(activePill) <= game.getNodeYCood(game.getPacManInitialNodeIndex()))
+				return true;
+		
+		return false;
+	}	
 }
