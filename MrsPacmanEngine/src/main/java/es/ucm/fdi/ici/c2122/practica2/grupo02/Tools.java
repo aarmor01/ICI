@@ -9,9 +9,10 @@ public final class Tools {
 	
 	public static Color[] colours = { Color.RED, Color.PINK, Color.CYAN, Color.YELLOW };
 	
-	public static GHOST nearestGhost(Game game, int pcNode, int chaseLimit) {
+	public static GHOST nearestGhostInRange(Game game, int chaseLimit) {
 		GHOST ghost = null;
 		int nGhost = -1;
+		int pcNode = game.getPacmanCurrentNodeIndex();
 
 		for (GHOST ghostType : GHOST.values()) {
 			int ghostIndex = game.getGhostCurrentNodeIndex(ghostType);

@@ -23,7 +23,7 @@ public class ChaseGhost implements Action {
 	@Override
 	public MOVE execute(Game game) {
 		int pacmanNode = game.getPacmanCurrentNodeIndex();
-		GHOST nearestGhostType = Tools.nearestGhost(game, pacmanNode, chaseLimit);
+		GHOST nearestGhostType = Tools.nearestGhostInRange(game, chaseLimit);
 		//Perseguir
 		return game.getApproximateNextMoveTowardsTarget(pacmanNode,
 				game.getGhostCurrentNodeIndex(nearestGhostType), game.getPacmanLastMoveMade(), DM.PATH);

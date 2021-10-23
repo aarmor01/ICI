@@ -43,9 +43,7 @@ public class Ghosts extends GhostController {
 		nextIntersectGhost(game);
 				
 		//Ant
-		//IN NEED OF DEVELOPMENT
-				
-				
+		//IN NEED OF DEVELOPMENT	
 		//Agressive
 		if (game.doesGhostRequireAction(ghosts[3]))
 			nextMoveAgressive(game, game.getGhostCurrentNodeIndex(ghosts[3]), game.getPacmanCurrentNodeIndex(), ghosts[3], 3);

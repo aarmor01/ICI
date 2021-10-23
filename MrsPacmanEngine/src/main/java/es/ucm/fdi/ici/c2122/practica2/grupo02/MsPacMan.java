@@ -7,9 +7,8 @@ import javax.swing.JPanel;
 
 import es.ucm.fdi.ici.Input;
 import es.ucm.fdi.ici.c2122.practica2.grupo02.mspacman.MsPacManInput;
-import es.ucm.fdi.ici.c2122.practica2.grupo02.mspacman.actions.ChaseGhost;
-import es.ucm.fdi.ici.c2122.practica2.grupo02.mspacman.actions.ReachClosestPill;
-import es.ucm.fdi.ici.c2122.practica2.grupo02.mspacman.transitions.PPillTokenNcloseGhost;
+import es.ucm.fdi.ici.c2122.practica2.grupo02.mspacman.actions.*;
+import es.ucm.fdi.ici.c2122.practica2.grupo02.mspacman.transitions.*;
 import es.ucm.fdi.ici.fsm.FSM;
 import es.ucm.fdi.ici.fsm.SimpleState;
 import es.ucm.fdi.ici.fsm.Transition;
@@ -35,9 +34,9 @@ public class MsPacMan extends PacmanController {
     	Transition tran1 = new PPillTokenNcloseGhost();
     	
     	
-    	fsm.add(state1, tran1, state2);
+    	fsm.add(state2, tran1, state1);
 
-    	fsm.ready(state1);
+    	fsm.ready(state2);
     	
     	JFrame frame = new JFrame();
     	JPanel main = new JPanel();
