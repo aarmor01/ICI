@@ -1,9 +1,8 @@
 package es.ucm.fdi.ici.c2122.practica2.grupo02.mspacman.actions;
 
-import java.awt.Color;
-
-import es.ucm.fdi.ici.c2122.practica2.grupo02.Tools;
 import es.ucm.fdi.ici.Action;
+import es.ucm.fdi.ici.c2122.practica2.grupo02.GameConstants;
+import es.ucm.fdi.ici.c2122.practica2.grupo02.Tools;
 import pacman.game.Constants.DM;
 import pacman.game.Constants.GHOST;
 import pacman.game.Constants.MOVE;
@@ -29,7 +28,7 @@ public class RunawayFromClosestGhost implements Action {
 		GHOST nearestGhostType = Tools.nearestGhostInRange(game, chaseDistance);
 		
 		if (nearestGhostType != null) {
-			GameView.addPoints(game, Tools.colours[nearestGhostType.ordinal()],
+			GameView.addPoints(game, GameConstants.colours[nearestGhostType.ordinal()],
 				game.getShortestPath(game.getGhostCurrentNodeIndex(nearestGhostType), pacmanNode));
 			
 			return game.getApproximateNextMoveAwayFromTarget(pacmanNode,

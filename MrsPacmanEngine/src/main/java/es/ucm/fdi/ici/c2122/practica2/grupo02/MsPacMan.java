@@ -31,7 +31,7 @@ public class MsPacMan extends PacmanController {
     	SimpleState state1 = new SimpleState("state1", new ChaseGhost());
     	SimpleState state2 = new SimpleState("state2", new ReachClosestPill());
     	
-    	Transition tran1 = new PPillTokenNcloseGhost();
+    	Transition tran1 = new CanChaseGhost();
     	
     	
     	fsm.add(state2, tran1, state1);

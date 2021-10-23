@@ -7,19 +7,16 @@ import pacman.game.Game;
 public class IsBorn implements Action {
 
 	public IsBorn() {
-		// TODO Auto-generated constructor stub
 	}
 
 	@Override
 	public String getActionId() {
-		// TODO Auto-generated method stub
 		return "Is Born";
 	}
 
 	@Override
 	public MOVE execute(Game game) {
-		// TODO Auto-generated method stub
-		return null;
+		return MOVE.NEUTRAL;
 	}
 
 }

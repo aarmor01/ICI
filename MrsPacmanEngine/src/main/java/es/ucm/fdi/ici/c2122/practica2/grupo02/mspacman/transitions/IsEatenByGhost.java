@@ -6,17 +6,16 @@ import es.ucm.fdi.ici.fsm.Transition;
 public class IsEatenByGhost implements Transition {
 
 	public IsEatenByGhost() {
-		super(); // TODO Auto-generated constructor stub
+		super();
 	}
 
 	@Override
 	public boolean evaluate(Input in) {
-		// TODO Auto-generated method stub
-		return false;
+		return true;
 	}
 	
 	@Override
 	public String toString() {
-		return "Is Eaten By Ghost";
+		return "MsPacman was eaten by a ghost";
 	}
 }
