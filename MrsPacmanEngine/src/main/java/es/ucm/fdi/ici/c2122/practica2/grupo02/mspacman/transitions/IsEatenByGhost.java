@@ -13,7 +13,7 @@ public class IsEatenByGhost implements Transition {
 	public boolean evaluate(Input in) {
 		return true;
 	}
-	
+
 	@Override
 	public String toString() {
 		return "MsPacman was eaten by a ghost";

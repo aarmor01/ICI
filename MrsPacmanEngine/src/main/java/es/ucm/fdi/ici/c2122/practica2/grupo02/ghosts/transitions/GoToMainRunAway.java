@@ -4,7 +4,6 @@ import es.ucm.fdi.ici.Input;
 import es.ucm.fdi.ici.fsm.Transition;
 
 public class GoToMainRunAway implements Transition {
-
 	public GoToMainRunAway() {
 		super();
 	}
