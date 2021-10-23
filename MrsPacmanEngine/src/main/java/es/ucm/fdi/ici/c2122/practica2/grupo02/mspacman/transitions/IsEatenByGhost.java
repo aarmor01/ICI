@@ -2,7 +2,6 @@ package es.ucm.fdi.ici.c2122.practica2.grupo02.mspacman.transitions;
 
 import es.ucm.fdi.ici.Input;
 import es.ucm.fdi.ici.fsm.Transition;
-import es.ucm.fdi.ici.c2122.practica2.grupo02.mspacman.MsPacManInput;
 
 public class IsEatenByGhost implements Transition {
 
@@ -12,13 +11,11 @@ public class IsEatenByGhost implements Transition {
 
 	@Override
 	public boolean evaluate(Input in) {
-		MsPacManInput input = (MsPacManInput) in;
-
-		return input.anyGhostOutsideLair();
+		return true;
 	}
 
 	@Override
 	public String toString() {
-		return "A ghost has entered the maze";
+		return "MsPacman was eaten by a ghost";
 	}
 }
