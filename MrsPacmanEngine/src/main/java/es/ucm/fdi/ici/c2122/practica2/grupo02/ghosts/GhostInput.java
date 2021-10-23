@@ -22,10 +22,10 @@ public class GhostInput extends Input{
 	private boolean PINKYoutOfLair;
 	private boolean SUEoutOfLair;
 	
-	int BLINKYposition;
-	int INKYposition;
-	int PINKYposition;
-	int SUEposition;
+	private int BLINKYposition;
+	private int INKYposition;
+	private int PINKYposition;
+	private int SUEposition;
 	
 	private double pacmanDistancePowerPill;
 	
@@ -33,6 +33,10 @@ public class GhostInput extends Input{
 	private int distancePinkyToPacman;
 	private int distanceInkyToPacman;
 	private int distanceSueToPacman;
+	
+	private int nextPillPacManBySeer;
+	
+	private int[] chaseCountsGhosts = {0,0,0,0};
 	
 	public GhostInput(Game game) {
 		super(game);
@@ -55,21 +59,50 @@ public class GhostInput extends Input{
 		this.INKYedible = !(game.getGhostLairTime(GHOST.INKY) > 0);
 		this.SUEedible = !(game.getGhostLairTime(GHOST.SUE) > 0);
 		
-		int pacman = game.getPacmanCurrentNodeIndex();
+		int pacmanNode = game.getPacmanCurrentNodeIndex();
 		this.pacmanDistancePowerPill = Double.MAX_VALUE;
 		for(int ppill: game.getPowerPillIndices()) {
-			double distance = game.getDistance(pacman, ppill, DM.PATH);
+			double distance = game.getDistance(pacmanNode, ppill, DM.PATH);
 			this.pacmanDistancePowerPill = Math.min(distance, this.pacmanDistancePowerPill);
 		}
 		
 		BLINKYposition = game.getGhostCurrentNodeIndex(GHOST.BLINKY);
-		distanceBlinkyToPacman = game.getShortestPathDistance(pacman, BLINKYposition);
+		distanceBlinkyToPacman = game.getShortestPathDistance(pacmanNode, BLINKYposition);
 		PINKYposition = game.getGhostCurrentNodeIndex(GHOST.PINKY);
-		distancePinkyToPacman = game.getShortestPathDistance(pacman, PINKYposition);
+		distancePinkyToPacman = game.getShortestPathDistance(pacmanNode, PINKYposition);
 		INKYposition = game.getGhostCurrentNodeIndex(GHOST.INKY);
-		distanceInkyToPacman = game.getShortestPathDistance(pacman, INKYposition);
+		distanceInkyToPacman = game.getShortestPathDistance(pacmanNode, INKYposition);
 		SUEposition = game.getGhostCurrentNodeIndex(GHOST.SUE);
-		distanceSueToPacman = game.getShortestPathDistance(pacman, SUEposition);
+		distanceSueToPacman = game.getShortestPathDistance(pacmanNode, SUEposition);
+		
+		if (game.doesGhostRequireAction(GHOST.BLINKY)) {
+			//Seer prediction
+			int[] activePills = game.getActivePillsIndices();
+			int nearestPillNode = -1;
+			int shortestDistance = -1;
+			
+			int minPredictionDistance = 15;
+			// We get the next possible destination of the Pacman
+			for (int activePill : activePills) {
+				int distance = game.getShortestPathDistance(pacmanNode, activePill, game.getPacmanLastMoveMade());
+				if (shortestDistance == -1 || distance < shortestDistance && distance > minPredictionDistance) {
+					nearestPillNode = activePill;
+					shortestDistance = distance;
+				}
+			}
+			
+			nextPillPacManBySeer = nearestPillNode;
+		}
+		
+		int distanceToStartChase = 30;
+		int contadorGhosts = 0;
+		for (GHOST ghost : GHOST.values()) {
+			if (game.doesGhostRequireAction(ghost)) {
+				if (!game.isGhostEdible(ghost) && game.getShortestPathDistance(game.getGhostCurrentNodeIndex(ghost), pacmanNode) < distanceToStartChase)
+					chaseCountsGhosts[contadorGhosts]++;
+			}
+			contadorGhosts++;
+		}
 	}
 
 	public boolean isBLINKYedible() {
@@ -134,6 +167,38 @@ public class GhostInput extends Input{
 	
 	public int getSUEposition() {
 		return SUEposition;
+	}
+	
+	public int getNextPillPacManBySeer() {
+		return nextPillPacManBySeer;
+	}
+	
+	public int getGhostChaseCount(GHOST ghost) {
+		switch(ghost) {
+		case BLINKY:
+			return chaseCountsGhosts[0];
+		case INKY:
+			return chaseCountsGhosts[1];
+		case PINKY:
+			return chaseCountsGhosts[2];
+		case SUE:
+			return chaseCountsGhosts[3];
+		default:
+			return -1;
+		}
+	}
+	
+	public void resetCount(GHOST ghost) {
+		switch(ghost) {
+		case BLINKY:
+			chaseCountsGhosts[0] = 0;
+		case INKY:
+			chaseCountsGhosts[1] = 0;
+		case PINKY:
+			chaseCountsGhosts[2] = 0;
+		case SUE:
+			chaseCountsGhosts[3] = 0;
+		}
 	}
 
 	public double getMinPacmanDistancePPill() {
