@@ -27,6 +27,6 @@ public class ChaseSecondaryPathTransition implements Transition {
 
 	@Override
 	public String toString() {
-		return ghost + "decides to chase by secondary path";
+		return ghost + " has been chasing MsPacMan for too long on the same path";
 	}
 }

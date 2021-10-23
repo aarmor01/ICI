@@ -21,14 +21,16 @@ public class StartRunAwayGhost implements Transition {
 		switch(ghost) {
 		case BLINKY:
 			if(input.isBLINKYedible()) {
-				if (!(input.getBlinkyDistancePacman() > minDistanceGhostIgnoresEdible && input.getBLINKYedibleTimeLeft() < minTimeBeforeIgnoresEdible)) {
+				if (!(input.getBlinkyDistancePacman() > minDistanceGhostIgnoresEdible && 
+						input.getBLINKYedibleTimeLeft() < minTimeBeforeIgnoresEdible)) {
 					return true;
 				}
 			}
 			break;
 		case INKY:
 			if(input.isINKYedible()) {
-				if (!(input.getInkyDistancePacman() > minDistanceGhostIgnoresEdible && input.getINKYedibleTimeLeft() < minTimeBeforeIgnoresEdible)) {
+				if (!(input.getInkyDistancePacman() > minDistanceGhostIgnoresEdible && 
+						input.getINKYedibleTimeLeft() < minTimeBeforeIgnoresEdible)) {
 					return true;
 				}
 			}
@@ -36,14 +38,16 @@ public class StartRunAwayGhost implements Transition {
 			
 		case PINKY:
 			if(input.isPINKYedible()) {
-				if (!(input.getPinkyDistancePacman() > minDistanceGhostIgnoresEdible && input.getPINKYedibleTimeLeft() < minTimeBeforeIgnoresEdible)) {
+				if (!(input.getPinkyDistancePacman() > minDistanceGhostIgnoresEdible && 
+						input.getPINKYedibleTimeLeft() < minTimeBeforeIgnoresEdible)) {
 					return true;
 				}
 			}
 			break;
 		case SUE:
 			if(input.isSUEedible()) {
-				if (!(input.getSueDistancePacman() > minDistanceGhostIgnoresEdible && input.getSUEedibleTimeLeft() < minTimeBeforeIgnoresEdible)) {
+				if (!(input.getSueDistancePacman() > minDistanceGhostIgnoresEdible && 
+						input.getSUEedibleTimeLeft() < minTimeBeforeIgnoresEdible)) {
 					return true;
 				}
 			}
@@ -54,6 +58,6 @@ public class StartRunAwayGhost implements Transition {
 
 	@Override
 	public String toString() {
-		return ghost + "starts running away";
+		return ghost + " starts running away";
 	}
 }

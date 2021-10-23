@@ -19,13 +19,17 @@ public class StopRunAwayAndStartChase implements Transition {
 		GhostInput input = (GhostInput)in;
 		switch(ghost) {
 		case BLINKY:
-			return !input.isBLINKYedible() && input.isBLINKYoutOfLair() && input.getBlinkyDistancePacman() <= minDistanceToStartChasing;
+			return !input.isBLINKYedible() && input.isBLINKYoutOfLair() 
+					&& input.getBlinkyDistancePacman() <= minDistanceToStartChasing;
 		case PINKY:
-			return !input.isPINKYedible() && input.isPINKYoutOfLair() && input.getPinkyDistancePacman() <= minDistanceToStartChasing;
+			return !input.isPINKYedible() && input.isPINKYoutOfLair() 
+					&& input.getPinkyDistancePacman() <= minDistanceToStartChasing;
 		case INKY:
-			return !input.isINKYedible() && input.isINKYoutOfLair() && input.getInkyDistancePacman() <= minDistanceToStartChasing;
+			return !input.isINKYedible() && input.isINKYoutOfLair() 
+					&& input.getInkyDistancePacman() <= minDistanceToStartChasing;
 		case SUE:
-			return !input.isSUEedible() && input.isSUEoutOfLair() && input.getSueDistancePacman() <= minDistanceToStartChasing;
+			return !input.isSUEedible() && input.isSUEoutOfLair() 
+					&& input.getSueDistancePacman() <= minDistanceToStartChasing;
 		default:
 			return false;
 		}

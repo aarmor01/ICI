@@ -34,6 +34,6 @@ public class IsMsPacManNear implements Transition {
 
 	@Override
 	public String toString() {
-		return ghost + " starts chasing";
+		return ghost + " starts chasing MsPacMan";
 	}
 }
