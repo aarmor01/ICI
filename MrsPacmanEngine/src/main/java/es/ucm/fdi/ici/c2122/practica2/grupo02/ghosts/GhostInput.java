@@ -12,10 +12,20 @@ public class GhostInput extends Input{
 	private boolean PINKYedible;
 	private boolean SUEedible;
 	
+	private int BLINKYedTimeLeft;
+	private int INKYedTimeLeft;
+	private int PINKYedTimeLeft;
+	private int SUEedTimeLeft;
+	
 	private boolean BLINKYoutOfLair;
 	private boolean INKYoutOfLair;
 	private boolean PINKYoutOfLair;
 	private boolean SUEoutOfLair;
+	
+	int BLINKYposition;
+	int INKYposition;
+	int PINKYposition;
+	int SUEposition;
 	
 	private double pacmanDistancePowerPill;
 	
@@ -34,6 +44,11 @@ public class GhostInput extends Input{
 		this.PINKYedible = game.isGhostEdible(GHOST.PINKY);
 		this.INKYedible = game.isGhostEdible(GHOST.INKY);
 		this.SUEedible = game.isGhostEdible(GHOST.SUE);
+		
+		this.BLINKYedTimeLeft = game.getGhostEdibleTime(GHOST.BLINKY);
+		this.INKYedTimeLeft = game.getGhostEdibleTime(GHOST.INKY);
+		this.PINKYedTimeLeft = game.getGhostEdibleTime(GHOST.PINKY);
+		this.SUEedTimeLeft = game.getGhostEdibleTime(GHOST.SUE);
 	
 		this.BLINKYoutOfLair = !(game.getGhostLairTime(GHOST.BLINKY) > 0);
 		this.PINKYedible = !(game.getGhostLairTime(GHOST.PINKY) > 0);
@@ -47,14 +62,14 @@ public class GhostInput extends Input{
 			this.pacmanDistancePowerPill = Math.min(distance, this.pacmanDistancePowerPill);
 		}
 		
-		int blinkyNode = game.getGhostCurrentNodeIndex(GHOST.BLINKY);
-		distanceBlinkyToPacman = game.getShortestPathDistance(pacman, blinkyNode);
-		int pinkyNode = game.getGhostCurrentNodeIndex(GHOST.PINKY);
-		distancePinkyToPacman = game.getShortestPathDistance(pacman, pinkyNode);
-		int inkyNode = game.getGhostCurrentNodeIndex(GHOST.INKY);
-		distanceInkyToPacman = game.getShortestPathDistance(pacman, inkyNode);
-		int sueNode = game.getGhostCurrentNodeIndex(GHOST.SUE);
-		distanceSueToPacman = game.getShortestPathDistance(pacman, sueNode);
+		BLINKYposition = game.getGhostCurrentNodeIndex(GHOST.BLINKY);
+		distanceBlinkyToPacman = game.getShortestPathDistance(pacman, BLINKYposition);
+		PINKYposition = game.getGhostCurrentNodeIndex(GHOST.PINKY);
+		distancePinkyToPacman = game.getShortestPathDistance(pacman, PINKYposition);
+		INKYposition = game.getGhostCurrentNodeIndex(GHOST.INKY);
+		distanceInkyToPacman = game.getShortestPathDistance(pacman, INKYposition);
+		SUEposition = game.getGhostCurrentNodeIndex(GHOST.SUE);
+		distanceSueToPacman = game.getShortestPathDistance(pacman, SUEposition);
 	}
 
 	public boolean isBLINKYedible() {
@@ -73,6 +88,22 @@ public class GhostInput extends Input{
 		return SUEedible;
 	}
 	
+	public int getBLINKYedibleTimeLeft() {
+		return BLINKYedTimeLeft;
+	}
+	
+	public int getINKYedibleTimeLeft() {
+		return INKYedTimeLeft;
+	}
+	
+	public int getPINKYedibleTimeLeft() {
+		return PINKYedTimeLeft;
+	}
+	
+	public int getSUEedibleTimeLeft() {
+		return SUEedTimeLeft;
+	}
+	
 	public boolean isBLINKYoutOfLair() {
 		return BLINKYoutOfLair;
 	}
@@ -87,6 +118,22 @@ public class GhostInput extends Input{
 
 	public boolean isSUEoutOfLair() {
 		return SUEoutOfLair;
+	}
+	
+	public int getBLINKYposition() {
+		return BLINKYposition;
+	}
+	
+	public int getINKYposition() {
+		return INKYposition;
+	}
+	
+	public int getPINKYposition() {
+		return PINKYposition;
+	}
+	
+	public int getSUEposition() {
+		return SUEposition;
 	}
 
 	public double getMinPacmanDistancePPill() {

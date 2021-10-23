@@ -7,6 +7,7 @@ import pacman.game.Constants.GHOST;
 
 public class StopRunAwayGhost implements Transition {
 	GHOST ghost;
+	int minDistanceToStartChasing = 40;
 	
 	public StopRunAwayGhost(GHOST ghost) {
 		super();
@@ -18,19 +19,19 @@ public class StopRunAwayGhost implements Transition {
 		GhostInput input = (GhostInput)in;
 		switch(ghost) {
 		case BLINKY:
-			return !input.isBLINKYedible() && input.isBLINKYoutOfLair();
+			return !input.isBLINKYedible() && input.isBLINKYoutOfLair() && input.getBlinkyDistancePacman() > minDistanceToStartChasing;
 		case PINKY:
-			return !input.isPINKYedible() && input.isPINKYoutOfLair();
+			return !input.isPINKYedible() && input.isPINKYoutOfLair() && input.getPinkyDistancePacman() > minDistanceToStartChasing;
 		case INKY:
-			return !input.isINKYedible() && input.isINKYoutOfLair();
+			return !input.isINKYedible() && input.isINKYoutOfLair() && input.getInkyDistancePacman() > minDistanceToStartChasing;
 		case SUE:
-			return !input.isSUEedible() && input.isSUEoutOfLair();
+			return !input.isSUEedible() && input.isSUEoutOfLair() && input.getSueDistancePacman() > minDistanceToStartChasing;
 		default:
 			return false;
 		}
 	}
 
 	public String toString() {
-		return ghost + " is no longer edible";
+		return ghost + " is no longer edible and returns to specific behaviour";
 	}
 }

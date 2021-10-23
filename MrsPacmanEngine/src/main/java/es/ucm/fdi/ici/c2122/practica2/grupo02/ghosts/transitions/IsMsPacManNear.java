@@ -7,7 +7,7 @@ import pacman.game.Constants.GHOST;
 
 public class IsMsPacManNear implements Transition {
 	GHOST ghost;
-	int minDistanceToStartChasing;
+	int minDistanceToStartChasing = 40;
 	
 	public IsMsPacManNear(GHOST ghost) {
 		super();
