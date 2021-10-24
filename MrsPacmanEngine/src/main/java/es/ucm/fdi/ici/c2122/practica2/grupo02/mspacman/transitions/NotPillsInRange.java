@@ -6,7 +6,9 @@ import es.ucm.fdi.ici.fsm.Transition;
 
 public class NotPillsInRange implements Transition {
 
-	public NotPillsInRange() {
+	String id = "";
+	public NotPillsInRange(String id_) {
+		id = id_;
 		// TODO Auto-generated constructor stub
 	}
 
@@ -15,6 +17,11 @@ public class NotPillsInRange implements Transition {
 		MsPacManInput input = (MsPacManInput)in;
 		// TODO Auto-generated method stub
 		return !input.pillsInRange();
+	}
+	
+	@Override
+	public String toString() {
+		return "Not Pills In Range " + id;
 	}
 
 }

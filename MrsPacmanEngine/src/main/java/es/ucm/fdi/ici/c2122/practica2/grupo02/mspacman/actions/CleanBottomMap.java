@@ -30,7 +30,7 @@ public class CleanBottomMap implements Action {
 		
 		//For each active Pill we check which one is the nearest
 		for (int activePill : activePills) {
-			if(game.getNodeYCood(activePill) <= game.getNodeYCood(game.getPacManInitialNodeIndex())) {
+			if(game.getNodeYCood(activePill) >= game.getNodeYCood(game.getPacManInitialNodeIndex())) {
 				int distance = game.getShortestPathDistance(pcNode, activePill, game.getPacmanLastMoveMade());
 				if (shortestDistance == -1 || distance < shortestDistance) {
 					nearestPillNode = activePill;

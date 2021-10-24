@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.util.Random;
 
 import es.ucm.fdi.ici.Input;
+import es.ucm.fdi.ici.c2122.practica2.grupo02.GameConstants;
 import es.ucm.fdi.ici.c2122.practica2.grupo02.Tools;
 import pacman.game.Constants.DM;
 import pacman.game.Constants.GHOST;
@@ -33,8 +34,11 @@ public class MsPacManInput extends Input {
 		ghostOutsideLair = !(game.getGhostLairTime(GHOST.BLINKY) > 0) || !(game.getGhostLairTime(GHOST.PINKY) > 0)
 				|| !(game.getGhostLairTime(GHOST.INKY) > 0) || !(game.getGhostLairTime(GHOST.SUE) > 0);
 		
-		nearestGhostDistance = game.getShortestPathDistance(game.getPacmanCurrentNodeIndex(), 
-				game.getGhostCurrentNodeIndex(Tools.nearestGhost(game)), game.getPacmanLastMoveMade());
+		GHOST g = Tools.nearestGhost(game); 
+		if(g != null) {
+			nearestGhostDistance = game.getShortestPathDistance(game.getPacmanCurrentNodeIndex(), 
+					game.getGhostCurrentNodeIndex(g), game.getPacmanLastMoveMade());
+		}
 	}
 
 	public boolean canEat() {
@@ -71,6 +75,17 @@ public class MsPacManInput extends Input {
 		return false;
 	}
 	
+	public boolean GhostTooCloseToPacMan() {
+		return Tools.nearestGhostInRange(game, GameConstants.pacmanChaseDistance) != null;
+	}
+	
+	public boolean PacManIsInDanger() {
+		GHOST g = Tools.nearestGhostInRange(game, GameConstants.pacmanChaseDistance);
+		if(g!= null)
+			return game.isGhostEdible(g);
+		else return false;
+	}
+	
 	public boolean MoreThanOnePillsInRange() {
 		int pcNode = game.getPacmanCurrentNodeIndex();
 		MOVE[] possibleMoves = game.getPossibleMoves(pcNode);
@@ -93,7 +108,8 @@ public class MsPacManInput extends Input {
 		int pcNode = game.getPacmanCurrentNodeIndex();
 		
 		int nodeTarget = Tools.getPathWithMorePills(game, pcNode);
-				
+		
+		
 		//Min distance to predict if the nearest Ghost can block up MsPacMan's path 
 		//We get all the nodes that take MsPacMan to the pill
 		int[] path = game.getShortestPath(pcNode, nodeTarget);
@@ -113,22 +129,26 @@ public class MsPacManInput extends Input {
 			}
 			
 			if(game.isJunction(pathNode)) {
-				for(MOVE move : game.getPossibleMoves(pathNode)) {
-					//Doesn't check the last move made since it's going to check in next iteration
-					int nextNode = game.getNeighbouringNodes(pathNode, move)[0];
-					//We check if the nearest Ghost is close to our nodes path, if so, we ran away
-					MOVE actualMove = move;
-					for(int i = 0; i < maxNodesDistance; i++) {
-						for(GHOST ghostType: GHOST.values()) {
-							int distance = game.getShortestPathDistance(nextNode, pathNode, game.getGhostLastMoveMade(ghostType));
-							if(nextNode == game.getGhostCurrentNodeIndex(ghostType) && distance < maxSurroundingsDistance)
-								return true;	
+				MOVE[] possibleMoves = game.getPossibleMoves(pathNode);
+				for(MOVE move : possibleMoves) {
+					int[] neighbourNodes = game.getNeighbouringNodes(pathNode, move);
+					if(neighbourNodes != null) {
+						int nextNode = neighbourNodes[0];
+						MOVE actualMove = move;
+						for(int i = 0; i < maxNodesDistance; i++) {
+							for(GHOST ghostType: GHOST.values()) {
+								int distance = game.getShortestPathDistance(nextNode, pathNode, game.getGhostLastMoveMade(ghostType));
+								if(nextNode == game.getGhostCurrentNodeIndex(ghostType) && distance < maxSurroundingsDistance)
+									return true;	
+							}
+							
+							int[] possibleNextNodes = game.getNeighbouringNodes(nextNode, actualMove);
+							//If the array is null, is because that node is a wall. 
+							if(possibleNextNodes != null) {
+								actualMove = game.getMoveToMakeToReachDirectNeighbour(nextNode, possibleNextNodes[0]);
+								nextNode = possibleNextNodes[0];
+							}else break;
 						}
-						
-						int[] possibleNextNodes = game.getNeighbouringNodes(nextNode, actualMove);
-						//If the array were void, it would be a dead end.
-						nextNode = possibleNextNodes[0];
-						actualMove = game.getMoveToMakeToReachDirectNeighbour(nextNode, possibleNextNodes[0]);
 					}
 				}
 			}

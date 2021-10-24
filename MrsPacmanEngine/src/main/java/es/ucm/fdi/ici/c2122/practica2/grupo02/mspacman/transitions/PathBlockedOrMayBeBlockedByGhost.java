@@ -6,7 +6,9 @@ import es.ucm.fdi.ici.fsm.Transition;
 
 public class PathBlockedOrMayBeBlockedByGhost implements Transition {
 
-	public PathBlockedOrMayBeBlockedByGhost() {
+	String id = "";
+	public PathBlockedOrMayBeBlockedByGhost(String id_) {
+		id = id_;
 		// TODO Auto-generated constructor stub
 	}
 
@@ -20,7 +22,7 @@ public class PathBlockedOrMayBeBlockedByGhost implements Transition {
 	
 	@Override
 	public String toString() {
-		return "Path Blocked Or May Be Blocked By Ghost";
+		return "Path Blocked Or May Be Blocked By Ghost " + id;
 	}
 
 }

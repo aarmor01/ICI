@@ -61,13 +61,14 @@ public final class Tools {
 	}
 	
 	public static int getPathWithMorePills(Game game, int pcNode) {
-		MOVE[] possibleMoves = game.getPossibleMoves(pcNode);
+		MOVE[] possibleMoves = game.getPossibleMoves(pcNode, game.getPacmanLastMoveMade());
 		
 		int bestWayNode = -1;
 		int nPills = 0;
+		int nodeDir = pcNode;
 		for(MOVE moves : possibleMoves){
 			int auxNumPills = 0;
-			int nodeDir = game.getNeighbour(pcNode, moves);
+			nodeDir = game.getNeighbour(pcNode, moves);
 			while(nodeDir != -1 && !game.isJunction(nodeDir)) {
 				if(game.isPillStillAvailable(nodeDir)) auxNumPills++;
 				nodeDir = game.getNeighbour(nodeDir, moves);
@@ -81,6 +82,10 @@ public final class Tools {
 		
 		if (bestWayNode != -1) {
 			GameView.addLines(game, Color.CYAN, pcNode, bestWayNode);
+		}else {
+			nodeDir = pcNode;
+			int[] neightbour = game.getNeighbouringNodes(nodeDir, game.getPacmanLastMoveMade());
+			bestWayNode = neightbour[rnd.nextInt(neightbour.length)];
 		}
 		
 		nodeTarget = bestWayNode;

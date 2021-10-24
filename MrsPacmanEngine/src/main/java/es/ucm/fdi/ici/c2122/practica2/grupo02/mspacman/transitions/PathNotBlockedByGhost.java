@@ -4,9 +4,9 @@ import es.ucm.fdi.ici.Input;
 import es.ucm.fdi.ici.c2122.practica2.grupo02.mspacman.MsPacManInput;
 import es.ucm.fdi.ici.fsm.Transition;
 
-public class PathNotBlocked implements Transition {
+public class PathNotBlockedByGhost implements Transition {
 
-	public PathNotBlocked() {
+	public PathNotBlockedByGhost() {
 		// TODO Auto-generated constructor stub
 	}
 

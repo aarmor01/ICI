@@ -34,6 +34,8 @@ public class RunawayFromClosestGhost implements Action {
 			return game.getApproximateNextMoveAwayFromTarget(pacmanNode,
 					game.getGhostCurrentNodeIndex(nearestGhostType), game.getPacmanLastMoveMade(), DM.PATH);
 		}
-		return null;
+		
+		MOVE[] possibleMoves = game.getPossibleMoves(pacmanNode, game.getPacmanLastMoveMade());
+		return possibleMoves[Tools.rnd.nextInt(possibleMoves.length)];
 	}
 }
