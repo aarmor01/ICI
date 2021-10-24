@@ -32,19 +32,24 @@ public class Mole implements Action {
 			for (int node : neighbouringNodes) {
 				while(!intersectionFound) {
 					MOVE lastMoveMade = MOVE.NEUTRAL;					
-					if (game.getNodeYCood(node) - game.getNodeYCood(lastNode) == 1 || game.getNodeYCood(node) - game.getNodeYCood(lastNode) < -10)
+					if (game.getNodeYCood(node) - game.getNodeYCood(lastNode) == 1 ||
+							game.getNodeYCood(node) - game.getNodeYCood(lastNode) < -10)
 						lastMoveMade = MOVE.DOWN;
-					else if (game.getNodeYCood(node) - game.getNodeYCood(lastNode) == -1 || game.getNodeYCood(node) - game.getNodeYCood(lastNode) > 10)
+					else if (game.getNodeYCood(node) - game.getNodeYCood(lastNode) == -1 || 
+							game.getNodeYCood(node) - game.getNodeYCood(lastNode) > 10)
 						lastMoveMade = MOVE.UP;
-					else if(game.getNodeXCood(node) - game.getNodeXCood(lastNode) == 1 || game.getNodeXCood(node) - game.getNodeXCood(lastNode) < -10)
+					else if(game.getNodeXCood(node) - game.getNodeXCood(lastNode) == 1 || 
+							game.getNodeXCood(node) - game.getNodeXCood(lastNode) < -10)
 						lastMoveMade = MOVE.RIGHT;
-					else if (game.getNodeXCood(node) - game.getNodeXCood(lastNode) == -1 || game.getNodeXCood(node) - game.getNodeXCood(lastNode) > 10)
+					else if (game.getNodeXCood(node) - game.getNodeXCood(lastNode) == -1 || 
+							game.getNodeXCood(node) - game.getNodeXCood(lastNode) > 10)
 						lastMoveMade = MOVE.LEFT;
 					
 					if (game.isJunction(node)) {
 						intersectionFound = true;
 						intersectionNodeFound[contador] = node;
-					}else {
+					}
+					else {
 						if (game.isPillStillAvailable(node))
 							numPillsFound[contador]++;
 						//We move the node to the next position
@@ -65,9 +70,11 @@ public class Mole implements Action {
 				}
 			}
 			if (optimalNode == 0)
-				return game.getNextMoveTowardsTarget(ghostNode, pacmanNode, game.getGhostLastMoveMade(ghostType), DM.PATH);
+				return game.getNextMoveTowardsTarget(ghostNode, pacmanNode, 
+						game.getGhostLastMoveMade(ghostType), DM.PATH);
 			else
-				return game.getNextMoveTowardsTarget(ghostNode, optimalNode, game.getGhostLastMoveMade(ghostType), DM.PATH);
+				return game.getNextMoveTowardsTarget(ghostNode, optimalNode, 
+						game.getGhostLastMoveMade(ghostType), DM.PATH);
 		}
 		return MOVE.NEUTRAL;
 	}
