@@ -20,7 +20,7 @@ public class CanChaseGhost implements Transition {
 	
 	@Override
 	public String toString() {
-		return "Pacman has eaten PowerPill now/before, and there is a ghost nearby";
+		return "Pacman has eaten PP and ghost nearby";
 	}
 
 }

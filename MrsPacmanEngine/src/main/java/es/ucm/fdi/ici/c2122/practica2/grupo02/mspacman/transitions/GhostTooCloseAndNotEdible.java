@@ -14,7 +14,14 @@ public class GhostTooCloseAndNotEdible implements Transition {
 	public boolean evaluate(Input in) {
 		MsPacManInput input = (MsPacManInput)in;
 		// TODO Auto-generated method stub
-		return input.PacManIsInDanger();
+		boolean danger = input.PacManIsInDanger(); 
+		
+		return danger;
+	}
+	
+	@Override
+	public String toString() {
+		return "Ghost not edible and too close to PacMan";
 	}
 
 }

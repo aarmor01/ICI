@@ -15,5 +15,9 @@ public class NoEdibleTimeAndNotInDanger implements Transition {
 		MsPacManInput input = (MsPacManInput)in;
 		return !input.canEat() && !input.PacManIsInDanger();
 	}
-
+	
+	@Override
+	public String toString() {
+		return "PacMan cant eat Ghost and isn't in danger";
+	}
 }

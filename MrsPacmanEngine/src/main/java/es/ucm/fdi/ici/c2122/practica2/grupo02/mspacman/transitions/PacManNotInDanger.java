@@ -16,5 +16,10 @@ public class PacManNotInDanger implements Transition {
 		// TODO Auto-generated method stub
 		return !input.GhostTooCloseToPacMan();
 	}
+	
+	@Override
+	public String toString() {
+		return "MsPacman is not in danger";
+	}
 
 }

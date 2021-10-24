@@ -35,6 +35,7 @@ public class MsPacManInput extends Input {
 				|| !(game.getGhostLairTime(GHOST.INKY) > 0) || !(game.getGhostLairTime(GHOST.SUE) > 0);
 		
 		GHOST g = Tools.nearestGhost(game); 
+		
 		if(g != null) {
 			nearestGhostDistance = game.getShortestPathDistance(game.getPacmanCurrentNodeIndex(), 
 					game.getGhostCurrentNodeIndex(g), game.getPacmanLastMoveMade());
@@ -82,7 +83,7 @@ public class MsPacManInput extends Input {
 	public boolean PacManIsInDanger() {
 		GHOST g = Tools.nearestGhostInRange(game, GameConstants.pacmanChaseDistance);
 		if(g!= null)
-			return game.isGhostEdible(g);
+			return !game.isGhostEdible(g);
 		else return false;
 	}
 	

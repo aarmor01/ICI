@@ -28,8 +28,10 @@ public class RunawayFromClosestGhost implements Action {
 		GHOST nearestGhostType = Tools.nearestGhostInRange(game, chaseDistance);
 		
 		if (nearestGhostType != null) {
-			GameView.addPoints(game, GameConstants.colours[nearestGhostType.ordinal()],
-				game.getShortestPath(game.getGhostCurrentNodeIndex(nearestGhostType), pacmanNode));
+			if(GameConstants.DEBUG) {
+				GameView.addPoints(game, GameConstants.colours[nearestGhostType.ordinal()],
+						game.getShortestPath(game.getGhostCurrentNodeIndex(nearestGhostType), pacmanNode));				
+			}
 			
 			return game.getApproximateNextMoveAwayFromTarget(pacmanNode,
 					game.getGhostCurrentNodeIndex(nearestGhostType), game.getPacmanLastMoveMade(), DM.PATH);

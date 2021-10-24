@@ -16,5 +16,10 @@ public class MoreThanOnePill_InRange implements Transition {
 		
 		return input.MoreThanOnePillsInRange();
 	}
+	
+	@Override
+	public String toString() {
+		return "More Than 1 Pill In Range";
+	}
 
 }

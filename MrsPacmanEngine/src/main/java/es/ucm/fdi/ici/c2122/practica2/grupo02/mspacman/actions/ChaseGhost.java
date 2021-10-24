@@ -25,7 +25,7 @@ public class ChaseGhost implements Action {
 		int pacmanNode = game.getPacmanCurrentNodeIndex();
 		GHOST nearestGhostType = Tools.nearestGhostInRange(game, chaseLimit);
 		
-		if(nearestGhostType != null) {
+		if(nearestGhostType != null && game.isGhostEdible(nearestGhostType)) {
 			return game.getApproximateNextMoveTowardsTarget(pacmanNode,
 					game.getGhostCurrentNodeIndex(nearestGhostType), game.getPacmanLastMoveMade(), DM.PATH);
 		}

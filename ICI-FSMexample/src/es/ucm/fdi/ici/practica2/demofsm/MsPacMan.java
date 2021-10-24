@@ -42,7 +42,6 @@ public class MsPacMan extends PacmanController {
     	Transition tran3 = new RandomTransition(.1);
     	Transition tran4 = new RandomTransition(.01);
     	
-    	
     	FSM cfsm1 = new FSM("Compound1");
     	GraphFSMObserver c1observer = new GraphFSMObserver(cfsm1.toString());
     	cfsm1.addObserver(c1observer);

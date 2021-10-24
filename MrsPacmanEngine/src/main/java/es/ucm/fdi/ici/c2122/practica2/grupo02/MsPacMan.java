@@ -97,13 +97,16 @@ public class MsPacMan extends PacmanController {
     	//Base State
     	fsm.ready(isBorn_s0);
     	
-    	JFrame frame = new JFrame();
-    	JPanel main = new JPanel();
-    	main.setLayout(new BorderLayout());
-    	main.add(observer.getAsPanel(true, null), BorderLayout.CENTER);
-    	frame.getContentPane().add(main);
-    	frame.pack();
-    	frame.setVisible(true);
+    	if (GameConstants.DEBUG) {
+	    	JFrame frame = new JFrame();
+	    	JPanel main = new JPanel();
+	    	main.setLayout(new BorderLayout());
+	    	main.add(observer.getAsPanel(true, null), BorderLayout.NORTH);
+	    	main.add(c1observer.getAsPanel(true, null), BorderLayout.CENTER);
+	    	frame.getContentPane().add(main);
+	    	frame.pack();
+	    	frame.setVisible(true);
+    	}
 	}
 	
 	

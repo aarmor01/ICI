@@ -34,7 +34,7 @@ public class TakeAlternativePathToClosestPill implements Action {
 		
 		int shortestDistance = Integer.MAX_VALUE;
 		int newActualNode = pcNode;
-		if(possibleDirs.length > 1) {
+		if(possibleDirs != null && possibleDirs.length > 1) {
 			for(int i = 0; i < possibleDirs.length; i++) {
 				//Check different paths distance from surroundings nodes
 				MOVE changeMove = game.getMoveToMakeToReachDirectNeighbour(pcNode, possibleDirs[i]);
