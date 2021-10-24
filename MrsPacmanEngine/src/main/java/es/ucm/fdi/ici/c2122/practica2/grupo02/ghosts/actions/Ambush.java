@@ -48,7 +48,10 @@ public class Ambush implements Action {
 					else {
 						//We move the node to the next position
 						lastNode = node;
-						neighbouringNodes[actualNode] = game.getNeighbouringNodes(node, lastMoveMade)[0];
+						if (game.getNeighbouringNodes(node, lastMoveMade) != null)
+							neighbouringNodes[actualNode] = game.getNeighbouringNodes(node, lastMoveMade)[0];
+						else
+							return MOVE.NEUTRAL;
 					}
 					actualNode++;
 				}

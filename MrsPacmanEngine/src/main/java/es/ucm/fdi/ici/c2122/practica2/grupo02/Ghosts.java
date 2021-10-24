@@ -67,6 +67,9 @@ public class Ghosts extends GhostController {
 			Transition stopRunAwayGhostTransition = new StopRunAwayGhost(ghost);
 			Transition stopRunAwayAndChaseTransition = new StopRunAwayAndStartChase(ghost);
 			Transition chaseSecondaryTransition = new ChaseSecondaryPathTransition(ghost);
+			Transition hasBeenEaten = new GhostHasBeenEaten(ghost);
+			Transition hasBeenEaten2 = new GhostHasBeenEaten2(ghost);
+			Transition hasBeenEaten3 = new GhostHasBeenEaten3(ghost);
 			
 			fsmChase.add(chasePrimaryPath, chaseSecondaryTransition, chaseSecondaryPath);
 			fsmChase.add(chaseSecondaryPath, mainChaseTransition, chasePrimaryPath);
@@ -83,20 +86,23 @@ public class Ghosts extends GhostController {
 			
 			CompoundState run = new CompoundState(ghost + " starts running", fsmRun);
 			
+			fsm.add(chase, hasBeenEaten, lair);
+			fsm.add(run, hasBeenEaten2, lair);
+			
 			switch(ghost) {
 			case BLINKY:
 				SimpleState seer = new SimpleState("Seer", new Seer(ghost));
 				Transition seerChaseSpecificTransition = new SeerSpecialChaseStart(ghost);
 				fsm.add(lair, lairTimeOverTransition, seer);
 				fsm.add(seer, isMsPacManNearTransition, chase);
-//				fsm.add(seer, seerChaseSpecificTransition, chase);
+				fsm.add(seer, seerChaseSpecificTransition, chase);
 				fsm.add(seer, startRunAwayGhostFromSpecificBehaviourTransition, run);
 				fsm.add(chase, startRunAwayGhostTransition, run);
 				fsm.add(run, stopRunAwayGhostTransition, seer);
 				fsm.add(run, stopRunAwayAndChaseTransition, chase);
+				fsm.add(seer, hasBeenEaten3, lair);
 				break;
 			case PINKY:
-			case INKY:
 				SimpleState mole = new SimpleState("Mole", new Mole(ghost));
 				fsm.add(lair, lairTimeOverTransition, mole);
 				fsm.add(mole, isMsPacManNearTransition, chase);
@@ -104,16 +110,18 @@ public class Ghosts extends GhostController {
 				fsm.add(chase, startRunAwayGhostTransition, run);
 				fsm.add(run, stopRunAwayGhostTransition, mole);
 				fsm.add(run, stopRunAwayAndChaseTransition, chase);
+				fsm.add(mole, hasBeenEaten3, lair);
 				break;
-//			case INKY:
-//				SimpleState moleambush = new SimpleState(new Ambush(ghost));
-//				fsm.add(lair, lairTimeOverTransition, ambush);
-//				fsm.add(ambush, isMsPacManNearTransition, chase);
-//				fsm.add(ambush, startRunAwayGhostFromSpecificBehaviourTransition, run);
-//				fsm.add(chase, startRunAwayGhostTransition, run);
-//				fsm.add(run, stopRunAwayGhostTransition, ambush);
-//				fsm.add(run, stopRunAwayAndChaseTransition, chase);
-//				break;
+			case INKY:
+				SimpleState ambush = new SimpleState(new Ambush(ghost));
+				fsm.add(lair, lairTimeOverTransition, ambush);
+				fsm.add(ambush, isMsPacManNearTransition, chase);
+				fsm.add(ambush, startRunAwayGhostFromSpecificBehaviourTransition, run);
+				fsm.add(chase, startRunAwayGhostTransition, run);
+				fsm.add(run, stopRunAwayGhostTransition, ambush);
+				fsm.add(run, stopRunAwayAndChaseTransition, chase);
+				fsm.add(ambush, hasBeenEaten3, lair);
+				break;
 			case SUE:
 				SimpleState agressive = new SimpleState("Agressive", new Agressive(ghost));
 				fsm.add(lair, lairTimeOverTransition, agressive);
@@ -122,6 +130,7 @@ public class Ghosts extends GhostController {
 				fsm.add(chase, startRunAwayGhostTransition, run);
 				fsm.add(run, stopRunAwayGhostTransition, agressive);
 				fsm.add(run, stopRunAwayAndChaseTransition, chase);
+				fsm.add(agressive, hasBeenEaten3, lair);
 				break;
 			}
 			
@@ -158,10 +167,10 @@ public class Ghosts extends GhostController {
 		{
 			FSM fsm = fsms.get(ghost);
 			MOVE move = fsm.run(in);
-			if (move == MOVE.UP)
-				move = MOVE.DOWN;
-			else if (move == MOVE.DOWN)
-				move = MOVE.UP;
+//			if (move == MOVE.UP)
+//				move = MOVE.DOWN;
+//			else if (move == MOVE.DOWN)
+//				move = MOVE.UP;
 			result.put(ghost, move);
 		}
 		

@@ -20,12 +20,20 @@ public class ChasePrimaryPath implements Action {
 		if (game.doesGhostRequireAction(ghostType)) {
 			int pacmanNode = game.getPacmanCurrentNodeIndex();
 			int ghostNode = game.getGhostCurrentNodeIndex(ghostType);
-			int ghostNodeX = game.getNodeXCood(ghostNode);
-			int ghostNodeY = game.getNodeYCood(ghostNode);
-			int pacmanNodeX = game.getNodeXCood(pacmanNode);
-			int pacmanNodeY = game.getNodeYCood(pacmanNode);
-			return game.getNextMoveTowardsTarget(ghostNode, pacmanNode,
-					game.getGhostLastMoveMade(ghostType), DM.PATH);
+//			int ghostNodeX = game.getNodeXCood(ghostNode);
+//			int ghostNodeY = game.getNodeYCood(ghostNode);
+//			int pacmanNodeX = game.getNodeXCood(pacmanNode);
+//			int pacmanNodeY = game.getNodeYCood(pacmanNode);
+			MOVE movimiento = game.getNextMoveTowardsTarget(ghostNode, pacmanNode, game.getGhostLastMoveMade(ghostType), DM.PATH);
+			if (movimiento == MOVE.UP)
+				movimiento = MOVE.DOWN;
+			else if (movimiento == MOVE.DOWN)
+				movimiento = MOVE.UP;
+			else if (movimiento == MOVE.RIGHT)
+				movimiento = MOVE.LEFT;
+			else if (movimiento == MOVE.LEFT)
+				movimiento = MOVE.RIGHT;
+			return movimiento;
 		}else
 			return MOVE.NEUTRAL;
 	}
