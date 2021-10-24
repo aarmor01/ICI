@@ -3,6 +3,7 @@ package es.ucm.fdi.ici.c2122.practica2.grupo02.mspacman.actions;
 import java.awt.Color;
 
 import es.ucm.fdi.ici.Action;
+import es.ucm.fdi.ici.c2122.practica2.grupo02.GameConstants;
 import pacman.game.Constants.DM;
 import pacman.game.Constants.MOVE;
 import pacman.game.Game;
@@ -38,7 +39,7 @@ public class ReachClosestPill implements Action {
 		}
 
 		//if there's active pill we draw it's euclidean path
-		if (nearestPillNode != -1)
+		if (nearestPillNode != -1 && GameConstants.DEBUG)
 			GameView.addLines(game, Color.CYAN, pcNode, nearestPillNode);
 		
 		return game.getApproximateNextMoveTowardsTarget(pcNode, nearestPillNode, game.getPacmanLastMoveMade(), DM.PATH);
