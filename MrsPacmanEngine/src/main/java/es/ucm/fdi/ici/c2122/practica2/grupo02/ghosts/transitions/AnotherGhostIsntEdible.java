@@ -6,6 +6,7 @@ import es.ucm.fdi.ici.fsm.Transition;
 import pacman.game.Constants.GHOST;
 
 public class AnotherGhostIsntEdible implements Transition {
+	
 	GHOST ghost;
 
 	public AnotherGhostIsntEdible(GHOST ghost) {

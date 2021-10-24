@@ -7,8 +7,11 @@ import pacman.game.Constants.GHOST;
 import pacman.game.Constants.MOVE;
 
 public class RunAwayAlternative implements Action {
+	
 	GHOST ghostType;
+	
 	public RunAwayAlternative(GHOST ghostType) {
+		super();
 		this.ghostType = ghostType;
 	}
 

@@ -3,17 +3,19 @@ package es.ucm.fdi.ici.c2122.practica2.grupo02.ghosts.actions;
 import java.awt.Color;
 
 import es.ucm.fdi.ici.Action;
-import pacman.game.Game;
-import pacman.game.GameView;
+import es.ucm.fdi.ici.c2122.practica2.grupo02.GameConstants;
 import pacman.game.Constants.DM;
 import pacman.game.Constants.GHOST;
 import pacman.game.Constants.MOVE;
+import pacman.game.Game;
+import pacman.game.GameView;
 
 public class Seer implements Action {
+	
 	GHOST ghostType;
-	int minPredictionDistance = 15;
-	boolean DEBUG = true;
+	
 	public Seer(GHOST ghostType) {
+		super();
 		this.ghostType = ghostType;
 	}
 
@@ -25,23 +27,25 @@ public class Seer implements Action {
 			
 			int[] activePills = game.getActivePillsIndices();
 			int nearestPillNode = -1;
-			int shortestDistance = -1;
+			int shortestDistance = Integer.MAX_VALUE;
 			
 			// We get the next possible destination of the Pacman
 			for (int activePill : activePills) {
-				int distance = game.getShortestPathDistance(pacmanNode, activePill, game.getPacmanLastMoveMade());
-				if (shortestDistance == -1 || distance < shortestDistance && distance > minPredictionDistance) {
+				int distance = game.getShortestPathDistance(pacmanNode, 
+						activePill, game.getPacmanLastMoveMade());
+				if (distance > GameConstants.minPredictionDistance && distance < shortestDistance) {
 					nearestPillNode = activePill;
 					shortestDistance = distance;
 				}
 			}
 			
-			if (DEBUG)
+			if (GameConstants.DEBUG)
 				GameView.addLines(game, Color.RED, ghostNode, nearestPillNode);
 			
 			return game.getApproximateNextMoveTowardsTarget(ghostNode, nearestPillNode,
 					game.getGhostLastMoveMade(ghostType), DM.PATH);
 		}
+		
 		return MOVE.NEUTRAL;
 	}
 

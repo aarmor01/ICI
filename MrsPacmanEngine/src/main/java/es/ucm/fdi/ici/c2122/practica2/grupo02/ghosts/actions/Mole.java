@@ -7,8 +7,11 @@ import pacman.game.Constants.GHOST;
 import pacman.game.Constants.MOVE;
 
 public class Mole implements Action {
+	
 	GHOST ghostType;
+	
 	public Mole(GHOST ghostType) {
+		super();
 		this.ghostType = ghostType;
 	}
 

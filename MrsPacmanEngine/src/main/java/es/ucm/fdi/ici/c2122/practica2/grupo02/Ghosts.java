@@ -73,7 +73,7 @@ public class Ghosts extends GhostController {
 			
 			fsmChase.ready(chasePrimaryPath);
 			
-			CompoundState chase = new CompoundState(ghost + "starts chasing", fsmChase);
+			CompoundState chase = new CompoundState(ghost + " starts chasing", fsmChase);
 			
 			fsmRun.add(runAwayFromPacMan, ghostNotEdibleTransition, runTowardsGhost);
 			fsmRun.add(runAwayFromPacMan, anotherGhostOnRunAway, runAlternative);
@@ -81,7 +81,7 @@ public class Ghosts extends GhostController {
 			
 			fsmRun.ready(runAwayFromPacMan);
 			
-			CompoundState run = new CompoundState(ghost + "starts running", fsmRun);
+			CompoundState run = new CompoundState(ghost + " starts running", fsmRun);
 			
 			fsm.ready(lair);
 			
@@ -160,8 +160,5 @@ public class Ghosts extends GhostController {
 		}
 		
 		return result;
-		
-	
-		
 	}
 }

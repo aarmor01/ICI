@@ -5,27 +5,28 @@ import es.ucm.fdi.ici.c2122.practica2.grupo02.ghosts.GhostInput;
 import es.ucm.fdi.ici.fsm.Transition;
 import pacman.game.Constants.GHOST;
 
-public class RunAwayFromSpecificBehaviourTransition implements Transition {
+public class GhostHasBeenEaten implements Transition {
 
 	GHOST ghost;
 
-	public RunAwayFromSpecificBehaviourTransition(GHOST ghost) {
+	public GhostHasBeenEaten(GHOST ghost) {
 		super();
 		this.ghost = ghost;
 	}
 
 	@Override
 	public boolean evaluate(Input in) {
-		GhostInput input = (GhostInput) in;
+GhostInput input = (GhostInput) in;
+		
 		switch (ghost) {
 		case BLINKY:
-			return input.isBLINKYedible();
-		case INKY:
-			return input.isINKYedible();
+			return !input.isBLINKYoutOfLair();
 		case PINKY:
-			return input.isPINKYedible();
+			return !input.isPINKYoutOfLair();
+		case INKY:
+			return !input.isINKYoutOfLair();
 		case SUE:
-			return input.isSUEedible();
+			return !input.isSUEoutOfLair();
 		default:
 			return false;
 		}
@@ -33,6 +34,6 @@ public class RunAwayFromSpecificBehaviourTransition implements Transition {
 
 	@Override
 	public String toString() {
-		return ghost + " starts running away from specific ghost behaviour";
+		return ghost + " has been eaten";
 	}
 }

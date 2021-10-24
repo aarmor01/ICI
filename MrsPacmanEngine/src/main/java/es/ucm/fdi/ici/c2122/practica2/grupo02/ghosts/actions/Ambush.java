@@ -7,8 +7,11 @@ import pacman.game.Constants.GHOST;
 import pacman.game.Constants.MOVE;
 
 public class Ambush implements Action {
+	
 	GHOST ghostType;
+	
 	public Ambush(GHOST ghostType) {
+		super();
 		this.ghostType = ghostType;
 	}
 

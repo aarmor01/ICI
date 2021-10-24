@@ -1,13 +1,14 @@
 package es.ucm.fdi.ici.c2122.practica2.grupo02.ghosts.transitions;
 
 import es.ucm.fdi.ici.Input;
-import es.ucm.fdi.ici.c2122.practica2.grupo02.ghosts.GhostInput;
 import es.ucm.fdi.ici.fsm.Transition;
+import es.ucm.fdi.ici.c2122.practica2.grupo02.GameConstants;
+import es.ucm.fdi.ici.c2122.practica2.grupo02.ghosts.GhostInput;
 import pacman.game.Constants.GHOST;
 
 public class ChaseSecondaryPathTransition implements Transition {
+	
 	GHOST ghost;
-	int numIntersectionsBeforeChange = 2;
 	
 	public ChaseSecondaryPathTransition(GHOST ghost) {
 		super();
@@ -17,12 +18,12 @@ public class ChaseSecondaryPathTransition implements Transition {
 	@Override
 	public boolean evaluate(Input in) {
 		GhostInput input = (GhostInput)in;
-		if (input.getGhostChaseCount(ghost) >= 2) {
+		
+		if (input.getGhostChaseCount(ghost) >= GameConstants.numIntersectionsBeforeChange) {
 			input.resetCount(ghost);
 			return true;
 		}
-		else
-			return false;
+		else return false;
 	}
 
 	@Override

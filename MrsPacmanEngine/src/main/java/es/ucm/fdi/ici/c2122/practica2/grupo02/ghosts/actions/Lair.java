@@ -7,15 +7,16 @@ import pacman.game.Game;
 public class Lair implements Action {
 
 	public Lair() {
-	}
-
-	@Override
-	public String getActionId() {
-		return "Ghost in Lair";
+		super();
 	}
 
 	@Override
 	public MOVE execute(Game game) {
 		return MOVE.NEUTRAL;
+	}
+	
+	@Override
+	public String getActionId() {
+		return "Ghost is in lair";
 	}
 }

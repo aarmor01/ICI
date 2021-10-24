@@ -7,8 +7,11 @@ import pacman.game.Constants.GHOST;
 import pacman.game.Constants.MOVE;
 
 public class RunAwayFromPacMan implements Action {
+	
 	GHOST ghostType;
+	
 	public RunAwayFromPacMan(GHOST ghostType) {
+		super();
 		this.ghostType = ghostType;
 	}
 
@@ -17,8 +20,10 @@ public class RunAwayFromPacMan implements Action {
 		if (game.doesGhostRequireAction(ghostType)) {
 			int pacmanNode = game.getPacmanCurrentNodeIndex();
 			int ghostNode = game.getGhostCurrentNodeIndex(ghostType);
-			return game.getNextMoveAwayFromTarget(ghostNode, pacmanNode, game.getGhostLastMoveMade(ghostType), DM.PATH);
+			return game.getNextMoveAwayFromTarget(ghostNode, pacmanNode, 
+					game.getGhostLastMoveMade(ghostType), DM.PATH);
 		}
+		
 		return MOVE.NEUTRAL;
 	}
 

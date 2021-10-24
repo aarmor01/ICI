@@ -7,8 +7,11 @@ import pacman.game.Constants.GHOST;
 import pacman.game.Constants.MOVE;
 
 public class ChasePrimaryPath implements Action {
+	
 	GHOST ghostType;
+	
 	public ChasePrimaryPath(GHOST ghostType) {
+		super();
 		this.ghostType = ghostType;
 	}
 
@@ -17,7 +20,8 @@ public class ChasePrimaryPath implements Action {
 		if (game.doesGhostRequireAction(ghostType)) {
 			int pacmanNode = game.getPacmanCurrentNodeIndex();
 			int ghostNode = game.getGhostCurrentNodeIndex(ghostType);
-			return game.getNextMoveTowardsTarget(ghostNode, pacmanNode, game.getGhostLastMoveMade(ghostType), DM.PATH);
+			return game.getNextMoveTowardsTarget(ghostNode, pacmanNode,
+					game.getGhostLastMoveMade(ghostType), DM.PATH);
 		}
 		return MOVE.NEUTRAL;
 	}

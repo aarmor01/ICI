@@ -1,13 +1,14 @@
 package es.ucm.fdi.ici.c2122.practica2.grupo02.ghosts.transitions;
 
 import es.ucm.fdi.ici.Input;
+import es.ucm.fdi.ici.c2122.practica2.grupo02.GameConstants;
 import es.ucm.fdi.ici.c2122.practica2.grupo02.ghosts.GhostInput;
 import es.ucm.fdi.ici.fsm.Transition;
 import pacman.game.Constants.GHOST;
 
 public class StopRunAwayAndStartChase implements Transition {
+	
 	GHOST ghost;
-	int minDistanceToStartChasing = 40;
 	
 	public StopRunAwayAndStartChase(GHOST ghost) {
 		super();
@@ -20,16 +21,16 @@ public class StopRunAwayAndStartChase implements Transition {
 		switch(ghost) {
 		case BLINKY:
 			return !input.isBLINKYedible() && input.isBLINKYoutOfLair() 
-					&& input.getBlinkyDistancePacman() <= minDistanceToStartChasing;
+					&& input.getBlinkyDistancePacman() <= GameConstants.ghostChaseDistance;
 		case PINKY:
 			return !input.isPINKYedible() && input.isPINKYoutOfLair() 
-					&& input.getPinkyDistancePacman() <= minDistanceToStartChasing;
+					&& input.getPinkyDistancePacman() <= GameConstants.ghostChaseDistance;
 		case INKY:
 			return !input.isINKYedible() && input.isINKYoutOfLair() 
-					&& input.getInkyDistancePacman() <= minDistanceToStartChasing;
+					&& input.getInkyDistancePacman() <= GameConstants.ghostChaseDistance;
 		case SUE:
 			return !input.isSUEedible() && input.isSUEoutOfLair() 
-					&& input.getSueDistancePacman() <= minDistanceToStartChasing;
+					&& input.getSueDistancePacman() <= GameConstants.ghostChaseDistance;
 		default:
 			return false;
 		}

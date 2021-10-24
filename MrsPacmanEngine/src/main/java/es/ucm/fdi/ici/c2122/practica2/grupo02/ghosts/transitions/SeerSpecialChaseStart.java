@@ -6,7 +6,9 @@ import es.ucm.fdi.ici.fsm.Transition;
 import pacman.game.Constants.GHOST;
 
 public class SeerSpecialChaseStart implements Transition {
+	
 	GHOST ghost;
+	
 	public SeerSpecialChaseStart(GHOST ghost) {
 		super();
 		this.ghost = ghost;
@@ -15,6 +17,7 @@ public class SeerSpecialChaseStart implements Transition {
 	@Override
 	public boolean evaluate(Input in) {
 		GhostInput input = (GhostInput)in;
+		
 		switch(ghost) {
 			case BLINKY:
 				return input.getBLINKYposition() == input.getNextPillPacManBySeer();

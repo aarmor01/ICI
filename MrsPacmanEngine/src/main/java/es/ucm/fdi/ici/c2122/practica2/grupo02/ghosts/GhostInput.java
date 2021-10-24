@@ -1,10 +1,11 @@
 package es.ucm.fdi.ici.c2122.practica2.grupo02.ghosts;
 
 import es.ucm.fdi.ici.Input;
-import pacman.game.Game;
+import es.ucm.fdi.ici.c2122.practica2.grupo02.GameConstants;
 import pacman.game.Constants.DM;
 import pacman.game.Constants.GHOST;
 import pacman.game.Constants.MOVE;
+import pacman.game.Game;
 
 public class GhostInput extends Input {
 
@@ -28,12 +29,12 @@ public class GhostInput extends Input {
 	private int PINKYposition;
 	private int SUEposition;
 
-	private double pacmanDistancePowerPill;
+	private int distanceBLINKYToPacman;
+	private int distancePINKYToPacman;
+	private int distanceINKYToPacman;
+	private int distanceSUEToPacman;
 
-	private int distanceBlinkyToPacman;
-	private int distancePinkyToPacman;
-	private int distanceInkyToPacman;
-	private int distanceSueToPacman;
+	private double pacmanDistancePowerPill;
 
 	private int nextPillPacManBySeer;
 
@@ -50,6 +51,8 @@ public class GhostInput extends Input {
 
 	@Override
 	public void parseInput() {
+		int pacmanNode = game.getPacmanCurrentNodeIndex();
+
 		this.BLINKYedible = game.isGhostEdible(GHOST.BLINKY);
 		this.PINKYedible = game.isGhostEdible(GHOST.PINKY);
 		this.INKYedible = game.isGhostEdible(GHOST.INKY);
@@ -65,47 +68,36 @@ public class GhostInput extends Input {
 		this.INKYoutOfLair = !(game.getGhostLairTime(GHOST.INKY) > 0);
 		this.SUEoutOfLair = !(game.getGhostLairTime(GHOST.SUE) > 0);
 
-		int pacmanNode = game.getPacmanCurrentNodeIndex();
+		this.BLINKYposition = game.getGhostCurrentNodeIndex(GHOST.BLINKY);
+		this.PINKYposition = game.getGhostCurrentNodeIndex(GHOST.PINKY);
+		this.INKYposition = game.getGhostCurrentNodeIndex(GHOST.INKY);
+		this.SUEposition = game.getGhostCurrentNodeIndex(GHOST.SUE);
+
+		this.distanceBLINKYToPacman = game.getShortestPathDistance(pacmanNode, BLINKYposition);
+		this.distanceINKYToPacman = game.getShortestPathDistance(pacmanNode, INKYposition);
+		this.distancePINKYToPacman = game.getShortestPathDistance(pacmanNode, PINKYposition);
+		this.distanceSUEToPacman = game.getShortestPathDistance(pacmanNode, SUEposition);
+
 		this.pacmanDistancePowerPill = Double.MAX_VALUE;
 		for (int ppill : game.getPowerPillIndices()) {
 			double distance = game.getDistance(pacmanNode, ppill, DM.PATH);
 			this.pacmanDistancePowerPill = Math.min(distance, this.pacmanDistancePowerPill);
 		}
 
-		BLINKYposition = game.getGhostCurrentNodeIndex(GHOST.BLINKY);
-		distanceBlinkyToPacman = game.getShortestPathDistance(pacmanNode, BLINKYposition);
-		PINKYposition = game.getGhostCurrentNodeIndex(GHOST.PINKY);
-		distancePinkyToPacman = game.getShortestPathDistance(pacmanNode, PINKYposition);
-		INKYposition = game.getGhostCurrentNodeIndex(GHOST.INKY);
-		distanceInkyToPacman = game.getShortestPathDistance(pacmanNode, INKYposition);
-		SUEposition = game.getGhostCurrentNodeIndex(GHOST.SUE);
-		distanceSueToPacman = game.getShortestPathDistance(pacmanNode, SUEposition);
-
+		// Seer prediction
 		if (game.doesGhostRequireAction(GHOST.BLINKY)) {
-			// Seer prediction
-			int[] activePills = game.getActivePillsIndices();
-			int nearestPillNode = -1;
-			int shortestDistance = -1;
 
-			int minPredictionDistance = 15;
-			// We get the next possible destination of the Pacman
-			for (int activePill : activePills) {
-				int distance = game.getShortestPathDistance(pacmanNode, activePill, game.getPacmanLastMoveMade());
-				if (shortestDistance == -1 || distance < shortestDistance && distance > minPredictionDistance) {
-					nearestPillNode = activePill;
-					shortestDistance = distance;
-				}
-			}
-
-			nextPillPacManBySeer = nearestPillNode;
 		}
 
-		int distanceToStartChase = 15;
 		for (GHOST ghost : GHOST.values()) {
+
 			if (game.doesGhostRequireAction(ghost)) {
+				if (ghost == GHOST.BLINKY)
+					seerPill(pacmanNode);
+
 				if (!game.isGhostEdible(ghost) && game.getShortestPathDistance(game.getGhostCurrentNodeIndex(ghost),
-						pacmanNode) < distanceToStartChase) {
-					switch(ghost) {
+						pacmanNode) < GameConstants.ghostChaseDistance) {
+					switch (ghost) {
 					case BLINKY:
 						chaseCountBLINKY++;
 						break;
@@ -222,80 +214,76 @@ public class GhostInput extends Input {
 		}
 	}
 
+	public void resetAllCounts() {
+		chaseCountBLINKY = 0;
+		chaseCountINKY = 0;
+		chaseCountPINKY = 0;
+		chaseCountSUE = 0;
+	}
+
 	public double getMinPacmanDistancePPill() {
 		return pacmanDistancePowerPill;
 	}
 
 	public int getBlinkyDistancePacman() {
-		return distanceBlinkyToPacman;
+		return distanceBLINKYToPacman;
 	}
 
 	public int getPinkyDistancePacman() {
-		return distancePinkyToPacman;
+		return distancePINKYToPacman;
 	}
 
 	public int getInkyDistancePacman() {
-		return distanceInkyToPacman;
+		return distanceINKYToPacman;
 	}
 
 	public int getSueDistancePacman() {
-		return distanceSueToPacman;
+		return distanceSUEToPacman;
 	}
 
 	public boolean anotherGhostInRunAwayPath() {
 		return anotherGhostInPath;
 	}
 
-	private void checkGhostsInPath(GHOST ghost) {
-		int ghostNode = game.getGhostCurrentNodeIndex(ghost);
+	private void seerPill(int pacmanNode) {
+		int[] activePills = game.getActivePillsIndices();
+		int nearestPillNode = -1;
+		int shortestDistance = Integer.MAX_VALUE;
 
-//		MOVE runawayMove = game.getNextMoveAwayFromTarget(ghostNode, game.getPacmanCurrentNodeIndex(), game.getGhostLastMoveMade(ghost), DM.PATH);
-
-		int lastNode = ghostNode;
-		int neighbourNode = game.getNeighbouringNodes(ghostNode, game.getGhostLastMoveMade(ghost))[0];
-		boolean intersectionFound = false;
-
-		while (!intersectionFound && !anotherGhostInPath) {
-			MOVE lastMoveMade = MOVE.NEUTRAL;
-			if (game.getNodeYCood(neighbourNode) - game.getNodeYCood(lastNode) == 1
-					|| game.getNodeYCood(neighbourNode) - game.getNodeYCood(lastNode) < -10)
-				lastMoveMade = MOVE.DOWN;
-			else if (game.getNodeYCood(neighbourNode) - game.getNodeYCood(lastNode) == -1
-					|| game.getNodeYCood(neighbourNode) - game.getNodeYCood(lastNode) > 10)
-				lastMoveMade = MOVE.UP;
-			else if (game.getNodeXCood(neighbourNode) - game.getNodeXCood(lastNode) == 1
-					|| game.getNodeXCood(neighbourNode) - game.getNodeXCood(lastNode) < -10)
-				lastMoveMade = MOVE.RIGHT;
-			else if (game.getNodeXCood(neighbourNode) - game.getNodeXCood(lastNode) == -1
-					|| game.getNodeXCood(neighbourNode) - game.getNodeXCood(lastNode) > 10)
-				lastMoveMade = MOVE.LEFT;
-
-			if (theresAGhost(ghost, neighbourNode))
-				anotherGhostInPath = true;
-			if (game.isJunction(neighbourNode))
-				intersectionFound = true;
-			else {
-				// We move the node to the next position
-				lastNode = neighbourNode;
-				neighbourNode = game.getNeighbouringNodes(neighbourNode, lastMoveMade)[0];
+		// We get the next possible destination of the Pacman
+		for (int activePill : activePills) {
+			int distance = game.getShortestPathDistance(pacmanNode, activePill, game.getPacmanLastMoveMade());
+			if (distance < shortestDistance && distance > GameConstants.minPredictionDistance) {
+				nearestPillNode = activePill;
+				shortestDistance = distance;
 			}
 		}
 
-		anotherGhostInPath = false;
+		nextPillPacManBySeer = nearestPillNode;
 	}
 
-	private boolean theresAGhost(GHOST ghost, int node) {
-		switch (ghost) {
-		case BLINKY:
-			return node == INKYposition || node == PINKYposition || node == SUEposition;
-		case INKY:
-			return node == BLINKYposition || node == PINKYposition || node == SUEposition;
-		case PINKY:
-			return node == INKYposition || node == BLINKYposition || node == SUEposition;
-		case SUE:
-			return node == INKYposition || node == PINKYposition || node == BLINKYposition;
-		default:
-			return false;
+	private void checkGhostsInPath(GHOST ghost) {
+		int ghostNode = game.getGhostCurrentNodeIndex(ghost);
+
+		anotherGhostInPath = false;
+
+		for (GHOST ghostToEvade : GHOST.values()) {
+			if (anotherGhostInPath)
+				return;
+
+			if (ghostToEvade == ghost || game.getGhostLairTime(ghostToEvade) > 0)
+				continue;
+
+			int ghostEvNode = game.getGhostCurrentNodeIndex(ghostToEvade);
+			int[] path = game.getShortestPath(ghostNode, ghostEvNode, game.getGhostLastMoveMade(ghost));
+
+			int node = 0;
+			for (; node < path.length; node++) 
+				if (game.isJunction(node)) 
+					break;
+				
+			if(node == path.length)
+				anotherGhostInPath = true;
 		}
 	}
 }

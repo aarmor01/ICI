@@ -6,6 +6,7 @@ import es.ucm.fdi.ici.fsm.Transition;
 import pacman.game.Constants.GHOST;
 
 public class LairTimeOver implements Transition {
+	
 	GHOST ghost;
 
 	public LairTimeOver(GHOST ghost) {
@@ -16,6 +17,7 @@ public class LairTimeOver implements Transition {
 	@Override
 	public boolean evaluate(Input in) {
 		GhostInput input = (GhostInput) in;
+		
 		switch (ghost) {
 		case BLINKY:
 			return input.isBLINKYoutOfLair();

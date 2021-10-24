@@ -9,5 +9,9 @@ public class GameConstants {
 	public static int pacmanChaseDistance = 40;
 	public static int ghostChaseDistance = 50;
 	
+	public static int minPredictionDistance = 15;
+	
+	public static int numIntersectionsBeforeChange = 2;
+	
 	public static boolean DEBUG = false;
 }
