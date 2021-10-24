@@ -4,9 +4,9 @@ import es.ucm.fdi.ici.Input;
 import es.ucm.fdi.ici.c2122.practica2.grupo02.mspacman.MsPacManInput;
 import es.ucm.fdi.ici.fsm.Transition;
 
-public class PathBlockedOrMayBeBlockedByGhost implements Transition {
+public class MoreThanOnePill_InRange implements Transition {
 
-	public PathBlockedOrMayBeBlockedByGhost() {
+	public MoreThanOnePill_InRange() {
 		// TODO Auto-generated constructor stub
 	}
 
@@ -14,13 +14,7 @@ public class PathBlockedOrMayBeBlockedByGhost implements Transition {
 	public boolean evaluate(Input in) {
 		MsPacManInput input = (MsPacManInput)in;
 		
-		// TODO Auto-generated method stub
-		return input.PathBlockedByGhost();
-	}
-	
-	@Override
-	public String toString() {
-		return "Path Blocked Or May Be Blocked By Ghost";
+		return input.MoreThanOnePillsInRange();
 	}
 
 }

@@ -1,9 +1,15 @@
 package es.ucm.fdi.ici.c2122.practica2.grupo02.mspacman;
 
+import java.awt.Color;
+import java.util.Random;
+
 import es.ucm.fdi.ici.Input;
 import es.ucm.fdi.ici.c2122.practica2.grupo02.Tools;
+import pacman.game.Constants.DM;
 import pacman.game.Constants.GHOST;
+import pacman.game.Constants.MOVE;
 import pacman.game.Game;
+import pacman.game.GameView;
 
 public class MsPacManInput extends Input {
 	
@@ -13,8 +19,10 @@ public class MsPacManInput extends Input {
 
 	private int nearestGhostDistance;
 	
+	private Random rnd = new Random();
+	
 	public MsPacManInput(Game game) {
-		super(game);
+		super(game);	
 	}
 
 	@Override
@@ -48,5 +56,85 @@ public class MsPacManInput extends Input {
 				return true;
 		
 		return false;
-	}	
+	}
+	
+	public boolean pillsInRange() {
+		int pcNode = game.getPacmanCurrentNodeIndex();
+		MOVE[] possibleMoves = game.getPossibleMoves(pcNode);
+		for(MOVE moves : possibleMoves){
+			int nodeDir = game.getNeighbour(pcNode, moves);
+			while(nodeDir != -1 && !game.isJunction(nodeDir)) {
+				if(game.isPillStillAvailable(nodeDir)) return true;
+				nodeDir = game.getNeighbour(nodeDir, moves);
+			}	
+		}
+		return false;
+	}
+	
+	public boolean MoreThanOnePillsInRange() {
+		int pcNode = game.getPacmanCurrentNodeIndex();
+		MOVE[] possibleMoves = game.getPossibleMoves(pcNode);
+		int minPills = 1;
+		for(MOVE moves : possibleMoves){
+			int nPills = 0;
+			int nodeDir = game.getNeighbour(pcNode, moves);
+			while(nodeDir != -1 && !game.isJunction(nodeDir)) {
+				if(game.isPillStillAvailable(nodeDir)) {
+					nPills++;
+					if(nPills > minPills) return true;
+				}
+				nodeDir = game.getNeighbour(nodeDir, moves);
+			}	
+		}
+		return false;
+	}
+		
+	public boolean PathBlockedByGhost() {
+		int pcNode = game.getPacmanCurrentNodeIndex();
+		
+		int nodeTarget = Tools.getPathWithMorePills(game, pcNode);
+				
+		//Min distance to predict if the nearest Ghost can block up MsPacMan's path 
+		//We get all the nodes that take MsPacMan to the pill
+		int[] path = game.getShortestPath(pcNode, nodeTarget);
+		
+		//int ghostIndex = game.getGhostCurrentNodeIndex(nearestGhostType_);
+		
+		//For each Ghost we check if block up the MsPacMan path or may block it up.
+		//For each node we check if there's a Ghost, or if it is a junction, we check if it could be a Ghost in the 
+		//surroundings
+		int maxNodesDistance = 4;
+		int maxSurroundingsDistance = maxNodesDistance * 10;
+		
+		for(int pathNode : path) {			
+			for(GHOST ghostType: GHOST.values()) {
+				if(pathNode == game.getGhostCurrentNodeIndex(ghostType))
+					return false;	
+			}
+			
+			if(game.isJunction(pathNode)) {
+				for(MOVE move : game.getPossibleMoves(pathNode)) {
+					//Doesn't check the last move made since it's going to check in next iteration
+					int nextNode = game.getNeighbouringNodes(pathNode, move)[0];
+					//We check if the nearest Ghost is close to our nodes path, if so, we ran away
+					MOVE actualMove = move;
+					for(int i = 0; i < maxNodesDistance; i++) {
+						for(GHOST ghostType: GHOST.values()) {
+							int distance = game.getShortestPathDistance(nextNode, pathNode, game.getGhostLastMoveMade(ghostType));
+							if(nextNode == game.getGhostCurrentNodeIndex(ghostType) && distance < maxSurroundingsDistance)
+								return true;	
+						}
+						
+						int[] possibleNextNodes = game.getNeighbouringNodes(nextNode, actualMove);
+						//If the array were void, it would be a dead end.
+						nextNode = possibleNextNodes[0];
+						actualMove = game.getMoveToMakeToReachDirectNeighbour(nextNode, possibleNextNodes[0]);
+					}
+				}
+			}
+		}
+		
+		return false;
+	}
 }
+

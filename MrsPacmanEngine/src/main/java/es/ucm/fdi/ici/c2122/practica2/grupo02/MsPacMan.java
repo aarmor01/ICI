@@ -41,17 +41,27 @@ public class MsPacMan extends PacmanController {
     	
     	CompoundState collectPills_s2 = new CompoundState("Collect Pills", collectPills_fsm1);
    
+    	SimpleState TakePathWithMorePills_s3 = new SimpleState("Take Path With More Pills", new TakePathWithMorePills());
+    	SimpleState ReachClosestPill_s4 = new SimpleState("ReachClosestPill", new ReachClosestPill());
+    	Transition NotPillsInRange_t4 = new NotPillsInRange();
+    	Transition MoreThanOnePillsInRange_t5 = new MoreThanOnePill_InRange();
     	
-    	SimpleState ReachClosestPill_s3 = new SimpleState("ReachClosestPill", new ReachClosestPill());
-    	SimpleState TakePathWithMorePills_s4 = new SimpleState("Take Path With More Pills", new TakePathWithMorePills());
-    	Transition NotPillsInRange_s4 = new NotPillsInRange();
+    	collectPills_fsm1.add(TakePathWithMorePills_s3, NotPillsInRange_t4, ReachClosestPill_s4);
+    	collectPills_fsm1.add(ReachClosestPill_s4 , MoreThanOnePillsInRange_t5, TakePathWithMorePills_s3);
     	
-    	collectPills_fsm1.add(TakePathWithMorePills_s4, NotPillsInRange_s4, ReachClosestPill_s3);
-    	collectPills_fsm1.add(ReachClosestPill_s3 , NotPillsInRange_s4, TakePathWithMorePills_s4);
-    	//Collect Pills State---------------------------------
+    	Transition PathBlockedByGhost_t6 = new PathBlockedOrMayBeBlockedByGhost();
+    	Transition PathNotBlocked_t7 = new PathBlockedOrMayBeBlockedByGhost();
+    	SimpleState TakeAlternativePathToClosetsPill_s5 = new SimpleState("Take Alternative Path To Closest Pill", new TakeAlternativePathToClosestPill());
+    	collectPills_fsm1.add(TakePathWithMorePills_s3, PathBlockedByGhost_t6, TakeAlternativePathToClosetsPill_s5);
+    	collectPills_fsm1.add(TakeAlternativePathToClosetsPill_s5, PathNotBlocked_t7, TakePathWithMorePills_s3);
+    	
+    	collectPills_fsm1.add(TakeAlternativePathToClosetsPill_s5, PathBlockedByGhost_t6, TakeAlternativePathToClosetsPill_s5);
+    	collectPills_fsm1.add(TakeAlternativePathToClosetsPill_s5, NotPillsInRange_t4, ReachClosestPill_s4);
+    	
+    	//---------------------------------
     	
     	//Base State
-    	collectPills_fsm1.ready(TakePathWithMorePills_s4);
+    	collectPills_fsm1.ready(TakePathWithMorePills_s3);
     	
     	Transition NotExistingBottomPills_t2 = new WhileNotExistingBottomPills();
     	fsm.add(isBorn_s0, NotExistingBottomPills_t2, collectPills_s2);

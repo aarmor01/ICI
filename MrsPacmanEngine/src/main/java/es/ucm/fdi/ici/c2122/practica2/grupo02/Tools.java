@@ -1,9 +1,20 @@
 package es.ucm.fdi.ici.c2122.practica2.grupo02;
 
+import pacman.game.Constants.DM;
 import pacman.game.Constants.GHOST;
+import pacman.game.Constants.MOVE;
+
+import java.awt.Color;
+import java.util.Random;
+
 import pacman.game.Game;
+import pacman.game.GameView;
 
 public final class Tools {
+	
+	public static Random rnd = new Random();
+	
+	public static int nodeTarget = 0;
 	
 	public static GHOST nearestGhostInRange(Game game, int chaseLimit) {
 		int pcNode = game.getPacmanCurrentNodeIndex();
@@ -47,6 +58,33 @@ public final class Tools {
 		}
 
 		return ghost;
+	}
+	
+	public static int getPathWithMorePills(Game game, int pcNode) {
+		MOVE[] possibleMoves = game.getPossibleMoves(pcNode);
+		
+		int bestWayNode = -1;
+		int nPills = 0;
+		for(MOVE moves : possibleMoves){
+			int auxNumPills = 0;
+			int nodeDir = game.getNeighbour(pcNode, moves);
+			while(nodeDir != -1 && !game.isJunction(nodeDir)) {
+				if(game.isPillStillAvailable(nodeDir)) auxNumPills++;
+				nodeDir = game.getNeighbour(nodeDir, moves);
+			}
+			
+			if(auxNumPills > nPills) {
+				nPills = auxNumPills;
+				bestWayNode = nodeDir;
+			}
+		}
+		
+		if (bestWayNode != -1) {
+			GameView.addLines(game, Color.CYAN, pcNode, bestWayNode);
+		}
+		
+		nodeTarget = bestWayNode;
+		return bestWayNode;
 	}
 	
 }
