@@ -81,6 +81,6 @@ public class RunAwayAlternative implements Action {
 
 	@Override
 	public String getActionId() {
-		return ghostType + "runs away by alternate path";
+		return ghostType + " runs away by alternate path";
 	}
 }

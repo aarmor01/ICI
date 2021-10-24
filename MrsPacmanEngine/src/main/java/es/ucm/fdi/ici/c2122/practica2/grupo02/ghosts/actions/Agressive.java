@@ -24,6 +24,6 @@ public class Agressive implements Action {
 
 	@Override
 	public String getActionId() {
-		return ghostType + "chases when far away";
+		return ghostType + " chases when far away";
 	}
 }

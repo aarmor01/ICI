@@ -50,6 +50,6 @@ public class ChaseAlternatePathGhost implements Action {
 
 	@Override
 	public String getActionId() {
-		return ghostType + "chases by alternate path";
+		return ghostType + " chases by alternate path";
 	}
 }

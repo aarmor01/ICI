@@ -42,6 +42,6 @@ public class RunAwayToGhost implements Action {
 
 	@Override
 	public String getActionId() {
-		return ghostType + "runs away to closest ghost";
+		return ghostType + " runs away to closest ghost";
 	}
 }

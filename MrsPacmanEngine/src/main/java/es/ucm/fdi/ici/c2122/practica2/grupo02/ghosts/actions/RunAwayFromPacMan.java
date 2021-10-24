@@ -24,6 +24,6 @@ public class RunAwayFromPacMan implements Action {
 
 	@Override
 	public String getActionId() {
-		return ghostType + "runs away";
+		return ghostType + " runs away";
 	}
 }

@@ -47,7 +47,7 @@ public class ChaseSecondaryPath implements Action {
 
 	@Override
 	public String getActionId() {
-		return ghostType + "chases by secondary path";
+		return ghostType + " chases by secondary path";
 	}
 
 }
