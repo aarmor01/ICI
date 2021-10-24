@@ -22,7 +22,8 @@ public class MsPacMan extends PacmanController {
 
 	FSM fsm;
 	public MsPacMan() {
-		setName("MsPacMan XX");
+		setName("Definitely Not MsPacman");
+		setTeam("G2_ICIsports");
 		
     	fsm = new FSM("MsPacMan");
     	
