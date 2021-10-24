@@ -17,6 +17,6 @@ public class Lair implements Action {
 	
 	@Override
 	public String getActionId() {
-		return "Ghost is in lair";
+		return "Lair";
 	}
 }

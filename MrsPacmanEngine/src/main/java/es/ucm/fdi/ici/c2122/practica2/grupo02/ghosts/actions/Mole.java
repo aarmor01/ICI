@@ -81,6 +81,6 @@ public class Mole implements Action {
 
 	@Override
 	public String getActionId() {
-		return ghostType + " goes towards path with more pills";
+		return ghostType + " mole";
 	}
 }

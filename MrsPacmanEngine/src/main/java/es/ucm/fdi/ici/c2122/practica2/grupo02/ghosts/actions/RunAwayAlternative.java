@@ -53,7 +53,7 @@ public class RunAwayAlternative implements Action {
 					}else {
 						//We move the node to the next position
 						lastNode = node;
-						node = game.getNeighbouringNodes(node, lastMoveMade)[0];
+						neighbouringNodes[contador] = game.getNeighbouringNodes(node, lastMoveMade)[0];
 					}
 					contador++;
 				}
@@ -84,6 +84,6 @@ public class RunAwayAlternative implements Action {
 
 	@Override
 	public String getActionId() {
-		return ghostType + " runs away by alternate path";
+		return ghostType + " run alternate";
 	}
 }

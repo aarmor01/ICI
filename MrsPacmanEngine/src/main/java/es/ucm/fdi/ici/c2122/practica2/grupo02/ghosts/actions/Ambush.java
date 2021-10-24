@@ -60,6 +60,6 @@ public class Ambush implements Action {
 
 	@Override
 	public String getActionId() {
-		return ghostType + " goes towards next possible junction";
+		return ghostType + " ambush";
 	}
 }

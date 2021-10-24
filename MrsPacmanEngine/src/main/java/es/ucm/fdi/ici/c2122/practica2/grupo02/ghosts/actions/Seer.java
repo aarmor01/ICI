@@ -51,6 +51,6 @@ public class Seer implements Action {
 
 	@Override
 	public String getActionId() {
-		return ghostType + " goes towards closest pill";
+		return ghostType + " seer";
 	}
 }

@@ -20,14 +20,18 @@ public class ChasePrimaryPath implements Action {
 		if (game.doesGhostRequireAction(ghostType)) {
 			int pacmanNode = game.getPacmanCurrentNodeIndex();
 			int ghostNode = game.getGhostCurrentNodeIndex(ghostType);
+			int ghostNodeX = game.getNodeXCood(ghostNode);
+			int ghostNodeY = game.getNodeYCood(ghostNode);
+			int pacmanNodeX = game.getNodeXCood(pacmanNode);
+			int pacmanNodeY = game.getNodeYCood(pacmanNode);
 			return game.getNextMoveTowardsTarget(ghostNode, pacmanNode,
 					game.getGhostLastMoveMade(ghostType), DM.PATH);
-		}
-		return MOVE.NEUTRAL;
+		}else
+			return MOVE.NEUTRAL;
 	}
 
 	@Override
 	public String getActionId() {
-		return ghostType + " chases when far away";
+		return ghostType + " chase 1";
 	}
 }

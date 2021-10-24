@@ -49,12 +49,12 @@ public class Ghosts extends GhostController {
 			GraphFSMObserver anotherObserver = new GraphFSMObserver(fsmRun.toString());
 	    	fsmRun.addObserver(anotherObserver);
 			
-			SimpleState chasePrimaryPath = new SimpleState(new ChasePrimaryPath(ghost));
-			SimpleState chaseSecondaryPath = new SimpleState(new ChaseSecondaryPath(ghost));
-			SimpleState runAwayFromPacMan = new SimpleState(new RunAwayFromPacMan(ghost));
-			SimpleState runTowardsGhost = new SimpleState(new RunAwayToGhost(ghost));
-			SimpleState runAlternative = new SimpleState(new RunAwayAlternative(ghost));
-			SimpleState lair = new SimpleState(new Lair());
+			SimpleState chasePrimaryPath = new SimpleState("Chase Primary", new ChasePrimaryPath(ghost));
+			SimpleState chaseSecondaryPath = new SimpleState("Chase Secondary", new ChaseSecondaryPath(ghost));
+			SimpleState runAwayFromPacMan = new SimpleState("Run Away From PacMan", new RunAwayFromPacMan(ghost));
+			SimpleState runTowardsGhost = new SimpleState("Run Towards Ghost", new RunAwayToGhost(ghost));
+			SimpleState runAlternative = new SimpleState("Run Alternate Path", new RunAwayAlternative(ghost));
+			SimpleState lair = new SimpleState("Lair", new Lair());
 			
 			Transition mainRunAwayTransition = new GoToMainRunAway();
 			Transition mainChaseTransition = new GoToMainChase();
@@ -83,15 +83,13 @@ public class Ghosts extends GhostController {
 			
 			CompoundState run = new CompoundState(ghost + " starts running", fsmRun);
 			
-			fsm.ready(lair);
-			
 			switch(ghost) {
 			case BLINKY:
-				SimpleState seer = new SimpleState(new Seer(ghost));
+				SimpleState seer = new SimpleState("Seer", new Seer(ghost));
 				Transition seerChaseSpecificTransition = new SeerSpecialChaseStart(ghost);
 				fsm.add(lair, lairTimeOverTransition, seer);
 				fsm.add(seer, isMsPacManNearTransition, chase);
-				fsm.add(seer, seerChaseSpecificTransition, chase);
+//				fsm.add(seer, seerChaseSpecificTransition, chase);
 				fsm.add(seer, startRunAwayGhostFromSpecificBehaviourTransition, run);
 				fsm.add(chase, startRunAwayGhostTransition, run);
 				fsm.add(run, stopRunAwayGhostTransition, seer);
@@ -99,7 +97,7 @@ public class Ghosts extends GhostController {
 				break;
 			case PINKY:
 			case INKY:
-				SimpleState mole = new SimpleState(new Mole(ghost));
+				SimpleState mole = new SimpleState("Mole", new Mole(ghost));
 				fsm.add(lair, lairTimeOverTransition, mole);
 				fsm.add(mole, isMsPacManNearTransition, chase);
 				fsm.add(mole, startRunAwayGhostFromSpecificBehaviourTransition, run);
@@ -117,7 +115,7 @@ public class Ghosts extends GhostController {
 //				fsm.add(run, stopRunAwayAndChaseTransition, chase);
 //				break;
 			case SUE:
-				SimpleState agressive = new SimpleState(new Agressive(ghost));
+				SimpleState agressive = new SimpleState("Agressive", new Agressive(ghost));
 				fsm.add(lair, lairTimeOverTransition, agressive);
 				fsm.add(agressive, isMsPacManNearTransition, chase);
 				fsm.add(agressive, startRunAwayGhostFromSpecificBehaviourTransition, run);
@@ -127,17 +125,21 @@ public class Ghosts extends GhostController {
 				break;
 			}
 			
+			fsm.ready(lair);
+			
 			fsms.put(ghost, fsm);
 			
-			JFrame frame = new JFrame();
-	    	JPanel main = new JPanel();
-	    	main.setLayout(new BorderLayout());
-	    	main.add(graphObserver.getAsPanel(true, null), BorderLayout.NORTH);
-	    	main.add(c1observer.getAsPanel(true, null), BorderLayout.CENTER);
-	    	main.add(anotherObserver.getAsPanel(true, null), BorderLayout.SOUTH);
-	    	frame.getContentPane().add(main);
-	    	frame.pack();
-	    	frame.setVisible(true);
+			if (GameConstants.DEBUG) {
+				JFrame frame = new JFrame();
+		    	JPanel main = new JPanel();
+		    	main.setLayout(new BorderLayout());
+		    	main.add(graphObserver.getAsPanel(true, null), BorderLayout.NORTH);
+		    	main.add(c1observer.getAsPanel(true, null), BorderLayout.CENTER);
+		    	main.add(anotherObserver.getAsPanel(true, null), BorderLayout.SOUTH);
+		    	frame.getContentPane().add(main);
+		    	frame.pack();
+		    	frame.setVisible(true);
+			}
 		}
 	}
 	
@@ -156,6 +158,10 @@ public class Ghosts extends GhostController {
 		{
 			FSM fsm = fsms.get(ghost);
 			MOVE move = fsm.run(in);
+			if (move == MOVE.UP)
+				move = MOVE.DOWN;
+			else if (move == MOVE.DOWN)
+				move = MOVE.UP;
 			result.put(ghost, move);
 		}
 		
