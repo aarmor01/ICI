@@ -1,19 +1,16 @@
 package es.ucm.fdi.ici.c2122.practica2.grupo02;
 
+import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.util.EnumMap;
 
-import es.ucm.fdi.ici.c2122.practica2.grupo02.ghosts.actions.Agressive;
-import es.ucm.fdi.ici.c2122.practica2.grupo02.ghosts.actions.ChasePrimaryPath;
-import es.ucm.fdi.ici.c2122.practica2.grupo02.ghosts.actions.ChaseSecondaryPath;
-import es.ucm.fdi.ici.c2122.practica2.grupo02.ghosts.actions.Lair;
-import es.ucm.fdi.ici.c2122.practica2.grupo02.ghosts.actions.Seer;
-import es.ucm.fdi.ici.c2122.practica2.grupo02.ghosts.transitions.GoToMainRunAway;
-import es.ucm.fdi.ici.c2122.practica2.grupo02.ghosts.transitions.IsMsPacManNear;
-import es.ucm.fdi.ici.c2122.practica2.grupo02.ghosts.transitions.LairTimeOver;
-import es.ucm.fdi.ici.c2122.practica2.grupo02.ghosts.transitions.StartRunAwayGhost;
-import es.ucm.fdi.ici.c2122.practica2.grupo02.ghosts.transitions.StopRunAwayGhost;
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+
+import es.ucm.fdi.ici.c2122.practica2.grupo02.ghosts.GhostInput;
+import es.ucm.fdi.ici.c2122.practica2.grupo02.ghosts.actions.*;
+import es.ucm.fdi.ici.c2122.practica2.grupo02.ghosts.transitions.*;
 import es.ucm.fdi.ici.fsm.CompoundState;
 import es.ucm.fdi.ici.fsm.FSM;
 import es.ucm.fdi.ici.fsm.SimpleState;
@@ -33,7 +30,8 @@ public class Ghosts extends GhostController {
 	EnumMap<GHOST,FSM> fsms;
 	public Ghosts()
 	{
-		setName("Ghosts XX");
+		setName("Definitely Not Ghosts");
+		setTeam("G2_ICIsports");
 
 		fsms = new EnumMap<GHOST,FSM>(GHOST.class);
 		for(GHOST ghost: GHOST.values()) {
@@ -44,47 +42,102 @@ public class Ghosts extends GhostController {
 
 			
 			FSM fsmChase = new FSM("Chase compound");
+			GraphFSMObserver c1observer = new GraphFSMObserver(fsmChase.toString());
+	    	fsmChase.addObserver(c1observer);
+	    	
+	    	FSM fsmRun = new FSM("Run compound");
+			GraphFSMObserver anotherObserver = new GraphFSMObserver(fsmRun.toString());
+	    	fsmRun.addObserver(anotherObserver);
 			
 			SimpleState chasePrimaryPath = new SimpleState(new ChasePrimaryPath(ghost));
 			SimpleState chaseSecondaryPath = new SimpleState(new ChaseSecondaryPath(ghost));
+			SimpleState runAwayFromPacMan = new SimpleState(new RunAwayFromPacMan(ghost));
+			SimpleState runTowardsGhost = new SimpleState(new RunAwayToGhost(ghost));
+			SimpleState runAlternative = new SimpleState(new RunAwayAlternative(ghost));
 			SimpleState lair = new SimpleState(new Lair());
 			
 			Transition mainRunAwayTransition = new GoToMainRunAway();
+			Transition mainChaseTransition = new GoToMainChase();
 			Transition isMsPacManNearTransition = new IsMsPacManNear(ghost);
 			Transition lairTimeOverTransition = new LairTimeOver(ghost);
+			Transition anotherGhostOnRunAway = new AnotherGhostOnRunAwayPath(ghost);
+			Transition ghostNotEdibleTransition = new AnotherGhostIsntEdible(ghost);
 			Transition startRunAwayGhostTransition = new StartRunAwayGhost(ghost);
+			Transition startRunAwayGhostFromSpecificBehaviourTransition = new RunAwayFromSpecificBehaviourTransition(ghost);
 			Transition stopRunAwayGhostTransition = new StopRunAwayGhost(ghost);
+			Transition stopRunAwayAndChaseTransition = new StopRunAwayAndStartChase(ghost);
+			Transition chaseSecondaryTransition = new ChaseSecondaryPathTransition(ghost);
+			
+			fsmChase.add(chasePrimaryPath, chaseSecondaryTransition, chaseSecondaryPath);
+			fsmChase.add(chaseSecondaryPath, mainChaseTransition, chasePrimaryPath);
+			
+			fsmChase.ready(chasePrimaryPath);
+			
+			CompoundState chase = new CompoundState(ghost + "starts chasing", fsmChase);
+			
+			fsmRun.add(runAwayFromPacMan, ghostNotEdibleTransition, runTowardsGhost);
+			fsmRun.add(runAwayFromPacMan, anotherGhostOnRunAway, runAlternative);
+			fsmRun.add(runAlternative, mainRunAwayTransition, runAwayFromPacMan);
+			
+			fsmRun.ready(runAwayFromPacMan);
+			
+			CompoundState run = new CompoundState(ghost + "starts running", fsmRun);
+			
+			fsm.ready(lair);
 			
 			switch(ghost) {
 			case BLINKY:
 				SimpleState seer = new SimpleState(new Seer(ghost));
+				Transition seerChaseSpecificTransition = new SeerSpecialChaseStart(ghost);
 				fsm.add(lair, lairTimeOverTransition, seer);
-				//fsm.add(seer, startRunAwayGhostTransition, seer);
-				break;
-			case INKY:
-				//Cosas especificas de INKY
-				//fsm.add(lair, lairTimeOverTransition, seer);
+				fsm.add(seer, isMsPacManNearTransition, chase);
+				fsm.add(seer, seerChaseSpecificTransition, chase);
+				fsm.add(seer, startRunAwayGhostFromSpecificBehaviourTransition, run);
+				fsm.add(chase, startRunAwayGhostTransition, run);
+				fsm.add(run, stopRunAwayGhostTransition, seer);
+				fsm.add(run, stopRunAwayAndChaseTransition, chase);
 				break;
 			case PINKY:
-				//Cosas especificas de PINKY
-				//fsm.add(lair, lairTimeOverTransition, seer);
+			case INKY:
+				SimpleState mole = new SimpleState(new Mole(ghost));
+				fsm.add(lair, lairTimeOverTransition, mole);
+				fsm.add(mole, isMsPacManNearTransition, chase);
+				fsm.add(mole, startRunAwayGhostFromSpecificBehaviourTransition, run);
+				fsm.add(chase, startRunAwayGhostTransition, run);
+				fsm.add(run, stopRunAwayGhostTransition, mole);
+				fsm.add(run, stopRunAwayAndChaseTransition, chase);
 				break;
+//			case INKY:
+//				SimpleState moleambush = new SimpleState(new Ambush(ghost));
+//				fsm.add(lair, lairTimeOverTransition, ambush);
+//				fsm.add(ambush, isMsPacManNearTransition, chase);
+//				fsm.add(ambush, startRunAwayGhostFromSpecificBehaviourTransition, run);
+//				fsm.add(chase, startRunAwayGhostTransition, run);
+//				fsm.add(run, stopRunAwayGhostTransition, ambush);
+//				fsm.add(run, stopRunAwayAndChaseTransition, chase);
+//				break;
 			case SUE:
 				SimpleState agressive = new SimpleState(new Agressive(ghost));
 				fsm.add(lair, lairTimeOverTransition, agressive);
+				fsm.add(agressive, isMsPacManNearTransition, chase);
+				fsm.add(agressive, startRunAwayGhostFromSpecificBehaviourTransition, run);
+				fsm.add(chase, startRunAwayGhostTransition, run);
+				fsm.add(run, stopRunAwayGhostTransition, agressive);
+				fsm.add(run, stopRunAwayAndChaseTransition, chase);
 				break;
 			}
 			
-//			fsm.add(chase, near, runAway);
-//			fsm.add(runAway, toChaseTransition, chase);
-//			
-//			fsm.ready(chase);
-			
-			CompoundState chase = new CompoundState(ghost + "starts chasing", fsmChase);
-			
-			graphObserver.showInFrame(new Dimension(800,600));
-			
 			fsms.put(ghost, fsm);
+			
+			JFrame frame = new JFrame();
+	    	JPanel main = new JPanel();
+	    	main.setLayout(new BorderLayout());
+	    	main.add(graphObserver.getAsPanel(true, null), BorderLayout.NORTH);
+	    	main.add(c1observer.getAsPanel(true, null), BorderLayout.CENTER);
+	    	main.add(anotherObserver.getAsPanel(true, null), BorderLayout.SOUTH);
+	    	frame.getContentPane().add(main);
+	    	frame.pack();
+	    	frame.setVisible(true);
 		}
 	}
 	
@@ -97,7 +150,7 @@ public class Ghosts extends GhostController {
 	public EnumMap<GHOST, MOVE> getMove(Game game, long timeDue) {
 		EnumMap<GHOST,MOVE> result = new EnumMap<GHOST,MOVE>(GHOST.class);
 		
-		GhostsInput in = new GhostsInput(game);
+		GhostInput in = new GhostInput(game);
 		
 		for(GHOST ghost: GHOST.values())
 		{
@@ -111,21 +164,4 @@ public class Ghosts extends GhostController {
 	
 		
 	}
-	
-	
-//	boolean ghostNotOnSamePath(Game game, int ghostNode, int destination) {
-//		//All the nodes in the path we want to check
-//		int[] path = game.getShortestPath(ghostNode, destination);
-//		
-//		//For each Ghost we check if there is another ghost in the path
-//		for(int pathNode : path) {
-//			for(GHOST ghostType: GHOST.values()) {
-//				int ghostInPath = game.getGhostCurrentNodeIndex(ghostType);
-//				if (ghostInPath != ghostNode && pathNode == ghostInPath)
-//					return false;
-//			}	
-//		}
-//		
-//		return true;
-//	}
 }

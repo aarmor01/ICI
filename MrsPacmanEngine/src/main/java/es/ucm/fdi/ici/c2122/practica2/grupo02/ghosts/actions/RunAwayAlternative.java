@@ -31,9 +31,9 @@ public class RunAwayAlternative implements Action {
 				for (int node : neighbouringNodes) {
 					MOVE lastMoveMade = MOVE.NEUTRAL;					
 					if (game.getNodeYCood(node) - game.getNodeYCood(lastNode) == 1 || game.getNodeYCood(node) - game.getNodeYCood(lastNode) < -10)
-						lastMoveMade = MOVE.UP;
-					else if (game.getNodeYCood(node) - game.getNodeYCood(lastNode) == -1 || game.getNodeYCood(node) - game.getNodeYCood(lastNode) > 10)
 						lastMoveMade = MOVE.DOWN;
+					else if (game.getNodeYCood(node) - game.getNodeYCood(lastNode) == -1 || game.getNodeYCood(node) - game.getNodeYCood(lastNode) > 10)
+						lastMoveMade = MOVE.UP;
 					else if(game.getNodeXCood(node) - game.getNodeXCood(lastNode) == 1 || game.getNodeXCood(node) - game.getNodeXCood(lastNode) < -10)
 						lastMoveMade = MOVE.RIGHT;
 					else if (game.getNodeXCood(node) - game.getNodeXCood(lastNode) == -1 || game.getNodeXCood(node) - game.getNodeXCood(lastNode) > 10)

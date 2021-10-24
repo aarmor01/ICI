@@ -39,7 +39,10 @@ public class GhostInput extends Input {
 
 	private boolean anotherGhostInPath;
 
-	private int[] chaseCountsGhosts = { 0, 0, 0, 0 };
+	private int chaseCountBLINKY;
+	private int chaseCountINKY;
+	private int chaseCountPINKY;
+	private int chaseCountSUE;
 
 	public GhostInput(Game game) {
 		super(game);
@@ -58,9 +61,9 @@ public class GhostInput extends Input {
 		this.SUEedTimeLeft = game.getGhostEdibleTime(GHOST.SUE);
 
 		this.BLINKYoutOfLair = !(game.getGhostLairTime(GHOST.BLINKY) > 0);
-		this.PINKYedible = !(game.getGhostLairTime(GHOST.PINKY) > 0);
-		this.INKYedible = !(game.getGhostLairTime(GHOST.INKY) > 0);
-		this.SUEedible = !(game.getGhostLairTime(GHOST.SUE) > 0);
+		this.PINKYoutOfLair = !(game.getGhostLairTime(GHOST.PINKY) > 0);
+		this.INKYoutOfLair = !(game.getGhostLairTime(GHOST.INKY) > 0);
+		this.SUEoutOfLair = !(game.getGhostLairTime(GHOST.SUE) > 0);
 
 		int pacmanNode = game.getPacmanCurrentNodeIndex();
 		this.pacmanDistancePowerPill = Double.MAX_VALUE;
@@ -97,17 +100,29 @@ public class GhostInput extends Input {
 			nextPillPacManBySeer = nearestPillNode;
 		}
 
-		int distanceToStartChase = 30;
-		int contadorGhosts = 0;
+		int distanceToStartChase = 15;
 		for (GHOST ghost : GHOST.values()) {
 			if (game.doesGhostRequireAction(ghost)) {
 				if (!game.isGhostEdible(ghost) && game.getShortestPathDistance(game.getGhostCurrentNodeIndex(ghost),
-						pacmanNode) < distanceToStartChase)
-					chaseCountsGhosts[contadorGhosts]++;
+						pacmanNode) < distanceToStartChase) {
+					switch(ghost) {
+					case BLINKY:
+						chaseCountBLINKY++;
+						break;
+					case INKY:
+						chaseCountINKY++;
+						break;
+					case PINKY:
+						chaseCountPINKY++;
+						break;
+					case SUE:
+						chaseCountSUE++;
+						break;
+					}
+				}
 
 				checkGhostsInPath(ghost);
 			}
-			contadorGhosts++;
 		}
 	}
 
@@ -182,13 +197,13 @@ public class GhostInput extends Input {
 	public int getGhostChaseCount(GHOST ghost) {
 		switch (ghost) {
 		case BLINKY:
-			return chaseCountsGhosts[0];
+			return chaseCountBLINKY;
 		case INKY:
-			return chaseCountsGhosts[1];
+			return chaseCountINKY;
 		case PINKY:
-			return chaseCountsGhosts[2];
+			return chaseCountPINKY;
 		case SUE:
-			return chaseCountsGhosts[3];
+			return chaseCountSUE;
 		default:
 			return -1;
 		}
@@ -197,13 +212,13 @@ public class GhostInput extends Input {
 	public void resetCount(GHOST ghost) {
 		switch (ghost) {
 		case BLINKY:
-			chaseCountsGhosts[0] = 0;
+			chaseCountBLINKY = 0;
 		case INKY:
-			chaseCountsGhosts[1] = 0;
+			chaseCountINKY = 0;
 		case PINKY:
-			chaseCountsGhosts[2] = 0;
+			chaseCountPINKY = 0;
 		case SUE:
-			chaseCountsGhosts[3] = 0;
+			chaseCountSUE = 0;
 		}
 	}
 
@@ -234,20 +249,20 @@ public class GhostInput extends Input {
 	private void checkGhostsInPath(GHOST ghost) {
 		int ghostNode = game.getGhostCurrentNodeIndex(ghost);
 
-		MOVE runawayMove = game.getNextMoveAwayFromTarget(ghostNode, game.getPacmanCurrentNodeIndex(), DM.PATH);
+//		MOVE runawayMove = game.getNextMoveAwayFromTarget(ghostNode, game.getPacmanCurrentNodeIndex(), game.getGhostLastMoveMade(ghost), DM.PATH);
 
 		int lastNode = ghostNode;
-		int neighbourNode = game.getNeighbour(ghostNode, runawayMove);
+		int neighbourNode = game.getNeighbouringNodes(ghostNode, game.getGhostLastMoveMade(ghost))[0];
 		boolean intersectionFound = false;
 
 		while (!intersectionFound && !anotherGhostInPath) {
 			MOVE lastMoveMade = MOVE.NEUTRAL;
 			if (game.getNodeYCood(neighbourNode) - game.getNodeYCood(lastNode) == 1
 					|| game.getNodeYCood(neighbourNode) - game.getNodeYCood(lastNode) < -10)
-				lastMoveMade = MOVE.UP;
+				lastMoveMade = MOVE.DOWN;
 			else if (game.getNodeYCood(neighbourNode) - game.getNodeYCood(lastNode) == -1
 					|| game.getNodeYCood(neighbourNode) - game.getNodeYCood(lastNode) > 10)
-				lastMoveMade = MOVE.DOWN;
+				lastMoveMade = MOVE.UP;
 			else if (game.getNodeXCood(neighbourNode) - game.getNodeXCood(lastNode) == 1
 					|| game.getNodeXCood(neighbourNode) - game.getNodeXCood(lastNode) < -10)
 				lastMoveMade = MOVE.RIGHT;
@@ -262,7 +277,7 @@ public class GhostInput extends Input {
 			else {
 				// We move the node to the next position
 				lastNode = neighbourNode;
-				neighbourNode = game.getNeighbour(neighbourNode, lastMoveMade);
+				neighbourNode = game.getNeighbouringNodes(neighbourNode, lastMoveMade)[0];
 			}
 		}
 

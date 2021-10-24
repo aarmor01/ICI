@@ -24,26 +24,30 @@ public class Ambush implements Action {
 			int lastNode = pacmanNode;
 			boolean intersectionFound = false;
 			int intersectionNodeFound = 0;
+			int actualNode = 0;
 			while(!intersectionFound) {
+				actualNode = 0;
 				for (int node : neighbouringNodes) {
 					MOVE lastMoveMade = MOVE.NEUTRAL;					
-					if (game.getNodeYCood(node) - game.getNodeYCood(lastNode) == 1 || game.getNodeYCood(node) - game.getNodeYCood(lastNode) < -10)
-						lastMoveMade = MOVE.UP;
-					else if (game.getNodeYCood(node) - game.getNodeYCood(lastNode) == -1 || game.getNodeYCood(node) - game.getNodeYCood(lastNode) > 10)
+					if (game.getNodeYCood(node) - game.getNodeYCood(lastNode) == 1 || game.getNodeYCood(node) - game.getNodeYCood(lastNode) < -20)
 						lastMoveMade = MOVE.DOWN;
-					else if(game.getNodeXCood(node) - game.getNodeXCood(lastNode) == 1 || game.getNodeXCood(node) - game.getNodeXCood(lastNode) < -10)
+					else if (game.getNodeYCood(node) - game.getNodeYCood(lastNode) == -1 || game.getNodeYCood(node) - game.getNodeYCood(lastNode) > 20)
+						lastMoveMade = MOVE.UP;
+					else if(game.getNodeXCood(node) - game.getNodeXCood(lastNode) == 1 || game.getNodeXCood(node) - game.getNodeXCood(lastNode) < -20)
 						lastMoveMade = MOVE.RIGHT;
-					else if (game.getNodeXCood(node) - game.getNodeXCood(lastNode) == -1 || game.getNodeXCood(node) - game.getNodeXCood(lastNode) > 10)
+					else if (game.getNodeXCood(node) - game.getNodeXCood(lastNode) == -1 || game.getNodeXCood(node) - game.getNodeXCood(lastNode) > 20)
 						lastMoveMade = MOVE.LEFT;
 					
 					if (game.isJunction(node)) {
 						intersectionFound = true;
 						intersectionNodeFound = node;
 					}
-					else 
+					else {
 						//We move the node to the next position
 						lastNode = node;
-						node = game.getNeighbouringNodes(node, lastMoveMade)[0];
+						neighbouringNodes[actualNode] = game.getNeighbouringNodes(node, lastMoveMade)[0];
+					}
+					actualNode++;
 				}
 			}
 			return game.getNextMoveTowardsTarget(ghostNode, intersectionNodeFound, game.getGhostLastMoveMade(ghostType), DM.PATH);

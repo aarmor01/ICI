@@ -30,9 +30,9 @@ public class Mole implements Action {
 				while(!intersectionFound) {
 					MOVE lastMoveMade = MOVE.NEUTRAL;					
 					if (game.getNodeYCood(node) - game.getNodeYCood(lastNode) == 1 || game.getNodeYCood(node) - game.getNodeYCood(lastNode) < -10)
-						lastMoveMade = MOVE.UP;
-					else if (game.getNodeYCood(node) - game.getNodeYCood(lastNode) == -1 || game.getNodeYCood(node) - game.getNodeYCood(lastNode) > 10)
 						lastMoveMade = MOVE.DOWN;
+					else if (game.getNodeYCood(node) - game.getNodeYCood(lastNode) == -1 || game.getNodeYCood(node) - game.getNodeYCood(lastNode) > 10)
+						lastMoveMade = MOVE.UP;
 					else if(game.getNodeXCood(node) - game.getNodeXCood(lastNode) == 1 || game.getNodeXCood(node) - game.getNodeXCood(lastNode) < -10)
 						lastMoveMade = MOVE.RIGHT;
 					else if (game.getNodeXCood(node) - game.getNodeXCood(lastNode) == -1 || game.getNodeXCood(node) - game.getNodeXCood(lastNode) > 10)
@@ -61,8 +61,10 @@ public class Mole implements Action {
 					optimalNode = node;
 				}
 			}
-			
-			return game.getNextMoveTowardsTarget(ghostNode, optimalNode, game.getGhostLastMoveMade(ghostType), DM.PATH);
+			if (optimalNode == 0)
+				return game.getNextMoveTowardsTarget(ghostNode, pacmanNode, game.getGhostLastMoveMade(ghostType), DM.PATH);
+			else
+				return game.getNextMoveTowardsTarget(ghostNode, optimalNode, game.getGhostLastMoveMade(ghostType), DM.PATH);
 		}
 		return MOVE.NEUTRAL;
 	}
