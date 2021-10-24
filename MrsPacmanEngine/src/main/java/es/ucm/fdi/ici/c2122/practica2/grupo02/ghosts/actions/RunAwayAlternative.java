@@ -53,7 +53,10 @@ public class RunAwayAlternative implements Action {
 					}else {
 						//We move the node to the next position
 						lastNode = node;
-						neighbouringNodes[contador] = game.getNeighbouringNodes(node, lastMoveMade)[0];
+						if (game.getNeighbouringNodes(node, lastMoveMade) != null)
+							neighbouringNodes[contador] = game.getNeighbouringNodes(node, lastMoveMade)[0];
+						else
+							return MOVE.NEUTRAL;
 					}
 					contador++;
 				}
