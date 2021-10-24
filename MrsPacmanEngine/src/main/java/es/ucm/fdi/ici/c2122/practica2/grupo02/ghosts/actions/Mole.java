@@ -6,9 +6,9 @@ import pacman.game.Constants.DM;
 import pacman.game.Constants.GHOST;
 import pacman.game.Constants.MOVE;
 
-public class RunAwayAlternative implements Action {
+public class Mole implements Action {
 	GHOST ghostType;
-	public RunAwayAlternative(GHOST ghostType) {
+	public Mole(GHOST ghostType) {
 		this.ghostType = ghostType;
 	}
 
@@ -23,12 +23,11 @@ public class RunAwayAlternative implements Action {
 			
 			int lastNode = pacmanNode;
 			boolean intersectionFound = false;
-			boolean[] ghostInTheWay = {false, false, false};
-			int[] destinationNodes = {0,0,0};
+			int [] intersectionNodeFound = {0,0,0};
+			int [] numPillsFound = {0,0,0};
 			int contador = 0;
-			while(!intersectionFound) {
-				contador = 0;
-				for (int node : neighbouringNodes) {
+			for (int node : neighbouringNodes) {
+				while(!intersectionFound) {
 					MOVE lastMoveMade = MOVE.NEUTRAL;					
 					if (game.getNodeYCood(node) - game.getNodeYCood(lastNode) == 1 || game.getNodeYCood(node) - game.getNodeYCood(lastNode) < -10)
 						lastMoveMade = MOVE.UP;
@@ -39,48 +38,37 @@ public class RunAwayAlternative implements Action {
 					else if (game.getNodeXCood(node) - game.getNodeXCood(lastNode) == -1 || game.getNodeXCood(node) - game.getNodeXCood(lastNode) > 10)
 						lastMoveMade = MOVE.LEFT;
 					
-					for(GHOST ghost : GHOST.values()) {
-						if (game.getGhostCurrentNodeIndex(ghost) == node)
-							ghostInTheWay[contador] = true;
-					}
-					
 					if (game.isJunction(node)) {
 						intersectionFound = true;
-						destinationNodes[contador] = node;
+						intersectionNodeFound[contador] = node;
 					}else {
+						if (game.isPillStillAvailable(node))
+							numPillsFound[contador]++;
 						//We move the node to the next position
 						lastNode = node;
 						node = game.getNeighbouringNodes(node, lastMoveMade)[0];
 					}
-					contador++;
-				}
-			}
-			
-			int destination = 0;
-			int numberOfPossiblePaths = 0;
-			contador = 0;
-			for (boolean possiblePath : ghostInTheWay) {
-				if (possiblePath) {
-					numberOfPossiblePaths++;
-					if (numberOfPossiblePaths == 1)
-						destination = destinationNodes[contador];
-					else {
-						if (numberOfPossiblePaths > 1) {
-							if (game.getShortestPathDistance(destinationNodes[contador], pacmanNode) > game.getShortestPathDistance(destination, pacmanNode)) {
-								destination = destinationNodes[contador];
-							}
-						}
-					}
 				}
 				contador++;
 			}
-			return game.getNextMoveTowardsTarget(ghostNode, destination, game.getGhostLastMoveMade(ghostType), DM.PATH);
+			
+			int optimalNode = 0;
+			int maxNumberOfPills = 0;
+			contador = 0;
+			for (int node : intersectionNodeFound) {
+				if (numPillsFound[contador] > maxNumberOfPills) {
+					maxNumberOfPills = numPillsFound[contador];
+					optimalNode = node;
+				}
+			}
+			
+			return game.getNextMoveTowardsTarget(ghostNode, optimalNode, game.getGhostLastMoveMade(ghostType), DM.PATH);
 		}
 		return MOVE.NEUTRAL;
 	}
 
 	@Override
 	public String getActionId() {
-		return ghostType + "runs away by alternate path";
+		return ghostType + "goes towards path with more pills";
 	}
 }

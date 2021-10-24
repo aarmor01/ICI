@@ -41,6 +41,7 @@ public class Ambush implements Action {
 						intersectionNodeFound = node;
 					}else {
 						//We move the node to the next position
+						lastNode = node;
 						node = game.getNeighbouringNodes(node, lastMoveMade)[0];
 					}
 				}
