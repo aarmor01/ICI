@@ -39,10 +39,10 @@ public class Ambush implements Action {
 					if (game.isJunction(node)) {
 						intersectionFound = true;
 						intersectionNodeFound = node;
-					}else {
+					}
+					else 
 						//We move the node to the next position
 						node = game.getNeighbouringNodes(node, lastMoveMade)[0];
-					}
 				}
 			}
 			return game.getNextMoveTowardsTarget(ghostNode, intersectionNodeFound, game.getGhostLastMoveMade(ghostType), DM.PATH);

@@ -16,8 +16,8 @@ public class AnotherGhostOnRunAwayPath implements Transition {
 	@Override
 	public boolean evaluate(Input in) {
 		GhostInput input = (GhostInput)in;
-		// TODO Auto-generated method stub
-		return false;
+		
+		return input.anotherGhostInRunAwayPath();
 	}
 	
 	@Override
