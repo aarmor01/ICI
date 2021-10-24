@@ -6,9 +6,9 @@ import pacman.game.Constants.DM;
 import pacman.game.Constants.GHOST;
 import pacman.game.Constants.MOVE;
 
-public class Ambush implements Action {
+public class Mole implements Action {
 	GHOST ghostType;
-	public Ambush(GHOST ghostType) {
+	public Mole(GHOST ghostType) {
 		this.ghostType = ghostType;
 	}
 
@@ -23,9 +23,11 @@ public class Ambush implements Action {
 			
 			int lastNode = pacmanNode;
 			boolean intersectionFound = false;
-			int intersectionNodeFound = 0;
-			while(!intersectionFound) {
-				for (int node : neighbouringNodes) {
+			int [] intersectionNodeFound = {0,0,0};
+			int [] numPillsFound = {0,0,0};
+			int contador = 0;
+			for (int node : neighbouringNodes) {
+				while(!intersectionFound) {
 					MOVE lastMoveMade = MOVE.NEUTRAL;					
 					if (game.getNodeYCood(node) - game.getNodeYCood(lastNode) == 1 || game.getNodeYCood(node) - game.getNodeYCood(lastNode) < -10)
 						lastMoveMade = MOVE.UP;
@@ -38,21 +40,35 @@ public class Ambush implements Action {
 					
 					if (game.isJunction(node)) {
 						intersectionFound = true;
-						intersectionNodeFound = node;
-					}
-					else 
+						intersectionNodeFound[contador] = node;
+					}else {
+						if (game.isPillStillAvailable(node))
+							numPillsFound[contador]++;
 						//We move the node to the next position
 						lastNode = node;
 						node = game.getNeighbouringNodes(node, lastMoveMade)[0];
+					}
+				}
+				contador++;
+			}
+			
+			int optimalNode = 0;
+			int maxNumberOfPills = 0;
+			contador = 0;
+			for (int node : intersectionNodeFound) {
+				if (numPillsFound[contador] > maxNumberOfPills) {
+					maxNumberOfPills = numPillsFound[contador];
+					optimalNode = node;
 				}
 			}
-			return game.getNextMoveTowardsTarget(ghostNode, intersectionNodeFound, game.getGhostLastMoveMade(ghostType), DM.PATH);
+			
+			return game.getNextMoveTowardsTarget(ghostNode, optimalNode, game.getGhostLastMoveMade(ghostType), DM.PATH);
 		}
 		return MOVE.NEUTRAL;
 	}
 
 	@Override
 	public String getActionId() {
-		return ghostType + "goes towards next possible junction";
+		return ghostType + "goes towards path with more pills";
 	}
 }
