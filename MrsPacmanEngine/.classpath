@@ -34,5 +34,6 @@
 	<classpathentry kind="lib" path="/ICI-Evaluation/lib/ici.c2021.practica1.jar"/>
 	<classpathentry kind="lib" path="/ICI-Evaluation/lib/ici.c2021.practica2.jar"/>
 	<classpathentry kind="lib" path="/ICI-Evaluation/lib/ici.c2122.practica1.jar"/>
+	<classpathentry kind="lib" path="lib/jess.jar"/>
 	<classpathentry kind="output" path="target/classes"/>
 </classpath>
