@@ -3,23 +3,25 @@ package es.ucm.fdi.ici.c2122.practica3.grupo02.pacman.actions;
 import java.awt.Color;
 
 import es.ucm.fdi.ici.Action;
-import es.ucm.fdi.ici.c2122.practica2.grupo02.GameConstants;
+import es.ucm.fdi.ici.c2122.practica3.grupo02.GameConstants;
+import es.ucm.fdi.ici.rules.RulesAction;
+import jess.Fact;
 import pacman.game.Constants.DM;
 import pacman.game.Constants.MOVE;
 import pacman.game.Game;
 import pacman.game.GameView;
 
-public class CleanBottomMap implements Action {
+public class CleanBottomAction implements RulesAction {
 	
 	int initYCoordPM = 0;
-	public CleanBottomMap() {
+	public CleanBottomAction() {
 	
 	}
 	
 	@Override
 	public String getActionId() {
 		// TODO Auto-generated method stub
-		return "Clean Bottom Map";
+		return "PCcleansBottom";
 	}
 
 	@Override
@@ -45,6 +47,12 @@ public class CleanBottomMap implements Action {
 			GameView.addLines(game, Color.CYAN, pcNode, nearestPillNode);
 		
 		return game.getApproximateNextMoveTowardsTarget(pcNode, nearestPillNode, game.getPacmanLastMoveMade(), DM.PATH);
+	}
+
+	@Override
+	public void parseFact(Fact actionFact) {
+		// TODO Auto-generated method stub
+		
 	}
 
 }

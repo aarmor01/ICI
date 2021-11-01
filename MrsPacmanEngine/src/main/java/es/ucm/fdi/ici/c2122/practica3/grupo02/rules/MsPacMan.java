@@ -1,32 +1,80 @@
 package es.ucm.fdi.ici.c2122.practica3.grupo02.rules;
 
 import java.awt.BorderLayout;
+import java.util.HashMap;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
-import es.ucm.fdi.ici.Input;
-import es.ucm.fdi.ici.c2122.practica2.grupo02.mspacman.MsPacManInput;
-import es.ucm.fdi.ici.c2122.practica2.grupo02.mspacman.actions.*;
-import es.ucm.fdi.ici.c2122.practica2.grupo02.mspacman.transitions.*;
+import es.ucm.fdi.ici.c2122.practica2.grupo02.mspacman.actions.ChaseGhost;
+import es.ucm.fdi.ici.c2122.practica2.grupo02.mspacman.actions.CleanBottomMap;
+import es.ucm.fdi.ici.c2122.practica2.grupo02.mspacman.actions.IsBorn;
+import es.ucm.fdi.ici.c2122.practica2.grupo02.mspacman.actions.ReachClosestPill;
+import es.ucm.fdi.ici.c2122.practica2.grupo02.mspacman.actions.RunawayFromClosestGhost;
+import es.ucm.fdi.ici.c2122.practica2.grupo02.mspacman.actions.TakeAlternativePathToClosestPill;
+import es.ucm.fdi.ici.c2122.practica2.grupo02.mspacman.actions.TakePathWithMorePills;
+import es.ucm.fdi.ici.c2122.practica2.grupo02.mspacman.transitions.CanChaseGhost;
+import es.ucm.fdi.ici.c2122.practica2.grupo02.mspacman.transitions.GhostTooCloseAndNotEdible;
+import es.ucm.fdi.ici.c2122.practica2.grupo02.mspacman.transitions.IsEatenByGhost;
+import es.ucm.fdi.ici.c2122.practica2.grupo02.mspacman.transitions.MoreThanOnePill_InRange;
+import es.ucm.fdi.ici.c2122.practica2.grupo02.mspacman.transitions.NoEdibleTimeAndNotInDanger;
+import es.ucm.fdi.ici.c2122.practica2.grupo02.mspacman.transitions.NotPillsInRange;
+import es.ucm.fdi.ici.c2122.practica2.grupo02.mspacman.transitions.PacManNotInDanger;
+import es.ucm.fdi.ici.c2122.practica2.grupo02.mspacman.transitions.PathBlockedOrMayBeBlockedByGhost;
+import es.ucm.fdi.ici.c2122.practica2.grupo02.mspacman.transitions.PathNotBlockedByGhost;
+import es.ucm.fdi.ici.c2122.practica2.grupo02.mspacman.transitions.StopsClearingBottomHalf;
+import es.ucm.fdi.ici.c2122.practica2.grupo02.mspacman.transitions.WhileExistingBottomPills;
+import es.ucm.fdi.ici.c2122.practica2.grupo02.mspacman.transitions.WhileNotExistingBottomPills;
+
 import es.ucm.fdi.ici.c2122.practica3.grupo02.GameConstants;
+import es.ucm.fdi.ici.c2122.practica3.grupo02.Tools;
+import es.ucm.fdi.ici.c2122.practica3.grupo02.pacman.MsPacManInput;
+import es.ucm.fdi.ici.c2122.practica3.grupo02.pacman.actions.CleanBottomAction;
+
 import es.ucm.fdi.ici.fsm.CompoundState;
 import es.ucm.fdi.ici.fsm.FSM;
 import es.ucm.fdi.ici.fsm.SimpleState;
 import es.ucm.fdi.ici.fsm.Transition;
 import es.ucm.fdi.ici.fsm.observers.GraphFSMObserver;
+import es.ucm.fdi.ici.rules.RuleEngine;
+import es.ucm.fdi.ici.rules.RulesAction;
+import es.ucm.fdi.ici.rules.RulesInput;
+import es.ucm.fdi.ici.rules.observers.ConsoleRuleEngineObserver;
 import pacman.controllers.PacmanController;
 import pacman.game.Constants.MOVE;
 import pacman.game.Game;
 
 public class MsPacMan extends PacmanController {
-
+	
+	
+private static final String PACMAN_RULES_PATH = GameConstants.RULES_PATH + "pacmanrules.clp";
+private static final String PACMAN_NAME = "PacMan";
+	
+	HashMap<String,RulesAction> map;
+	
+	RuleEngine PacManRuleEngine;
+	
 	FSM fsm;
 	public MsPacMan() {
+		
 		setName("Definitely Not MsPacman");
 		setTeam("G2_ICIsports");
 		
-    	fsm = new FSM("MsPacMan");
+		map = new HashMap<String, RulesAction>();
+    	
+		RulesAction PCcleansBottom = new CleanBottomAction();  
+		
+		map.put("PCcleansBottom", PCcleansBottom);
+		
+		String fileRule = PACMAN_RULES_PATH;
+		PacManRuleEngine = new RuleEngine(PACMAN_NAME,fileRule,map);
+		
+		ConsoleRuleEngineObserver observer = new ConsoleRuleEngineObserver(PACMAN_NAME, true);
+		PacManRuleEngine.addObserver(observer);
+	}
+	
+	public void oldBehaviour() {
+		fsm = new FSM("MsPacMan");
     	
     	GraphFSMObserver observer = new GraphFSMObserver(fsm.toString());
     	fsm.addObserver(observer);
@@ -112,17 +160,21 @@ public class MsPacMan extends PacmanController {
 	
 	
 	public void preCompute(String opponent) {
-    		fsm.reset();
+    		//fsm.reset();
     }
-	
-	
 	
     /* (non-Javadoc)
      * @see pacman.controllers.Controller#getMove(pacman.game.Game, long)
      */
     @Override
     public MOVE getMove(Game game, long timeDue) {
-       	Input in = new MsPacManInput(game); 
-    	return fsm.run(in);
+    	//Creamos el input
+       	RulesInput in = new MsPacManInput(game); 
+       	//Reseteamos sus valores a saber por qué
+       	PacManRuleEngine.reset();
+       	//Obtenemos los resultados de cada iteracion
+       	PacManRuleEngine.assertFacts(in.getFacts());
+       	//En funcion de los resultados, habra devuelto un MOVE
+       	return PacManRuleEngine.run(game);
     }
 }

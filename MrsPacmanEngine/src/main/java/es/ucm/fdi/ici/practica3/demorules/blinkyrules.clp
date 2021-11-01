@@ -1,4 +1,4 @@
-;FACTS ASSERTED BY GAME INPUT
+;---------FACTS ASSERTED BY GAME INPUT
 (deftemplate BLINKY
 	(slot edible (type SYMBOL)))
 	
@@ -18,7 +18,7 @@
 (deftemplate ACTION
 	(slot id) (slot info (default "")) ) 
    
-;RULES 
+;---------RULES 
 (defrule BLINKYrunsAwayMSPACMANclosePPill
 	(MSPACMAN (mindistancePPill ?d)) (test (<= ?d 30)) 
 	=>  

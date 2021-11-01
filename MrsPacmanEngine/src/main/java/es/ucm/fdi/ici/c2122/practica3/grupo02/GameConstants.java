@@ -1,8 +1,11 @@
 package es.ucm.fdi.ici.c2122.practica3.grupo02;
 
 import java.awt.Color;
+import java.io.File;
 
 public class GameConstants {
+	
+	public static final String RULES_PATH = "es"+File.separator+"ucm"+File.separator+"fdi"+File.separator+"ici"+File.separator+"c2122"+File.separator+"practica3"+File.separator+"grupo02"+ File.separator + "rules"+File.separator;
 	
 	public static Color[] colours = { Color.RED, Color.PINK, Color.CYAN, Color.YELLOW };
 	
