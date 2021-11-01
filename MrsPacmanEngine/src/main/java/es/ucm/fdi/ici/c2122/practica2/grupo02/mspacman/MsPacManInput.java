@@ -44,18 +44,6 @@ public class MsPacManInput extends Input {
 		}
 	}
 	
-	@Override
-	public Collection<String> getFacts() {
-		Vector<String> facts = new Vector<String>();
-		facts.add(String.format("(BLINKY (edible %s))", this.BLINKYedible));
-		facts.add(String.format("(INKY (edible %s))", this.INKYedible));
-		facts.add(String.format("(PINKY (edible %s))", this.PINKYedible));
-		facts.add(String.format("(SUE (edible %s))", this.SUEedible));
-		facts.add(String.format("(MSPACMAN (mindistancePPill %d))", 
-								(int)this.minPacmanDistancePPill));
-		return facts;
-	}
-
 	public boolean canEat() {
 		return canEatGhost;
 	}
