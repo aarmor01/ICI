@@ -1,8 +1,5 @@
 package es.ucm.fdi.ici.c2122.practica3.grupo02.rules;
 
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Dimension;
 import java.io.File;
 import java.util.EnumMap;
 import java.util.HashMap;
@@ -20,8 +17,6 @@ import es.ucm.fdi.ici.fsm.SimpleState;
 import es.ucm.fdi.ici.fsm.Transition;
 import es.ucm.fdi.ici.fsm.observers.ConsoleFSMObserver;
 import es.ucm.fdi.ici.fsm.observers.GraphFSMObserver;
-import es.ucm.fdi.ici.practica3.demorules.ghosts.actions.ChaseAction;
-import es.ucm.fdi.ici.practica3.demorules.ghosts.actions.RunAwayAction;
 import es.ucm.fdi.ici.rules.RuleEngine;
 import es.ucm.fdi.ici.rules.RulesAction;
 import es.ucm.fdi.ici.rules.observers.ConsoleRuleEngineObserver;
@@ -43,28 +38,28 @@ public class Ghosts extends GhostController {
 	public Ghosts()
 	{
 		
-		setName("Ghosts XX");
-		setTeam("Team XX");
+		setName("Definitely Not Ghosts");
+		setTeam("G2_ICIsports");
 		
 		map = new HashMap<String,RulesAction>();
 		//Fill Actions
-		RulesAction BLINKYchases = new ChaseAction(GHOST.BLINKY);
-		RulesAction INKYchases = new ChaseAction(GHOST.INKY);
-		RulesAction PINKYchases = new ChaseAction(GHOST.PINKY);
-		RulesAction SUEchases = new ChaseAction(GHOST.SUE);
-		RulesAction BLINKYrunsAway = new RunAwayAction(GHOST.BLINKY);
-		RulesAction INKYrunsAway = new RunAwayAction(GHOST.INKY);
-		RulesAction PINKYrunsAway = new RunAwayAction(GHOST.PINKY);
-		RulesAction SUErunsAway = new RunAwayAction(GHOST.SUE);
-		
-		map.put("BLINKYchases", BLINKYchases);
-		map.put("INKYchases", INKYchases);
-		map.put("PINKYchases", PINKYchases);
-		map.put("SUEchases", SUEchases);	
-		map.put("BLINKYrunsAway", BLINKYrunsAway);
-		map.put("INKYrunsAway", INKYrunsAway);
-		map.put("PINKYrunsAway", PINKYrunsAway);
-		map.put("SUErunsAway", SUErunsAway);
+//		RulesAction BLINKYchases = new ChaseAction(GHOST.BLINKY);
+//		RulesAction INKYchases = new ChaseAction(GHOST.INKY);
+//		RulesAction PINKYchases = new ChaseAction(GHOST.PINKY);
+//		RulesAction SUEchases = new ChaseAction(GHOST.SUE);
+//		RulesAction BLINKYrunsAway = new RunAwayAction(GHOST.BLINKY);
+//		RulesAction INKYrunsAway = new RunAwayAction(GHOST.INKY);
+//		RulesAction PINKYrunsAway = new RunAwayAction(GHOST.PINKY);
+//		RulesAction SUErunsAway = new RunAwayAction(GHOST.SUE);
+//		
+//		map.put("BLINKYchases", BLINKYchases);
+//		map.put("INKYchases", INKYchases);
+//		map.put("PINKYchases", PINKYchases);
+//		map.put("SUEchases", SUEchases);	
+//		map.put("BLINKYrunsAway", BLINKYrunsAway);
+//		map.put("INKYrunsAway", INKYrunsAway);
+//		map.put("PINKYrunsAway", PINKYrunsAway);
+//		map.put("SUErunsAway", SUErunsAway);
 		
 		ghostRuleEngines = new EnumMap<GHOST,RuleEngine>(GHOST.class);
 		for(GHOST ghost: GHOST.values())
@@ -82,9 +77,6 @@ public class Ghosts extends GhostController {
 		ConsoleRuleEngineObserver observer = new ConsoleRuleEngineObserver(GHOST.BLINKY.name(), true);
 		ghostRuleEngines.get(GHOST.BLINKY).addObserver(observer);
 		
-		
-//		setName("Definitely Not Ghosts");
-//		setTeam("G2_ICIsports");
 //
 //		fsms = new EnumMap<GHOST,FSM>(GHOST.class);
 //		for(GHOST ghost: GHOST.values()) {

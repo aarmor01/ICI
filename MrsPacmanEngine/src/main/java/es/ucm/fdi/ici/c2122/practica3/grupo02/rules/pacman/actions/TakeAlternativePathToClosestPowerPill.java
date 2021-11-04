@@ -1,4 +1,4 @@
-package es.ucm.fdi.ici.c2122.practica3.grupo02.pacman.actions;
+package es.ucm.fdi.ici.c2122.practica3.grupo02.rules.pacman.actions;
 
 import es.ucm.fdi.ici.Action;
 import pacman.game.Constants.MOVE;

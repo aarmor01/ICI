@@ -1,9 +1,9 @@
 package es.ucm.fdi.ici.c2122.practica3.grupo02;
 
-import es.ucm.fdi.ici.c2122.practica3.grupo02.rules.Ghosts;
 import es.ucm.fdi.ici.c2122.practica3.grupo02.rules.MsPacMan;
-import pacman.Executor;
+import es.ucm.fdi.ici.c2122.practica3.grupo02.rules.Ghosts;
 
+import pacman.Executor;
 import pacman.controllers.GhostController;
 import pacman.controllers.PacmanController;
 
@@ -19,7 +19,7 @@ public class ExecutorTest {
 		
 //		PacmanController pacMan = new HumanController(new KeyBoardInput());
 		PacmanController pacMan = new MsPacMan();
-		GhostController ghosts = new es.ucm.fdi.ici.practica3.demorules.Ghosts();
+		GhostController ghosts = new es.ucm.fdi.ici.c2122.practica1.grupo10.Ghosts();
 		
 		System.out.println(executor.runGame(pacMan, ghosts, 50));
 	}

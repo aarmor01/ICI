@@ -1,4 +1,4 @@
-package es.ucm.fdi.ici.c2122.practica3.grupo02.pacman;
+package es.ucm.fdi.ici.c2122.practica3.grupo02.rules.pacman;
 
 import java.util.Collection;
 import java.util.Random;
