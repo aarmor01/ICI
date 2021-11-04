@@ -64,7 +64,7 @@ public class Ghosts extends GhostController {
 
 		// add observer only to BLINKY
 		ConsoleRuleEngineObserver observer = new ConsoleRuleEngineObserver(GHOST.BLINKY.name(), true);
-		ghostRuleEngines.get(GHOST.BLINKY).addObserver(observer);
+		ghostsRuleEngines.get(GHOST.BLINKY).addObserver(observer);
 
 //
 //		fsms = new EnumMap<GHOST,FSM>(GHOST.class);
