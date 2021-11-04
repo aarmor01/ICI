@@ -2,8 +2,8 @@ package es.ucm.fdi.ici.c2122.practica3.grupo02.rules;
 
 import java.util.HashMap;
 
-import es.ucm.fdi.ici.c2122.practica3.grupo02.GameConstants;
 import es.ucm.fdi.ici.c2122.practica3.grupo02.Tools;
+import es.ucm.fdi.ici.c2122.practica3.grupo02.GameConstants;
 import es.ucm.fdi.ici.c2122.practica3.grupo02.rules.pacman.MsPacManInput;
 import es.ucm.fdi.ici.c2122.practica3.grupo02.rules.pacman.actions.*;
 
@@ -12,35 +12,34 @@ import es.ucm.fdi.ici.rules.RulesAction;
 import es.ucm.fdi.ici.rules.RulesInput;
 import es.ucm.fdi.ici.rules.observers.ConsoleRuleEngineObserver;
 
-import pacman.controllers.PacmanController;
-import pacman.game.Constants.MOVE;
 import pacman.game.Game;
+import pacman.game.Constants.MOVE;
+import pacman.controllers.PacmanController;
 
 public class MsPacMan extends PacmanController {
 	
-	private static final String PACMAN_RULES_PATH = GameConstants.RULES_PATH + "pacmanrules.clp";
+	private static final String PACMAN_RULES_PATH = GameConstants.RULES_PATH + "mspacmanrules.clp";
 	private static final String PACMAN_NAME = "MsPacMan";
 	
-	HashMap<String,RulesAction> map;
-	
-	RuleEngine PacManRuleEngine;
+	HashMap<String,RulesAction> actionsMap;
+	RuleEngine mspacmanRuleEngine;
 	
 	public MsPacMan() {
 		
 		setName("Definitely Not MsPacman");
 		setTeam("G2_ICIsports");
 		
-		map = new HashMap<String, RulesAction>();
+		actionsMap = new HashMap<String, RulesAction>();
     	
 		RulesAction PCcleansBottom = new CleanBottomAction();  
 		
-		map.put("PCcleansBottom", PCcleansBottom);
+		actionsMap.put("PCcleansBottom", PCcleansBottom);
 		
 		String fileRule = PACMAN_RULES_PATH;
-		PacManRuleEngine = new RuleEngine(PACMAN_NAME, fileRule, map);
+		mspacmanRuleEngine = new RuleEngine(PACMAN_NAME, fileRule, actionsMap);
 		
 		ConsoleRuleEngineObserver observer = new ConsoleRuleEngineObserver(PACMAN_NAME, true);
-		PacManRuleEngine.addObserver(observer);
+		mspacmanRuleEngine.addObserver(observer);
 	}
 	
 	public void oldBehaviour() {
@@ -141,10 +140,10 @@ public class MsPacMan extends PacmanController {
     	//Creamos el input
        	RulesInput in = new MsPacManInput(game); 
        	//Reseteamos sus valores a saber por qué
-       	PacManRuleEngine.reset();
+       	mspacmanRuleEngine.reset();
        	//Obtenemos los resultados de cada iteracion
-       	PacManRuleEngine.assertFacts(in.getFacts());
+       	mspacmanRuleEngine.assertFacts(in.getFacts());
        	//En funcion de los resultados, habra devuelto un MOVE
-       	return PacManRuleEngine.run(game);
+       	return mspacmanRuleEngine.run(game);
     }
 }

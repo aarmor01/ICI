@@ -7,42 +7,31 @@ import java.util.HashMap;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
-import es.ucm.fdi.ici.c2122.practica2.grupo02.ghosts.GhostInput;
-import es.ucm.fdi.ici.c2122.practica2.grupo02.ghosts.actions.*;
-import es.ucm.fdi.ici.c2122.practica2.grupo02.ghosts.transitions.*;
 import es.ucm.fdi.ici.c2122.practica3.grupo02.GameConstants;
-import es.ucm.fdi.ici.fsm.CompoundState;
-import es.ucm.fdi.ici.fsm.FSM;
-import es.ucm.fdi.ici.fsm.SimpleState;
-import es.ucm.fdi.ici.fsm.Transition;
-import es.ucm.fdi.ici.fsm.observers.ConsoleFSMObserver;
-import es.ucm.fdi.ici.fsm.observers.GraphFSMObserver;
+import es.ucm.fdi.ici.c2122.practica3.grupo02.rules.ghosts.GhostInput;
+import es.ucm.fdi.ici.c2122.practica3.grupo02.rules.ghosts.actions.*;
+
 import es.ucm.fdi.ici.rules.RuleEngine;
 import es.ucm.fdi.ici.rules.RulesAction;
 import es.ucm.fdi.ici.rules.observers.ConsoleRuleEngineObserver;
-import pacman.controllers.GhostController;
+
 import pacman.game.Game;
-import pacman.game.GameView;
-import pacman.game.Constants.DM;
-import pacman.game.Constants.GHOST;
 import pacman.game.Constants.MOVE;
+import pacman.game.Constants.GHOST;
+import pacman.controllers.GhostController;
 
 public class Ghosts extends GhostController {
-	private static final String RULES_PATH = "es"+File.separator+"ucm"+File.separator+"fdi"+File.separator+"ici"+File.separator+"practica3"+File.separator+"demorules"+File.separator;
-	
-	HashMap<String,RulesAction> map;
-	
-	EnumMap<GHOST,RuleEngine> ghostRuleEngines;
 
-	EnumMap<GHOST,FSM> fsms;
-	public Ghosts()
-	{
-		
+	HashMap<String, RulesAction> actionsMap;
+	EnumMap<GHOST, RuleEngine> ghostsRuleEngines;
+
+	public Ghosts() {
+
 		setName("Definitely Not Ghosts");
 		setTeam("G2_ICIsports");
-		
-		map = new HashMap<String,RulesAction>();
-		//Fill Actions
+
+		actionsMap = new HashMap<String, RulesAction>();
+		// Fill Actions
 //		RulesAction BLINKYchases = new ChaseAction(GHOST.BLINKY);
 //		RulesAction INKYchases = new ChaseAction(GHOST.INKY);
 //		RulesAction PINKYchases = new ChaseAction(GHOST.PINKY);
@@ -60,23 +49,23 @@ public class Ghosts extends GhostController {
 //		map.put("INKYrunsAway", INKYrunsAway);
 //		map.put("PINKYrunsAway", PINKYrunsAway);
 //		map.put("SUErunsAway", SUErunsAway);
-		
-		ghostRuleEngines = new EnumMap<GHOST,RuleEngine>(GHOST.class);
-		for(GHOST ghost: GHOST.values())
-		{
-			String rulesFile = String.format("%s%srules.clp", RULES_PATH, ghost.name().toLowerCase());
-			RuleEngine engine  = new RuleEngine(ghost.name(),rulesFile, map);
-			ghostRuleEngines.put(ghost, engine);
-			
-			//add observer to every Ghost
-			//ConsoleRuleEngineObserver observer = new ConsoleRuleEngineObserver(ghost.name(), true);
-			//engine.addObserver(observer);
+
+		ghostsRuleEngines = new EnumMap<GHOST, RuleEngine>(GHOST.class);
+		for (GHOST ghost : GHOST.values()) {
+			String rulesFile = String.format("%s%srules.clp", GameConstants.RULES_PATH, ghost.name().toLowerCase());
+			RuleEngine engine = new RuleEngine(ghost.name(), rulesFile, actionsMap);
+			ghostsRuleEngines.put(ghost, engine);
+
+			// add observer to every Ghost
+			// ConsoleRuleEngineObserver observer = new
+			// ConsoleRuleEngineObserver(ghost.name(), true);
+			// engine.addObserver(observer);
 		}
-		
-		//add observer only to BLINKY
+
+		// add observer only to BLINKY
 		ConsoleRuleEngineObserver observer = new ConsoleRuleEngineObserver(GHOST.BLINKY.name(), true);
 		ghostRuleEngines.get(GHOST.BLINKY).addObserver(observer);
-		
+
 //
 //		fsms = new EnumMap<GHOST,FSM>(GHOST.class);
 //		for(GHOST ghost: GHOST.values()) {
@@ -196,29 +185,28 @@ public class Ghosts extends GhostController {
 //			}
 //		}
 	}
-	
+
 	public void preCompute(String opponent) {
-    	for(FSM fsm: fsms.values())
-    		fsm.reset();
-    }
-	
+//		for (FSM fsm : fsms.values())
+//			fsm.reset();
+	}
+
 	@Override
 	public EnumMap<GHOST, MOVE> getMove(Game game, long timeDue) {
-		EnumMap<GHOST,MOVE> result = new EnumMap<GHOST,MOVE>(GHOST.class);
-		
+		EnumMap<GHOST, MOVE> result = new EnumMap<GHOST, MOVE>(GHOST.class);
+
 		GhostInput in = new GhostInput(game);
-		
-		for(GHOST ghost: GHOST.values())
-		{
-			FSM fsm = fsms.get(ghost);
-			MOVE move = fsm.run(in);
-//			if (move == MOVE.UP)
-//				move = MOVE.DOWN;
-//			else if (move == MOVE.DOWN)
-//				move = MOVE.UP;
-			result.put(ghost, move);
+
+		for (GHOST ghost : GHOST.values()) {
+//			FSM fsm = fsms.get(ghost);
+//			MOVE move = fsm.run(in);
+////			if (move == MOVE.UP)
+////				move = MOVE.DOWN;
+////			else if (move == MOVE.DOWN)
+////				move = MOVE.UP;
+//			result.put(ghost, move);
 		}
-		
+
 		return result;
 	}
 }
