@@ -12,7 +12,10 @@
 	(slot edible (type SYMBOL)))
 	
 (deftemplate MSPACMAN
-	(slot existenPillsAbajo (type SYMBOL)))
+	(slot existenPillsAbajo (type SYMBOL))
+	(slot caminoBloqueado (type SYMBOL)))
+	
+	
     
 ;--------DEFINITION OF THE ACTION FACT---------------------------------
 (deftemplate ACTION
@@ -23,5 +26,10 @@
 	(MSPACMAN (existenPillsAbajo true))
 	=>  
 	(assert (ACTION (id PCcleansBottom) (info "MSPacMan limpia fondo"))) )	
+	
+(defrule PathBlocked
+	(MSPACMAN (caminoBloqueado true))
+	=>  
+	(assert (ACTION (id PCcleansBottom) (info "camino del MSPacMan bloqueado --> busca nuevo camino"))) )	
 	
 	

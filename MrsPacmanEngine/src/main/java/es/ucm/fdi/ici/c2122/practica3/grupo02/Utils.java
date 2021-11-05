@@ -11,11 +11,11 @@ import java.util.Random;
 import pacman.game.Game;
 import pacman.game.GameView;
 
-public final class Tools {
-	
-	public static Random rnd = new Random();
+public final class Utils {
 	
 	public static int nodeTarget = 0;
+	
+	public static Random rnd = new Random();
 	
 	public static GHOST nearestGhostInRange(Game game, int chaseLimit) {
 		int pcNode = game.getPacmanCurrentNodeIndex();

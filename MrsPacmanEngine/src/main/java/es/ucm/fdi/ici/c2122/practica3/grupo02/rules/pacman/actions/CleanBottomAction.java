@@ -4,6 +4,7 @@ import java.awt.Color;
 
 import es.ucm.fdi.ici.Action;
 import es.ucm.fdi.ici.c2122.practica3.grupo02.GameConstants;
+import es.ucm.fdi.ici.c2122.practica3.grupo02.Utils;
 import es.ucm.fdi.ici.rules.RulesAction;
 import jess.Fact;
 import pacman.game.Constants.DM;
@@ -45,6 +46,8 @@ public class CleanBottomAction implements RulesAction {
 		//if there's active pill we draw it's euclidean path
 		if (nearestPillNode != -1 && GameConstants.DEBUG)
 			GameView.addLines(game, Color.CYAN, pcNode, nearestPillNode);
+		
+		Utils.nodeTarget = nearestPillNode;
 		
 		return game.getApproximateNextMoveTowardsTarget(pcNode, nearestPillNode, game.getPacmanLastMoveMade(), DM.PATH);
 	}

@@ -2,11 +2,10 @@ package es.ucm.fdi.ici.c2122.practica3.grupo02.rules;
 
 import java.util.HashMap;
 
-import es.ucm.fdi.ici.c2122.practica3.grupo02.Tools;
+import es.ucm.fdi.ici.c2122.practica3.grupo02.Utils;
 import es.ucm.fdi.ici.c2122.practica3.grupo02.GameConstants;
 import es.ucm.fdi.ici.c2122.practica3.grupo02.rules.pacman.MsPacManInput;
 import es.ucm.fdi.ici.c2122.practica3.grupo02.rules.pacman.actions.*;
-
 import es.ucm.fdi.ici.rules.RuleEngine;
 import es.ucm.fdi.ici.rules.RulesAction;
 import es.ucm.fdi.ici.rules.RulesInput;

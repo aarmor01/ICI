@@ -5,7 +5,7 @@ import java.util.Random;
 import java.util.Vector;
 
 import es.ucm.fdi.ici.c2122.practica3.grupo02.GameConstants;
-import es.ucm.fdi.ici.c2122.practica3.grupo02.Tools;
+import es.ucm.fdi.ici.c2122.practica3.grupo02.Utils;
 import es.ucm.fdi.ici.rules.RulesInput;
 import pacman.game.Constants.GHOST;
 import pacman.game.Constants.MOVE;
@@ -20,6 +20,8 @@ public class MsPacManInput extends RulesInput {
 	private int nearestGhostDistance;
 	
 	private boolean existenPillsAbajo;
+	
+	private boolean caminoBloqueado;
 	
 	private Random rnd = new Random();
 	
@@ -43,6 +45,7 @@ public class MsPacManInput extends RulesInput {
 //		}
 		
 		existenPillsAbajo = ExistingBottomPills();
+		caminoBloqueado = PathMayBeObstructed();
 	}
 
 	public boolean canEat() {
@@ -80,11 +83,11 @@ public class MsPacManInput extends RulesInput {
 	}
 	
 	public boolean GhostTooCloseToPacMan() {
-		return Tools.nearestGhostInRange(game, GameConstants.pacmanChaseDistance) != null;
+		return Utils.nearestGhostInRange(game, GameConstants.pacmanChaseDistance) != null;
 	}
 	
 	public boolean PacManIsInDanger() {
-		GHOST g = Tools.nearestGhostInRange(game, GameConstants.pacmanChaseDistance);
+		GHOST g = Utils.nearestGhostInRange(game, GameConstants.pacmanChaseDistance);
 		if(g!= null)
 			return !game.isGhostEdible(g);
 		else return false;
@@ -107,11 +110,41 @@ public class MsPacManInput extends RulesInput {
 		}
 		return false;
 	}
+	
+	public boolean PathMayBeObstructed() {
+		int pcNode = game.getPacmanCurrentNodeIndex();
+		int nodeTarget = Utils.nodeTarget;
+		
+		if(nodeTarget != -1) {
+			//We get all the nodes that take MsPacMan to the pill
+			int[] path = game.getShortestPath(pcNode, nodeTarget);
+			
+			//For each Ghost we check if block up the MsPacMan path or may block it up.
+			
+			//Min distance to predict if the nearest Ghost can block up MsPacMan's path 
+			int obstructionLimit = 40;
+			
+			for(int pathNode : path) {			
+				for(GHOST ghostType: GHOST.values()) {
+					if(pathNode == game.getGhostCurrentNodeIndex(ghostType))
+						return true;
+					
+					int ghostIndex = game.getGhostCurrentNodeIndex(ghostType);
+					
+					int distance = game.getShortestPathDistance(ghostIndex, pathNode, game.getGhostLastMoveMade(ghostType));
+					if (distance < obstructionLimit) 
+						return true;
+				}
+			}
+		}
+		
+		return false;
+	}
 		
 	public boolean PathBlockedByGhost() {
 		int pcNode = game.getPacmanCurrentNodeIndex();
 		
-		int nodeTarget = Tools.getPathWithMorePills(game, pcNode);
+		int nodeTarget = Utils.getPathWithMorePills(game, pcNode);
 		
 		
 		//Min distance to predict if the nearest Ghost can block up MsPacMan's path 
@@ -165,6 +198,8 @@ public class MsPacManInput extends RulesInput {
 	public Collection<String> getFacts() {
 		Vector<String> facts = new Vector<String>();
 		facts.add(String.format("(MSPACMAN (existenPillsAbajo %s))", this.existenPillsAbajo));
+		facts.add(String.format("(MSPACMAN (caminoBloqueado %s))", this.caminoBloqueado));
+		
 //		facts.add(String.format("(INKY (edible %s))", this.INKYedible));
 //		facts.add(String.format("(PINKY (edible %s))", this.PINKYedible));
 //		facts.add(String.format("(SUE (edible %s))", this.SUEedible));
