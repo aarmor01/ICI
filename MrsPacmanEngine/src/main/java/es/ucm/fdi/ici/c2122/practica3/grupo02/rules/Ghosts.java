@@ -10,9 +10,10 @@ import javax.swing.JPanel;
 import es.ucm.fdi.ici.c2122.practica3.grupo02.GameConstants;
 import es.ucm.fdi.ici.c2122.practica3.grupo02.rules.ghosts.GhostInput;
 import es.ucm.fdi.ici.c2122.practica3.grupo02.rules.ghosts.actions.*;
-
+import es.ucm.fdi.ici.c2122.practica3.grupo02.rules.pacman.MsPacManInput;
 import es.ucm.fdi.ici.rules.RuleEngine;
 import es.ucm.fdi.ici.rules.RulesAction;
+import es.ucm.fdi.ici.rules.RulesInput;
 import es.ucm.fdi.ici.rules.observers.ConsoleRuleEngineObserver;
 
 import pacman.game.Game;
@@ -198,13 +199,14 @@ public class Ghosts extends GhostController {
 		GhostInput in = new GhostInput(game);
 
 		for (GHOST ghost : GHOST.values()) {
-//			FSM fsm = fsms.get(ghost);
-//			MOVE move = fsm.run(in);
-////			if (move == MOVE.UP)
-////				move = MOVE.DOWN;
-////			else if (move == MOVE.DOWN)
-////				move = MOVE.UP;
-//			result.put(ghost, move);
+			//Creamos el input
+	       	RulesInput inG = new GhostInput(game); 
+	       	//Reseteamos sus valores a saber por qué
+	       	ghostsRuleEngines.get(ghost).reset();
+	       	//Obtenemos los resultados de cada iteracion
+	       	ghostsRuleEngines.get(ghost).assertFacts(inG.getFacts());
+	       	//En funcion de los resultados, habra devuelto un MOVE
+	       	result.put(ghost, ghostsRuleEngines.get(ghost).run(game));
 		}
 
 		return result;

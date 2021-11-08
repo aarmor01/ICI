@@ -1,16 +1,15 @@
 ;FACTS ASSERTED BY GAME INPUT
 (deftemplate BLINKY
-	(slot edible (type SYMBOL)))
-	
-(deftemplate INKY
-	(slot edible (type SYMBOL)))
-	
-(deftemplate PINKY
-	(slot edible (type SYMBOL)))
-
-(deftemplate SUE
-	(slot edible (type SYMBOL)))
-	
+	(slot BLINKYedible (type SYMBOL))
+    (slot BLINKYedTimeLeft (type NUMBER))
+    (slot BLINKYoutOfLair (type SYMBOL))
+	(slot BLINKYposition (type NUMBER))
+	(slot distanceBLINKYToPacman (type NUMBER))
+	(slot pacmanDistancePowerPill (type NUMBER))
+	(slot nextPillPacManBySeer (type NUMBER))
+	(slot anotherGhostInPath (type SYMBOL))
+	(slot chaseCountBLINKY (type NUMBER))
+)
 (deftemplate MSPACMAN 
     (slot mindistancePPill (type NUMBER)) )
     

@@ -1,13 +1,17 @@
 package es.ucm.fdi.ici.c2122.practica3.grupo02.rules.ghosts;
 
-import es.ucm.fdi.ici.Input;
+import es.ucm.fdi.ici.rules.RulesInput;
+
+import java.util.Collection;
+import java.util.Vector;
+
 import es.ucm.fdi.ici.c2122.practica2.grupo02.GameConstants;
 import pacman.game.Constants.DM;
 import pacman.game.Constants.GHOST;
 import pacman.game.Constants.MOVE;
 import pacman.game.Game;
 
-public class GhostInput extends Input {
+public class GhostInput extends RulesInput {
 
 	private boolean BLINKYedible;
 	private boolean INKYedible;
@@ -285,5 +289,20 @@ public class GhostInput extends Input {
 			if(node == path.length)
 				anotherGhostInPath = true;
 		}
+	}
+	
+	@Override
+	public Collection<String> getFacts() {
+		Vector<String> facts = new Vector<String>();
+		
+//		facts.add(String.format("(MSPACMAN (existenPillsAbajo %s))", this.existenPillsAbajo));
+//		facts.add(String.format("(MSPACMAN (caminoBloqueado %s))", this.caminoBloqueado));
+		
+//		facts.add(String.format("(INKY (edible %s))", this.INKYedible));
+//		facts.add(String.format("(PINKY (edible %s))", this.PINKYedible));
+//		facts.add(String.format("(SUE (edible %s))", this.SUEedible));
+//		facts.add(String.format("(MSPACMAN (mindistancePPill %d))", 
+//								(int)this.minPacmanDistancePPill));
+		return facts;
 	}
 }
