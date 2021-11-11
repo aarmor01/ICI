@@ -30,9 +30,13 @@ public class MsPacMan extends PacmanController {
 		
 		actionsMap = new HashMap<String, RulesAction>();
     	
+		//ACTIONS
 		RulesAction PCcleansBottom = new CleanBottomAction();  
-		
 		actionsMap.put("PCcleansBottom", PCcleansBottom);
+		
+		RulesAction runaway = new RunawayFromClosestGhost();  
+		actionsMap.put("RunawayFromClosestGhost", runaway);
+		
 		
 		String fileRule = PACMAN_RULES_PATH;
 		mspacmanRuleEngine = new RuleEngine(PACMAN_NAME, fileRule, actionsMap);
