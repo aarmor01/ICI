@@ -128,7 +128,7 @@ public class MsPacMan extends PacmanController {
 	
 	
 	public void preCompute(String opponent) {
-    		//fsm.reset();
+//    		fsm.reset();
     }
 	
     /* (non-Javadoc)
