@@ -25,6 +25,8 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Random;
 
+import org.bouncycastle.util.Arrays;
+
 import pacman.game.Constants.DM;
 import pacman.game.Constants.GHOST;
 import pacman.game.Constants.MOVE;
@@ -284,7 +286,16 @@ public final class Game {
         setPills();
         initGhosts();
 
-        internalPacman = new PacMan(currentMaze.initialPacManNodeIndex, MOVE.LEFT, NUM_LIVES, false);
+        //RANDOM INIT
+        int initialNode = 0;
+        do {
+        	initialNode = (int)(Math.random()*(double)currentMaze.graph.length); 
+        }while(initialNode == currentMaze.lairNodeIndex);
+        MOVE[] poss = this.getPossibleMoves(initialNode);
+        MOVE init = poss[0];
+        internalPacman = new PacMan(initialNode, init, NUM_LIVES, false);
+        //FIXED INIT
+        //internalPacman = new PacMan(currentMaze.initialPacManNodeIndex, MOVE.LEFT, NUM_LIVES, false);
     }
 
     /**
@@ -1231,7 +1242,7 @@ public final class Game {
      */
     @SuppressWarnings({"WeakerAccess", "unused"})
     public int[] getJunctionIndices() {
-        return currentMaze.junctionIndices;
+        return Arrays.clone(currentMaze.junctionIndices);
     }
 
     /**
@@ -1241,7 +1252,7 @@ public final class Game {
      */
     @SuppressWarnings({"WeakerAccess", "unused"})
     public int[] getPillIndices() {
-        return currentMaze.pillIndices;
+        return Arrays.clone(currentMaze.pillIndices);
     }
 
     /**
@@ -1251,7 +1262,7 @@ public final class Game {
      */
     @SuppressWarnings({"WeakerAccess", "unused"})
     public int[] getPowerPillIndices() {
-        return currentMaze.powerPillIndices;
+        return Arrays.clone(currentMaze.powerPillIndices);
     }
 
     /**
@@ -1528,7 +1539,7 @@ public final class Game {
      */
     @SuppressWarnings({"WeakerAccess", "unused"})
     public MOVE[] getPossibleMoves(int nodeIndex) {
-        return currentMaze.graph[nodeIndex].allPossibleMoves.get(MOVE.NEUTRAL);
+        return currentMaze.graph[nodeIndex].allPossibleMoves.get(MOVE.NEUTRAL).clone();
     }
 
     /**
@@ -1540,7 +1551,7 @@ public final class Game {
      */
     @SuppressWarnings({"WeakerAccess", "unused"})
     public MOVE[] getPossibleMoves(int nodeIndex, MOVE lastModeMade) {
-        return currentMaze.graph[nodeIndex].allPossibleMoves.get(lastModeMade);
+        return currentMaze.graph[nodeIndex].allPossibleMoves.get(lastModeMade).clone();
     }
 
     /**
@@ -1550,8 +1561,8 @@ public final class Game {
      * @return The set of neighbouring nodes
      */
     @SuppressWarnings({"WeakerAccess", "unused"})
-    public int[] getNeighbouringNodes(int nodeIndex) {
-        return currentMaze.graph[nodeIndex].allNeighbouringNodes.get(MOVE.NEUTRAL);
+    public final int[] getNeighbouringNodes(int nodeIndex) {
+        return Arrays.clone(currentMaze.graph[nodeIndex].allNeighbouringNodes.get(MOVE.NEUTRAL));
     }
 
     /**
@@ -1563,8 +1574,8 @@ public final class Game {
      * @return The set of neighbouring nodes except the one that is opposite of the last move made
      */
     @SuppressWarnings({"WeakerAccess", "unused"})
-    public int[] getNeighbouringNodes(int nodeIndex, MOVE lastModeMade) {
-        return currentMaze.graph[nodeIndex].allNeighbouringNodes.get(lastModeMade);
+    public final int[] getNeighbouringNodes(int nodeIndex, MOVE lastModeMade) {
+        return Arrays.clone(currentMaze.graph[nodeIndex].allNeighbouringNodes.get(lastModeMade));
     }
 
     /**

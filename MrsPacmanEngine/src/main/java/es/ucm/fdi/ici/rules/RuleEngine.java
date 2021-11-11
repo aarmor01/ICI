@@ -87,12 +87,22 @@ public class RuleEngine extends RuleEngineObservable{
 	private Fact findActionFact() throws JessException
 	{
 		Iterator<?> it = jess.listFacts();
+		Fact action = null;
+		int max = Integer.MIN_VALUE;
 		while(it.hasNext()){ 
 		    Fact dd = (Fact)it.next();
 		    String nombre = dd.getName(); 
 		    if(nombre.startsWith("MAIN::"+RulesAction.FACT_NAME))
-		    	return dd;
+		    {
+		    	int factpriority = dd.getSlotValue(RulesAction.PRIORITY_SLOT).intValue(null);
+		    	if(factpriority > max)
+		    	{
+		    		action = dd;
+		    		max = factpriority;
+		    	}
+		    }
 		}
-		return null;
+		return action;
 	}
+	
 }

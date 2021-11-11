@@ -12,6 +12,7 @@ import jess.Fact;
 public interface RulesAction extends Action {
 		
 	public static final String FACT_NAME = "ACTION";
+	public static final String PRIORITY_SLOT = "priority";
 	public static final String ID_SLOT = "id";
 
 	/**
