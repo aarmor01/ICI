@@ -1,4 +1,4 @@
-package es.ucm.fdi.ici.c2122.practica3.grupo02.rules;
+package es.ucm.fdi.ici.c2122.practica3.grupo02;
 
 import java.io.File;
 import java.util.EnumMap;
@@ -7,7 +7,6 @@ import java.util.HashMap;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
-import es.ucm.fdi.ici.c2122.practica3.grupo02.GameConstants;
 import es.ucm.fdi.ici.c2122.practica3.grupo02.rules.ghosts.GhostInput;
 import es.ucm.fdi.ici.c2122.practica3.grupo02.rules.ghosts.actions.*;
 import es.ucm.fdi.ici.c2122.practica3.grupo02.rules.pacman.MsPacManInput;

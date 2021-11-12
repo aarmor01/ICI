@@ -1,8 +1,6 @@
 package es.ucm.fdi.ici.c2122.practica3.grupo02;
 
 import es.ucm.fdi.ici.c2122.practica3.grupo02.rules.MsPacMan;
-import es.ucm.fdi.ici.c2122.practica3.grupo02.rules.Ghosts;
-
 import pacman.Executor;
 import pacman.controllers.GhostController;
 import pacman.controllers.PacmanController;

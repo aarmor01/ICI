@@ -16,22 +16,36 @@
     
 ;DEFINITION OF THE ACTION FACT
 (deftemplate ACTION
-	(slot id) (slot info (default "")) ) 
-   
+	(slot id) (slot info (default "")) (slot priority (type NUMBER) ) ; mandatory slots
+	(slot runawaystrategy (type SYMBOL)) ; Extra slot for the runaway action
+) 
+
+ 
 ;RULES 
 (defrule BLINKYrunsAwayMSPACMANclosePPill
 	(MSPACMAN (mindistancePPill ?d)) (test (<= ?d 30)) 
 	=>  
-	(assert (ACTION (id BLINKYrunsAway) (info "MSPacMan cerca PPill"))) )
+	(assert 
+		(ACTION (id BLINKYrunsAway) (info "MSPacMan cerca PPill") (priority 50) 
+			(runawaystrategy RANDOM)
+		)
+	)
+)
 
 (defrule BLINKYrunsAway
 	(BLINKY (edible true)) 
 	=>  
-	(assert (ACTION (id BLINKYrunsAway) (info "Comestible --> huir") )))
+	(assert 
+		(ACTION (id BLINKYrunsAway) (info "Comestible --> huir") (priority 30) 
+			(runawaystrategy CORNER)
+		)
+	)
+)
 	
 (defrule BLINKYchases
 	(BLINKY (edible false)) 
 	=> 
-	(assert (ACTION (id BLINKYchases) (info "No comestible --> perseguir") )))	
+	(assert (ACTION (id BLINKYchases) (info "No comestible --> perseguir")  (priority 10) ))
+)	
 	
 	

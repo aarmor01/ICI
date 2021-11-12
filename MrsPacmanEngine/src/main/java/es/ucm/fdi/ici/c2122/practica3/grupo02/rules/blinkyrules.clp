@@ -1,4 +1,6 @@
-;FACTS ASSERTED BY GAME INPUT
+; -- FACTS --
+
+; --- GAME INPUT DATA ---	
 (deftemplate BLINKY
 	(slot BLINKYedible (type SYMBOL))
     (slot BLINKYedTimeLeft (type NUMBER))
@@ -8,29 +10,43 @@
 	(slot pacmanDistancePowerPill (type NUMBER))
 	(slot nextPillPacManBySeer (type NUMBER))
 	(slot anotherGhostInPath (type SYMBOL))
-	(slot chaseCountBLINKY (type NUMBER))
-)
+	(slot chaseCountBLINKY (type NUMBER)) )
+
+(deftemplate INKY
+	(slot edible (type SYMBOL)) )
+
+(deftemplate PINKY
+	(slot edible (type SYMBOL)) )
+
+(deftemplate SUE
+	(slot edible (type SYMBOL)) )
+
 (deftemplate MSPACMAN 
     (slot mindistancePPill (type NUMBER)) )
-    
-;DEFINITION OF THE ACTION FACT
+
+; --- ACTION ---
 (deftemplate ACTION
-	(slot id) (slot info (default "")) ) 
-   
-;RULES 
+	(slot id)
+	(slot info (default ""))
+	(slot priority (type NUMBER)) )   
+	
+; -- RULES --
 (defrule BLINKYrunsAwayMSPACMANclosePPill
 	(MSPACMAN (mindistancePPill ?d)) (test (<= ?d 30)) 
 	=>  
-	(assert (ACTION (id BLINKYrunsAway) (info "MSPacMan cerca PPill"))) )
+	(assert (ACTION (id BLINKYrunsAway) 
+			(info "MSPacMan cerca PPill"))) )
 
 (defrule BLINKYrunsAway
 	(BLINKY (edible true)) 
 	=>  
-	(assert (ACTION (id BLINKYrunsAway) (info "Comestible --> huir") )))
+	(assert (ACTION (id BLINKYrunsAway)
+			(info "Comestible --> huir"))) )
 	
 (defrule BLINKYchases
 	(BLINKY (edible false)) 
 	=> 
-	(assert (ACTION (id BLINKYchases) (info "No comestible --> perseguir") )))	
+	(assert (ACTION (id BLINKYchases)
+			(info "No comestible --> perseguir"))) )	
 	
 	
