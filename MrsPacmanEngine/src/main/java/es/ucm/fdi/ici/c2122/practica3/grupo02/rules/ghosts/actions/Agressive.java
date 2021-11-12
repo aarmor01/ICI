@@ -14,6 +14,11 @@ public class Agressive implements Action {
 		super();
 		this.ghostType = ghostType;
 	}
+	
+	@Override
+	public String getActionId() {
+		return ghostType + " agressive";
+	}
 
 	@Override
 	public MOVE execute(Game game) {
@@ -24,10 +29,5 @@ public class Agressive implements Action {
 					game.getGhostLastMoveMade(ghostType), DM.PATH);
 		}
 		return MOVE.NEUTRAL;
-	}
-
-	@Override
-	public String getActionId() {
-		return ghostType + " agressive";
 	}
 }

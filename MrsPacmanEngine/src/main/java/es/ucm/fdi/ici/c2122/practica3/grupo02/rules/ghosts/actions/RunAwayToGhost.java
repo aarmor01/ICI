@@ -14,6 +14,11 @@ public class RunAwayToGhost implements Action {
 		super();
 		this.ghostType = ghostType;
 	}
+	
+	@Override
+	public String getActionId() {
+		return ghostType + " runs to ghost";
+	}
 
 	@Override
 	public MOVE execute(Game game) {
@@ -45,10 +50,5 @@ public class RunAwayToGhost implements Action {
 		}
 
 		return MOVE.NEUTRAL;
-	}
-
-	@Override
-	public String getActionId() {
-		return ghostType + " runs to ghost";
 	}
 }

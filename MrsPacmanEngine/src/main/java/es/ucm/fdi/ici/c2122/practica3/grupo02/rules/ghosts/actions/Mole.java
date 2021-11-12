@@ -14,6 +14,11 @@ public class Mole implements Action {
 		super();
 		this.ghostType = ghostType;
 	}
+	
+	@Override
+	public String getActionId() {
+		return ghostType + " mole";
+	}
 
 	@Override
 	public MOVE execute(Game game) {
@@ -77,10 +82,5 @@ public class Mole implements Action {
 						game.getGhostLastMoveMade(ghostType), DM.PATH);
 		}
 		return MOVE.NEUTRAL;
-	}
-
-	@Override
-	public String getActionId() {
-		return ghostType + " mole";
 	}
 }

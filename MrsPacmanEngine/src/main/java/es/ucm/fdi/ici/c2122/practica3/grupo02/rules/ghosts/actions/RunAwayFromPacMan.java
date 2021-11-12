@@ -16,6 +16,11 @@ public class RunAwayFromPacMan implements Action {
 	}
 
 	@Override
+	public String getActionId() {
+		return ghostType + " runs away";
+	}
+	
+	@Override
 	public MOVE execute(Game game) {
 		if (game.doesGhostRequireAction(ghostType)) {
 			int pacmanNode = game.getPacmanCurrentNodeIndex();
@@ -25,10 +30,5 @@ public class RunAwayFromPacMan implements Action {
 		}
 		
 		return MOVE.NEUTRAL;
-	}
-
-	@Override
-	public String getActionId() {
-		return ghostType + " runs away";
 	}
 }

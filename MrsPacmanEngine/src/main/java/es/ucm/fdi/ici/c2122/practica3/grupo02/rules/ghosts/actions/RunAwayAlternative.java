@@ -16,6 +16,11 @@ public class RunAwayAlternative implements Action {
 	}
 
 	@Override
+	public String getActionId() {
+		return ghostType + " run alternate";
+	}
+	
+	@Override
 	public MOVE execute(Game game) {
 		if (game.doesGhostRequireAction(ghostType)) {
 			int pacmanNode = game.getPacmanCurrentNodeIndex();
@@ -83,10 +88,5 @@ public class RunAwayAlternative implements Action {
 			return game.getNextMoveTowardsTarget(ghostNode, destination, game.getGhostLastMoveMade(ghostType), DM.PATH);
 		}
 		return MOVE.NEUTRAL;
-	}
-
-	@Override
-	public String getActionId() {
-		return ghostType + " run alternate";
 	}
 }

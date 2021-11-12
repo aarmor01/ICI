@@ -8,15 +8,16 @@ public class Lair implements Action {
 
 	public Lair() {
 		super();
+	}	
+	
+	@Override
+	public String getActionId() {
+		return "Lair";
 	}
 
 	@Override
 	public MOVE execute(Game game) {
 		return MOVE.NEUTRAL;
 	}
-	
-	@Override
-	public String getActionId() {
-		return "Lair";
-	}
+
 }

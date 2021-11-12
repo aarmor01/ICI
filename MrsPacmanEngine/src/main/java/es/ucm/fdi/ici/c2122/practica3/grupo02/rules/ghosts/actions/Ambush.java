@@ -14,6 +14,11 @@ public class Ambush implements Action {
 		super();
 		this.ghostType = ghostType;
 	}
+	
+	@Override
+	public String getActionId() {
+		return ghostType + " ambush";
+	}
 
 	@Override
 	public MOVE execute(Game game) {
@@ -59,10 +64,5 @@ public class Ambush implements Action {
 			return game.getNextMoveTowardsTarget(ghostNode, intersectionNodeFound, game.getGhostLastMoveMade(ghostType), DM.PATH);
 		}
 		return MOVE.NEUTRAL;
-	}
-
-	@Override
-	public String getActionId() {
-		return ghostType + " ambush";
 	}
 }

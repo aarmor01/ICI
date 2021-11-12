@@ -16,6 +16,11 @@ public class ChaseSecondaryPath implements Action {
 	}
 
 	@Override
+	public String getActionId() {
+		return ghostType + " chase 2";
+	}
+
+	@Override
 	public MOVE execute(Game game) {
         if (game.doesGhostRequireAction(ghostType))        //if it requires an action
         {
@@ -46,10 +51,4 @@ public class ChaseSecondaryPath implements Action {
         
         return MOVE.NEUTRAL;
 	}
-
-	@Override
-	public String getActionId() {
-		return ghostType + " chase 2";
-	}
-
 }

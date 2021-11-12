@@ -20,6 +20,11 @@ public class Seer implements Action {
 	}
 
 	@Override
+	public String getActionId() {
+		return ghostType + " seer";
+	}
+
+	@Override
 	public MOVE execute(Game game) {
 		if (game.doesGhostRequireAction(ghostType)) {
 			int pacmanNode = game.getPacmanCurrentNodeIndex();
@@ -47,10 +52,5 @@ public class Seer implements Action {
 		}
 		
 		return MOVE.NEUTRAL;
-	}
-
-	@Override
-	public String getActionId() {
-		return ghostType + " seer";
 	}
 }

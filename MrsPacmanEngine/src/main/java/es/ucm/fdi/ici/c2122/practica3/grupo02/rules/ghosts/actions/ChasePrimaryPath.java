@@ -16,6 +16,11 @@ public class ChasePrimaryPath implements Action {
 	}
 
 	@Override
+	public String getActionId() {
+		return ghostType + " chase 1";
+	}
+	
+	@Override
 	public MOVE execute(Game game) {
 		if (game.doesGhostRequireAction(ghostType)) {
 			int pacmanNode = game.getPacmanCurrentNodeIndex();
@@ -34,12 +39,8 @@ public class ChasePrimaryPath implements Action {
 			else if (movimiento == MOVE.LEFT)
 				movimiento = MOVE.RIGHT;
 			return movimiento;
-		}else
+		}
+		else
 			return MOVE.NEUTRAL;
-	}
-
-	@Override
-	public String getActionId() {
-		return ghostType + " chase 1";
 	}
 }

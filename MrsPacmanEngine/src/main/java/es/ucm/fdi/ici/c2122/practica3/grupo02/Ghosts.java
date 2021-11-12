@@ -193,10 +193,10 @@ public class Ghosts extends GhostController {
 		EnumMap<GHOST, MOVE> result = new EnumMap<GHOST, MOVE>(GHOST.class);
 
 		for (GHOST ghost : GHOST.values()) {
-	       	RulesInput inG = new GhostInput(game); 
+	       	RulesInput inGhost = new GhostInput(game); 
 	       	
 	       	ghostsRuleEngines.get(ghost).reset();
-	       	ghostsRuleEngines.get(ghost).assertFacts(inG.getFacts());
+	       	ghostsRuleEngines.get(ghost).assertFacts(inGhost.getFacts());
 	       	
 	       	result.put(ghost, ghostsRuleEngines.get(ghost).run(game));
 		}
