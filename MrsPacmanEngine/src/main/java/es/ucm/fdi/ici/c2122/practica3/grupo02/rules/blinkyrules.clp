@@ -7,8 +7,6 @@
     (slot outOfLair (type SYMBOL))
 	(slot position (type NUMBER))
 	(slot distanceToPacman (type NUMBER))
-	(slot pacmanDistancePowerPill (type NUMBER))
-	(slot nextPillPacManBySeer (type NUMBER))
 	(slot anotherGhostInPath (type SYMBOL))
 	(slot chaseCount (type NUMBER)) )
 
@@ -18,8 +16,6 @@
     (slot outOfLair (type SYMBOL))
 	(slot position (type NUMBER))
 	(slot distanceToPacman (type NUMBER))
-	(slot pacmanDistancePowerPill (type NUMBER))
-	(slot nextPillPacManBySeer (type NUMBER))
 	(slot anotherGhostInPath (type SYMBOL))
 	(slot chaseCount (type NUMBER)) )
 
@@ -29,8 +25,6 @@
     (slot outOfLair (type SYMBOL))
 	(slot position (type NUMBER))
 	(slot distanceToPacman (type NUMBER))
-	(slot pacmanDistancePowerPill (type NUMBER))
-	(slot nextPillPacManBySeer (type NUMBER))
 	(slot anotherGhostInPath (type SYMBOL))
 	(slot chaseCount (type NUMBER)) )
 
@@ -40,13 +34,13 @@
     (slot outOfLair (type SYMBOL))
 	(slot position (type NUMBER))
 	(slot distanceToPacman (type NUMBER))
-	(slot pacmanDistancePowerPill (type NUMBER))
-	(slot nextPillPacManBySeer (type NUMBER))
 	(slot anotherGhostInPath (type SYMBOL))
 	(slot chaseCount (type NUMBER)) )
 
 (deftemplate MSPACMAN 
-    (slot mindistancePPill (type NUMBER)) )
+    (slot mindistancePPill (type NUMBER))
+    (slot pacmanDistancePowerPill (type NUMBER))
+	(slot nextPillPacManBySeer (type NUMBER)) )
 
 ; --- ACTION ---
 (deftemplate ACTION
