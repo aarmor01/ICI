@@ -10,6 +10,8 @@ import javax.swing.JPanel;
 import es.ucm.fdi.ici.c2122.practica3.grupo02.rules.ghosts.GhostInput;
 import es.ucm.fdi.ici.c2122.practica3.grupo02.rules.ghosts.actions.*;
 import es.ucm.fdi.ici.c2122.practica3.grupo02.rules.pacman.MsPacManInput;
+import es.ucm.fdi.ici.c2122.practica3.grupo02.rules.pacman.actions.CleanBottomAction;
+import es.ucm.fdi.ici.c2122.practica3.grupo02.rules.pacman.actions.RunawayFromClosestGhost;
 import es.ucm.fdi.ici.rules.RuleEngine;
 import es.ucm.fdi.ici.rules.RulesAction;
 import es.ucm.fdi.ici.rules.RulesInput;
@@ -22,7 +24,7 @@ import pacman.controllers.GhostController;
 
 public class Ghosts extends GhostController {
 
-	HashMap<String, RulesAction> actionsMap;
+	
 	EnumMap<GHOST, RuleEngine> ghostsRuleEngines;
 
 	public Ghosts() {
@@ -33,10 +35,15 @@ public class Ghosts extends GhostController {
 		ghostsRuleEngines = new EnumMap<GHOST, RuleEngine>(GHOST.class);
 		
 		for (GHOST ghost : GHOST.values()) {
+			HashMap<String, RulesAction> actionsMap;
 			// -- ACTIONS --
 			actionsMap = new HashMap<String, RulesAction>();
 			
-			// add actions here huhuhuhuhuhuhu
+			RulesAction agressive = new Agressive(ghost);  
+			actionsMap.put(agressive.getActionId(), agressive);
+			
+			RulesAction runaway = new RunAwayFromPacMan(ghost);  
+			actionsMap.put(runaway.getActionId(), runaway);
 			
 			// -- RULES --
 			String rulesFile = String.format("%s%srules.clp", 

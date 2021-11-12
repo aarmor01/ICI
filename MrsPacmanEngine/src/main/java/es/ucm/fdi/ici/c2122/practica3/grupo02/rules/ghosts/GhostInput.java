@@ -345,45 +345,24 @@ public class GhostInput extends RulesInput {
 		Vector<String> facts = new Vector<String>();
 		
 		//BLINKY
-		facts.add(String.format("(BLINKY (edible %s))", this.BLINKYedible));
-		facts.add(String.format("(BLINKY (edTimeLeft %d))", (int)this.BLINKYedTimeLeft));
-		facts.add(String.format("(BLINKY (outOfLair %s))", this.BLINKYoutOfLair));
-		facts.add(String.format("(BLINKY (position %d))", (int)this.BLINKYposition));
-		facts.add(String.format("(BLINKY (distanceToPacman %d))", (int)this.distanceBLINKYToPacman));
-		facts.add(String.format("(BLINKY (anotherGhostInPath %s))", this.BLINKYanotherGhostInPath));
-		facts.add(String.format("(BLINKY (chaseCount %d))", (int)this.chaseCountBLINKY));
+		facts.add(String.format("(BLINKY (edible %b) (edTimeLeft %d) (outOfLair %b) (position %d) (distanceToPacman %d) (anotherGhostInPath %b) (chaseCount %d))",
+				(boolean)this.BLINKYedible, (int)this.BLINKYedTimeLeft, (boolean)this.BLINKYoutOfLair, (int)this.BLINKYposition, (int)this.distanceBLINKYToPacman, (boolean)this.BLINKYanotherGhostInPath, (int)this.chaseCountBLINKY));
 		
 		//INKY
-		facts.add(String.format("(INKY (edible %s))", this.INKYedible));
-		facts.add(String.format("(INKY (edTimeLeft %d))", (int)this.INKYedTimeLeft));
-		facts.add(String.format("(INKY (outOfLair %s))", this.INKYoutOfLair));
-		facts.add(String.format("(INKY (position %d))", (int)this.INKYposition));
-		facts.add(String.format("(INKY (distanceToPacman %d))", (int)this.distanceINKYToPacman));
-		facts.add(String.format("(INKY (anotherGhostInPath %s))", this.INKYanotherGhostInPath));
-		facts.add(String.format("(INKY (chaseCount %d))", (int)this.chaseCountINKY));
+		facts.add(String.format("(INKY (edible %b) (edTimeLeft %d) (outOfLair %b) (position %d) (distanceToPacman %d) (anotherGhostInPath %b) (chaseCount %d))",
+				(boolean)this.INKYedible, (int)this.INKYedTimeLeft, (boolean)this.INKYoutOfLair, (int)this.INKYposition, (int)this.distanceINKYToPacman, (boolean)this.INKYanotherGhostInPath, (int)this.chaseCountINKY));
 		
 		//PINKY
-		facts.add(String.format("(PINKY (edible %s))", this.PINKYedible));
-		facts.add(String.format("(PINKY (edTimeLeft %d))", (int)this.PINKYedTimeLeft));
-		facts.add(String.format("(PINKY (outOfLair %s))", this.PINKYoutOfLair));
-		facts.add(String.format("(PINKY (position %d))", (int)this.PINKYposition));
-		facts.add(String.format("(PINKY (distanceToPacman %d))", (int)this.distancePINKYToPacman));
-		facts.add(String.format("(PINKY (anotherGhostInPath %s))", this.PINKYanotherGhostInPath));
-		facts.add(String.format("(PINKY (chaseCount %d))", (int)this.chaseCountPINKY));
+		facts.add(String.format("(PINKY (edible %b) (edTimeLeft %d) (outOfLair %b) (position %d) (distanceToPacman %d) (anotherGhostInPath %b) (chaseCount %d))",
+				(boolean)this.PINKYedible, (int)this.PINKYedTimeLeft, (boolean)this.PINKYoutOfLair, (int)this.PINKYposition, (int)this.distancePINKYToPacman, (boolean)this.PINKYanotherGhostInPath, (int)this.chaseCountPINKY));
 		
 		//SUE
-		facts.add(String.format("(SUE (edible %s))", this.SUEedible));
-		facts.add(String.format("(SUE (edTimeLeft %d))", (int)this.SUEedTimeLeft));
-		facts.add(String.format("(SUE (outOfLair %s))", this.SUEoutOfLair));
-		facts.add(String.format("(SUE (position %d))", (int)this.SUEposition));
-		facts.add(String.format("(SUE (distanceToPacman %d))", (int)this.distanceSUEToPacman));
-		facts.add(String.format("(SUE (anotherGhostInPath %s))", this.SUEanotherGhostInPath));
-		facts.add(String.format("(SUE (chaseCount %d))", (int)this.chaseCountSUE));
+		facts.add(String.format("(SUE (edible %b) (edTimeLeft %d) (outOfLair %b) (position %d) (distanceToPacman %d) (anotherGhostInPath %b) (chaseCount %d))",
+				(boolean)this.SUEedible, (int)this.SUEedTimeLeft, (boolean)this.SUEoutOfLair, (int)this.SUEposition, (int)this.distanceSUEToPacman, (boolean)this.SUEanotherGhostInPath, (int)this.chaseCountSUE));
 		
 		//MSPACMAN
-		facts.add(String.format("(MSPACMAN (mindistancePPill %d))", (int)30)); //Temporal <-----------------------------------
-		facts.add(String.format("(MSPACMAN (pacmanDistancePowerPill %d))", (int)this.pacmanDistancePowerPill));
-		facts.add(String.format("(MSPACMAN (nextPillPacManBySeer %d))", (int)this.nextPillPacManBySeer));
+		facts.add(String.format("(MSPACMAN (mindistancePPill %d) (pacmanDistancePowerPill %d) (nextPillPacManBySeer %d))",
+				(int)30, (int)this.pacmanDistancePowerPill, (int)this.nextPillPacManBySeer));
 		
 //		facts.add(String.format("(INKY (edible %s))", this.INKYedible));
 //		facts.add(String.format("(PINKY (edible %s))", this.PINKYedible));

@@ -1,12 +1,13 @@
 package es.ucm.fdi.ici.c2122.practica3.grupo02.rules.ghosts.actions;
 
-import es.ucm.fdi.ici.Action;
+import es.ucm.fdi.ici.rules.RulesAction;
+import jess.Fact;
 import pacman.game.Game;
 import pacman.game.Constants.DM;
 import pacman.game.Constants.GHOST;
 import pacman.game.Constants.MOVE;
 
-public class RunAwayToGhost implements Action {
+public class RunAwayToGhost implements RulesAction {
 
 	GHOST ghostType;
 
@@ -17,7 +18,7 @@ public class RunAwayToGhost implements Action {
 	
 	@Override
 	public String getActionId() {
-		return ghostType + " runs to ghost";
+		return ghostType + "runstoghost";
 	}
 
 	@Override
@@ -50,5 +51,11 @@ public class RunAwayToGhost implements Action {
 		}
 
 		return MOVE.NEUTRAL;
+	}
+	
+	@Override
+	public void parseFact(Fact actionFact) {
+		// TODO Auto-generated method stub
+		
 	}
 }
