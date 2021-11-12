@@ -38,8 +38,12 @@ public class GhostInput extends Input {
 
 	private int nextPillPacManBySeer;
 
-	private boolean anotherGhostInPath;
+	private boolean BLINKYanotherGhostInPath;
+	private boolean INKYanotherGhostInPath;
+	private boolean PINKYanotherGhostInPath;
+	private boolean SUEanotherGhostInPath;
 
+	
 	private int chaseCountBLINKY;
 	private int chaseCountINKY;
 	private int chaseCountPINKY;
