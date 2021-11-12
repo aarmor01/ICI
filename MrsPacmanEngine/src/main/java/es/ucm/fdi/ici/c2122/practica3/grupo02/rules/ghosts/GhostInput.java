@@ -283,7 +283,7 @@ public class GhostInput extends RulesInput {
 	private void checkGhostsInPath(GHOST ghost) {
 		int ghostNode = game.getGhostCurrentNodeIndex(ghost);
 
-		bool auxAnotherGhostInPath;
+		boolean auxAnotherGhostInPath;
 		switch(ghost) {
 		case BLINKY:
 			auxAnotherGhostInPath = BLINKYanotherGhostInPath;
@@ -300,6 +300,9 @@ public class GhostInput extends RulesInput {
 		case SUE:
 			auxAnotherGhostInPath = SUEanotherGhostInPath;
 			SUEanotherGhostInPath = false;
+			break;
+		default:
+			auxAnotherGhostInPath = false;
 			break;
 		}
 
