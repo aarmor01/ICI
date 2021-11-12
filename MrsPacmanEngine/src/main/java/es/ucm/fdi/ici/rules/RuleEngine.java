@@ -94,12 +94,12 @@ public class RuleEngine extends RuleEngineObservable{
 		    String nombre = dd.getName(); 
 		    if(nombre.startsWith("MAIN::"+RulesAction.FACT_NAME))
 		    {
-//		    	int factpriority = dd.getSlotValue(RulesAction.PRIORITY_SLOT).intValue(null);
-//		    	if(factpriority > max)
-//		    	{
-//		    		max = factpriority;
-//		    	}
-		    	action = dd; //no deberia tocar esto pero funciona. Hay que tener prioridades? parece que si
+		    	int factpriority = dd.getSlotValue(RulesAction.PRIORITY_SLOT).intValue(null);
+		    	if(factpriority > max)
+		    	{
+		    		action = dd;
+		    		max = factpriority;
+		    	}
 		    }
 		}
 		return action;

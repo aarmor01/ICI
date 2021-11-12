@@ -18,17 +18,17 @@
     
 ;--------DEFINITION OF THE ACTION FACT---------------------------------
 (deftemplate ACTION
-	(slot id) (slot info (default "")) ) 
+	(slot id) (slot info (default "")) (slot priority (type NUMBER) )) 
    
 ;----------------RULES-------------------------------------------------
 (defrule CleanBottomPill
 	(MSPACMAN (existenPillsAbajo true))
 	=>  
-	(assert (ACTION (id PCcleansBottom) (info "MSPacMan limpia fondo"))) )	
+	(assert (ACTION (id PCcleansBottom) (info "MSPacMan limpia fondo") (priority 1) )))	
 	
 (defrule PathBlocked
-	(MSPACMAN (caminoBloqueado true))
+	(MSPACMAN (existenPillsAbajo true))
 	=>  
-	(assert (ACTION (id RunawayFromClosestGhost) (info "camino del MSPacMan bloqueado --> Huir / busca nuevo camino"))) )	
+	(assert (ACTION (id RunawayFromClosestGhost) (info "camino del MSPacMan bloqueado --> Huir / busca nuevo camino") (priority 1) ) ) )	
 	
 	

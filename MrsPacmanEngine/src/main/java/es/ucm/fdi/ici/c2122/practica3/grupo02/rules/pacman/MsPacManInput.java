@@ -208,8 +208,7 @@ public class MsPacManInput extends RulesInput {
 	@Override
 	public Collection<String> getFacts() {
 		Vector<String> facts = new Vector<String>();
-		facts.add(String.format("(MSPACMAN (existenPillsAbajo %s))", this.existenPillsAbajo));
-		facts.add(String.format("(MSPACMAN (caminoBloqueado %s))", this.caminoBloqueado));
+		facts.add(String.format("(MSPACMAN (existenPillsAbajo %s) (caminoBloqueado %s))", this.existenPillsAbajo, this.caminoBloqueado));
 		
 //		facts.add(String.format("(INKY (edible %s))", this.INKYedible));
 //		facts.add(String.format("(PINKY (edible %s))", this.PINKYedible));

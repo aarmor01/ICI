@@ -24,20 +24,19 @@ public class MsPacMan extends PacmanController {
 	RuleEngine mspacmanRuleEngine;
 	
 	public MsPacMan() {
-		
 		setName("Definitely Not MsPacman");
 		setTeam("G2_ICIsports");
 		
 		actionsMap = new HashMap<String, RulesAction>();
     	
-		//ACTIONS
+		//ACTIONS------------------------
 		RulesAction PCcleansBottom = new CleanBottomAction();  
-		actionsMap.put("PCcleansBottom", PCcleansBottom);
+		actionsMap.put(PCcleansBottom.getActionId(), PCcleansBottom);
 		
 		RulesAction runaway = new RunawayFromClosestGhost();  
-		actionsMap.put("RunawayFromClosestGhost", runaway);
+		actionsMap.put(runaway.getActionId(), runaway);
 		
-		
+		//-------------------------------
 		String fileRule = PACMAN_RULES_PATH;
 		mspacmanRuleEngine = new RuleEngine(PACMAN_NAME, fileRule, actionsMap);
 		
