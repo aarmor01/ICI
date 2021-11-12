@@ -30,8 +30,25 @@ public class Ghosts extends GhostController {
 		setName("Definitely Not Ghosts");
 		setTeam("G2_ICIsports");
 
-		actionsMap = new HashMap<String, RulesAction>();
-		// Fill Actions
+		ghostsRuleEngines = new EnumMap<GHOST, RuleEngine>(GHOST.class);
+		
+		for (GHOST ghost : GHOST.values()) {
+			// -- ACTIONS --
+			actionsMap = new HashMap<String, RulesAction>();
+			
+			// add actions here huhuhuhuhuhuhu
+			
+			// -- RULES --
+			String rulesFile = String.format("%s%srules.clp", 
+					GameConstants.RULES_PATH, ghost.name().toLowerCase());
+			RuleEngine engine = new RuleEngine(ghost.name(), rulesFile, actionsMap);
+			ghostsRuleEngines.put(ghost, engine);
+
+			// -- RULES OBSERVERS --
+			ConsoleRuleEngineObserver observer = new ConsoleRuleEngineObserver(ghost.name(), true);
+			ghostsRuleEngines.get(ghost).addObserver(observer);
+		}
+		
 //		RulesAction BLINKYchases = new ChaseAction(GHOST.BLINKY);
 //		RulesAction INKYchases = new ChaseAction(GHOST.INKY);
 //		RulesAction PINKYchases = new ChaseAction(GHOST.PINKY);
@@ -40,7 +57,7 @@ public class Ghosts extends GhostController {
 //		RulesAction INKYrunsAway = new RunAwayAction(GHOST.INKY);
 //		RulesAction PINKYrunsAway = new RunAwayAction(GHOST.PINKY);
 //		RulesAction SUErunsAway = new RunAwayAction(GHOST.SUE);
-//		
+		
 //		map.put("BLINKYchases", BLINKYchases);
 //		map.put("INKYchases", INKYchases);
 //		map.put("PINKYchases", PINKYchases);
@@ -50,23 +67,6 @@ public class Ghosts extends GhostController {
 //		map.put("PINKYrunsAway", PINKYrunsAway);
 //		map.put("SUErunsAway", SUErunsAway);
 
-		ghostsRuleEngines = new EnumMap<GHOST, RuleEngine>(GHOST.class);
-		for (GHOST ghost : GHOST.values()) {
-			String rulesFile = String.format("%s%srules.clp", GameConstants.RULES_PATH, ghost.name().toLowerCase());
-			RuleEngine engine = new RuleEngine(ghost.name(), rulesFile, actionsMap);
-			ghostsRuleEngines.put(ghost, engine);
-
-			// add observer to every Ghost
-			// ConsoleRuleEngineObserver observer = new
-			// ConsoleRuleEngineObserver(ghost.name(), true);
-			// engine.addObserver(observer);
-		}
-
-		// add observer only to BLINKY
-		ConsoleRuleEngineObserver observer = new ConsoleRuleEngineObserver(GHOST.BLINKY.name(), true);
-		ghostsRuleEngines.get(GHOST.BLINKY).addObserver(observer);
-
-//
 //		fsms = new EnumMap<GHOST,FSM>(GHOST.class);
 //		for(GHOST ghost: GHOST.values()) {
 //			FSM fsm = new FSM(ghost.name());
@@ -186,25 +186,18 @@ public class Ghosts extends GhostController {
 //		}
 	}
 
-	public void preCompute(String opponent) {
-//		for (FSM fsm : fsms.values())
-//			fsm.reset();
-	}
+	public void preCompute(String opponent) {}
 
 	@Override
 	public EnumMap<GHOST, MOVE> getMove(Game game, long timeDue) {
 		EnumMap<GHOST, MOVE> result = new EnumMap<GHOST, MOVE>(GHOST.class);
 
-		GhostInput in = new GhostInput(game);
-
 		for (GHOST ghost : GHOST.values()) {
-			//Creamos el input
 	       	RulesInput inG = new GhostInput(game); 
-	       	//Reseteamos sus valores a saber por qué
+	       	
 	       	ghostsRuleEngines.get(ghost).reset();
-	       	//Obtenemos los resultados de cada iteracion
 	       	ghostsRuleEngines.get(ghost).assertFacts(inG.getFacts());
-	       	//En funcion de los resultados, habra devuelto un MOVE
+	       	
 	       	result.put(ghost, ghostsRuleEngines.get(ghost).run(game));
 		}
 
