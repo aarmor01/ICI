@@ -125,89 +125,6 @@ public class GhostInput extends RulesInput {
 		}
 	}
 
-	public boolean isBLINKYedible() {
-		return BLINKYedible;
-	}
-
-	public boolean isINKYedible() {
-		return INKYedible;
-	}
-
-	public boolean isPINKYedible() {
-		return PINKYedible;
-	}
-
-	public boolean isSUEedible() {
-		return SUEedible;
-	}
-
-	public int getBLINKYedibleTimeLeft() {
-		return BLINKYedTimeLeft;
-	}
-
-	public int getINKYedibleTimeLeft() {
-		return INKYedTimeLeft;
-	}
-
-	public int getPINKYedibleTimeLeft() {
-		return PINKYedTimeLeft;
-	}
-
-	public int getSUEedibleTimeLeft() {
-		return SUEedTimeLeft;
-	}
-
-	public boolean isBLINKYoutOfLair() {
-		return BLINKYoutOfLair;
-	}
-
-	public boolean isPINKYoutOfLair() {
-		return PINKYoutOfLair;
-	}
-
-	public boolean isINKYoutOfLair() {
-		return INKYoutOfLair;
-	}
-
-	public boolean isSUEoutOfLair() {
-		return SUEoutOfLair;
-	}
-
-	public int getBLINKYposition() {
-		return BLINKYposition;
-	}
-
-	public int getINKYposition() {
-		return INKYposition;
-	}
-
-	public int getPINKYposition() {
-		return PINKYposition;
-	}
-
-	public int getSUEposition() {
-		return SUEposition;
-	}
-
-	public int getNextPillPacManBySeer() {
-		return nextPillPacManBySeer;
-	}
-
-	public int getGhostChaseCount(GHOST ghost) {
-		switch (ghost) {
-		case BLINKY:
-			return chaseCountBLINKY;
-		case INKY:
-			return chaseCountINKY;
-		case PINKY:
-			return chaseCountPINKY;
-		case SUE:
-			return chaseCountSUE;
-		default:
-			return -1;
-		}
-	}
-
 	public void resetCount(GHOST ghost) {
 		switch (ghost) {
 		case BLINKY:
@@ -226,41 +143,6 @@ public class GhostInput extends RulesInput {
 		chaseCountINKY = 0;
 		chaseCountPINKY = 0;
 		chaseCountSUE = 0;
-	}
-
-	public double getMinPacmanDistancePPill() {
-		return pacmanDistancePowerPill;
-	}
-
-	public int getBlinkyDistancePacman() {
-		return distanceBLINKYToPacman;
-	}
-
-	public int getPinkyDistancePacman() {
-		return distancePINKYToPacman;
-	}
-
-	public int getInkyDistancePacman() {
-		return distanceINKYToPacman;
-	}
-
-	public int getSueDistancePacman() {
-		return distanceSUEToPacman;
-	}
-
-	public boolean anotherGhostInRunAwayPath(GHOST ghost) {
-		switch(ghost) {
-		case BLINKY:
-			return BLINKYanotherGhostInPath;
-		case PINKY:
-			return PINKYanotherGhostInPath;
-		case INKY:
-			return INKYanotherGhostInPath;
-		case SUE:
-			return SUEanotherGhostInPath;
-		default:
-			return false;
-		}
 	}
 
 	private void seerPill(int pacmanNode) {
