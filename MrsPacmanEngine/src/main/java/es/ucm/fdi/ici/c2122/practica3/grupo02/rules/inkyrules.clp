@@ -72,16 +72,16 @@
 	(INKY (outOfLair true))
 	(INKY (distanceToPacman ?d))
 	(CONSTANTS (ghostChaseDistance ?g))
-	(test (>= ?d ?g))
+	(test (<= ?d ?g))
 	=> 
 	(assert (ACTION (id INKYChase)
 			(info "No comestible --> perseguir")
 			(priority 10))) )
 	
 (defrule Ambush
-	(BLINKY (edible false))
-	(BLINKY (outOfLair true))
-	(BLINKY (distanceToPacman ?d))
+	(INKY (edible false))
+	(INKY (outOfLair true))
+	(INKY (distanceToPacman ?d))
 	(CONSTANTS (minPredictionDistance ?g))
 	(MSPACMAN (pacmanDistancePowerPill ?p))
 	(test (> ?d ?g))

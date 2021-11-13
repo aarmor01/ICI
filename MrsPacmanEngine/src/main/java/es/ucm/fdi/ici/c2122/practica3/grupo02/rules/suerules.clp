@@ -72,16 +72,16 @@
 	(SUE (outOfLair true))
 	(SUE (distanceToPacman ?d))
 	(CONSTANTS (ghostChaseDistance ?g))
-	(test (>= ?d ?g))
+	(test (<= ?d ?g))
 	=> 
 	(assert (ACTION (id SUEChase)
 			(info "No comestible --> perseguir")
 			(priority 10))) )	
 			
 (defrule Agressive
-	(BLINKY (edible false))
-	(BLINKY (outOfLair true))
-	(BLINKY (distanceToPacman ?d))
+	(SUE (edible false))
+	(SUE (outOfLair true))
+	(SUE (distanceToPacman ?d))
 	(CONSTANTS (minPredictionDistance ?g))
 	(MSPACMAN (pacmanDistancePowerPill ?p))
 	(test (> ?d ?g))

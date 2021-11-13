@@ -46,7 +46,7 @@ public class Seer implements RulesAction {
 			}
 			
 			if (GameConstants.DEBUG)
-				GameView.addLines(game, Color.RED, ghostNode, nearestPillNode);
+				GameView.addLines(game, Color.CYAN, ghostNode, nearestPillNode);
 			
 			return game.getApproximateNextMoveTowardsTarget(ghostNode, nearestPillNode,
 					game.getGhostLastMoveMade(ghostType), DM.PATH);

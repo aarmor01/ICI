@@ -1,8 +1,12 @@
 package es.ucm.fdi.ici.c2122.practica3.grupo02.rules.ghosts.actions;
 
+import java.awt.Color;
+
+import es.ucm.fdi.ici.c2122.practica3.grupo02.GameConstants;
 import es.ucm.fdi.ici.rules.RulesAction;
 import jess.Fact;
 import pacman.game.Game;
+import pacman.game.GameView;
 import pacman.game.Constants.DM;
 import pacman.game.Constants.GHOST;
 import pacman.game.Constants.MOVE;
@@ -62,7 +66,9 @@ public class Ambush implements RulesAction {
 					actualNode++;
 				}
 			}
-			return game.getNextMoveTowardsTarget(ghostNode, intersectionNodeFound, game.getGhostLastMoveMade(ghostType), DM.PATH);
+			if (intersectionNodeFound != -1 && GameConstants.DEBUG)
+				GameView.addLines(game, Color.CYAN, ghostNode, intersectionNodeFound);
+			return game.getApproximateNextMoveTowardsTarget(ghostNode, intersectionNodeFound, game.getGhostLastMoveMade(ghostType), DM.PATH);
 		}
 		return MOVE.NEUTRAL;
 	}

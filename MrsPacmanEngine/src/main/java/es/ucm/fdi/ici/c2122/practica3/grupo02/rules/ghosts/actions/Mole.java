@@ -1,8 +1,12 @@
 package es.ucm.fdi.ici.c2122.practica3.grupo02.rules.ghosts.actions;
 
+import java.awt.Color;
+
+import es.ucm.fdi.ici.c2122.practica3.grupo02.GameConstants;
 import es.ucm.fdi.ici.rules.RulesAction;
 import jess.Fact;
 import pacman.game.Game;
+import pacman.game.GameView;
 import pacman.game.Constants.DM;
 import pacman.game.Constants.GHOST;
 import pacman.game.Constants.MOVE;
@@ -75,12 +79,18 @@ public class Mole implements RulesAction {
 					optimalNode = node;
 				}
 			}
-			if (optimalNode == 0)
-				return game.getNextMoveTowardsTarget(ghostNode, pacmanNode, 
+			if (optimalNode == 0) {
+				if (pacmanNode != -1 && GameConstants.DEBUG)
+					GameView.addLines(game, Color.CYAN, ghostNode, pacmanNode);
+				return game.getApproximateNextMoveTowardsTarget(ghostNode, pacmanNode, 
 						game.getGhostLastMoveMade(ghostType), DM.PATH);
-			else
-				return game.getNextMoveTowardsTarget(ghostNode, optimalNode, 
+			}
+			else {
+				if (optimalNode != -1 && GameConstants.DEBUG)
+					GameView.addLines(game, Color.CYAN, ghostNode, optimalNode);
+				return game.getApproximateNextMoveTowardsTarget(ghostNode, optimalNode, 
 						game.getGhostLastMoveMade(ghostType), DM.PATH);
+			}
 		}
 		return MOVE.NEUTRAL;
 	}

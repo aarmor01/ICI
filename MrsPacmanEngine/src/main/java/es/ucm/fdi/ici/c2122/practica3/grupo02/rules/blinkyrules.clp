@@ -72,7 +72,7 @@
 	(BLINKY (outOfLair true))
 	(BLINKY (distanceToPacman ?d))
 	(CONSTANTS (ghostChaseDistance ?g))
-	(test (>= ?d ?g))
+	(test (<= ?d ?g))
 	=> 
 	(assert (ACTION (id BLINKYChase)
 			(info "No comestible --> perseguir")

@@ -72,16 +72,16 @@
 	(PINKY (outOfLair true))
 	(PINKY (distanceToPacman ?d))
 	(CONSTANTS (ghostChaseDistance ?g))
-	(test (>= ?d ?g))
+	(test (<= ?d ?g))
 	=> 
 	(assert (ACTION (id PINKYChase)
 			(info "No comestible --> perseguir")
 			(priority 10))) )	
 			
 (defrule Mole
-	(BLINKY (edible false))
-	(BLINKY (outOfLair true))
-	(BLINKY (distanceToPacman ?d))
+	(PINKY (edible false))
+	(PINKY (outOfLair true))
+	(PINKY (distanceToPacman ?d))
 	(CONSTANTS (minPredictionDistance ?g))
 	(MSPACMAN (pacmanDistancePowerPill ?p))
 	(test (> ?d ?g))
