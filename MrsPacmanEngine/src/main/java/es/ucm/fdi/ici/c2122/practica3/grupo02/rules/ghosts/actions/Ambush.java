@@ -18,7 +18,7 @@ public class Ambush implements RulesAction {
 	
 	@Override
 	public String getActionId() {
-		return ghostType + "ambush";
+		return ghostType + "Ambush";
 	}
 
 	@Override

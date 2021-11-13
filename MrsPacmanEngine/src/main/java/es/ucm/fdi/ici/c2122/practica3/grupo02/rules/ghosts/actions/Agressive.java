@@ -18,7 +18,7 @@ public class Agressive implements RulesAction {
 	
 	@Override
 	public String getActionId() {
-		return ghostType + "agressive";
+		return ghostType + "Agressive";
 	}
 
 	@Override

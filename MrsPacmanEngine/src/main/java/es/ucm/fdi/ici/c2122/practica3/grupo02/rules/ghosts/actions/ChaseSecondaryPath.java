@@ -18,7 +18,7 @@ public class ChaseSecondaryPath implements RulesAction {
 
 	@Override
 	public String getActionId() {
-		return ghostType + "chase2";
+		return ghostType + "Chase2";
 	}
 
 	@Override

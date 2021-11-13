@@ -22,7 +22,7 @@ public class Seer implements RulesAction {
 
 	@Override
 	public String getActionId() {
-		return ghostType + "seer";
+		return ghostType + "Seer";
 	}
 
 	@Override

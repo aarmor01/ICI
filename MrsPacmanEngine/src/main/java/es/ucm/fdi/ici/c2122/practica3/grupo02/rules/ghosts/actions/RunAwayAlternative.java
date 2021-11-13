@@ -18,7 +18,7 @@ public class RunAwayAlternative implements RulesAction {
 
 	@Override
 	public String getActionId() {
-		return ghostType + "runalternate";
+		return ghostType + "RunaAlternate";
 	}
 	
 	@Override

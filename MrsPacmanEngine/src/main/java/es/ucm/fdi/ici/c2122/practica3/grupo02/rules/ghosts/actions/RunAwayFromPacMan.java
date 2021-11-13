@@ -18,7 +18,7 @@ public class RunAwayFromPacMan implements RulesAction {
 
 	@Override
 	public String getActionId() {
-		return ghostType + "runsaway";
+		return ghostType + "RunsAway";
 	}
 	
 	@Override

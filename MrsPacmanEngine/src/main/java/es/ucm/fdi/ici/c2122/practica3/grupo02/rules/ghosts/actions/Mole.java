@@ -18,7 +18,7 @@ public class Mole implements RulesAction {
 	
 	@Override
 	public String getActionId() {
-		return ghostType + "mole";
+		return ghostType + "Mole";
 	}
 
 	@Override

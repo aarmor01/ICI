@@ -58,13 +58,13 @@
 (defrule BLINKYrunsAway
 	(BLINKY (edible true)) 
 	=>  
-	(assert (ACTION (id SUErunsaway)
+	(assert (ACTION (id SUERunsAway)
 			(info "Comestible --> huir")
 			(priority 1))) )
 	
 (defrule BLINKYchases
 	(BLINKY (edible false)) 
 	=> 
-	(assert (ACTION (id SUEagressive)
+	(assert (ACTION (id SUEAgressive)
 			(info "No comestible --> perseguir")
 			(priority 1))) )	
