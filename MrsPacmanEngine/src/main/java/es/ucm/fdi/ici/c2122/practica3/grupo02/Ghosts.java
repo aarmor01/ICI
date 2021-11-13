@@ -1,17 +1,11 @@
 package es.ucm.fdi.ici.c2122.practica3.grupo02;
 
-import java.io.File;
 import java.util.EnumMap;
 import java.util.HashMap;
 
-import javax.swing.JFrame;
-import javax.swing.JPanel;
-
 import es.ucm.fdi.ici.c2122.practica3.grupo02.rules.ghosts.GhostInput;
 import es.ucm.fdi.ici.c2122.practica3.grupo02.rules.ghosts.actions.*;
-import es.ucm.fdi.ici.c2122.practica3.grupo02.rules.pacman.MsPacManInput;
-import es.ucm.fdi.ici.c2122.practica3.grupo02.rules.pacman.actions.CleanBottomAction;
-import es.ucm.fdi.ici.c2122.practica3.grupo02.rules.pacman.actions.RunawayFromClosestGhost;
+
 import es.ucm.fdi.ici.rules.RuleEngine;
 import es.ucm.fdi.ici.rules.RulesAction;
 import es.ucm.fdi.ici.rules.RulesInput;
@@ -24,7 +18,6 @@ import pacman.controllers.GhostController;
 
 public class Ghosts extends GhostController {
 
-	
 	EnumMap<GHOST, RuleEngine> ghostsRuleEngines;
 
 	public Ghosts() {
@@ -33,29 +26,29 @@ public class Ghosts extends GhostController {
 		setTeam("G2_ICIsports");
 
 		ghostsRuleEngines = new EnumMap<GHOST, RuleEngine>(GHOST.class);
-		
+
 		for (GHOST ghost : GHOST.values()) {
-			HashMap<String, RulesAction> actionsMap;
 			// -- ACTIONS --
-			actionsMap = new HashMap<String, RulesAction>();
-			
-			RulesAction agressive = new Agressive(ghost);  
+			HashMap<String, RulesAction> actionsMap = new HashMap<String, RulesAction>();
+
+			RulesAction agressive = new Agressive(ghost);
 			actionsMap.put(agressive.getActionId(), agressive);
-			
-			RulesAction runaway = new RunAwayFromPacMan(ghost);  
+
+			RulesAction runaway = new RunAwayFromPacMan(ghost);
 			actionsMap.put(runaway.getActionId(), runaway);
-			
+
 			// -- RULES --
-			String rulesFile = String.format("%s%srules.clp", 
-					GameConstants.RULES_PATH, ghost.name().toLowerCase());
+			String rulesFile = String.format("%s%srules.clp", GameConstants.RULES_PATH, ghost.name().toLowerCase());
 			RuleEngine engine = new RuleEngine(ghost.name(), rulesFile, actionsMap);
 			ghostsRuleEngines.put(ghost, engine);
 
-			// -- RULES OBSERVERS --
-			ConsoleRuleEngineObserver observer = new ConsoleRuleEngineObserver(ghost.name(), true);
-			ghostsRuleEngines.get(ghost).addObserver(observer);
+			if (GameConstants.DEBUG) {
+				// -- RULES OBSERVERS --
+				ConsoleRuleEngineObserver observer = new ConsoleRuleEngineObserver(ghost.name(), true);
+				ghostsRuleEngines.get(ghost).addObserver(observer);
+			}
 		}
-		
+
 //		RulesAction BLINKYchases = new ChaseAction(GHOST.BLINKY);
 //		RulesAction INKYchases = new ChaseAction(GHOST.INKY);
 //		RulesAction PINKYchases = new ChaseAction(GHOST.PINKY);
@@ -64,7 +57,7 @@ public class Ghosts extends GhostController {
 //		RulesAction INKYrunsAway = new RunAwayAction(GHOST.INKY);
 //		RulesAction PINKYrunsAway = new RunAwayAction(GHOST.PINKY);
 //		RulesAction SUErunsAway = new RunAwayAction(GHOST.SUE);
-		
+
 //		map.put("BLINKYchases", BLINKYchases);
 //		map.put("INKYchases", INKYchases);
 //		map.put("PINKYchases", PINKYchases);
@@ -193,19 +186,20 @@ public class Ghosts extends GhostController {
 //		}
 	}
 
-	public void preCompute(String opponent) {}
+	public void preCompute(String opponent) {
+	}
 
 	@Override
 	public EnumMap<GHOST, MOVE> getMove(Game game, long timeDue) {
 		EnumMap<GHOST, MOVE> result = new EnumMap<GHOST, MOVE>(GHOST.class);
 
 		for (GHOST ghost : GHOST.values()) {
-	       	RulesInput inGhost = new GhostInput(game); 
-	       	
-	       	ghostsRuleEngines.get(ghost).reset();
-	       	ghostsRuleEngines.get(ghost).assertFacts(inGhost.getFacts());
-	       	
-	       	result.put(ghost, ghostsRuleEngines.get(ghost).run(game));
+			RulesInput inGhost = new GhostInput(game);
+
+			ghostsRuleEngines.get(ghost).reset();
+			ghostsRuleEngines.get(ghost).assertFacts(inGhost.getFacts());
+
+			result.put(ghost, ghostsRuleEngines.get(ghost).run(game));
 		}
 
 		return result;

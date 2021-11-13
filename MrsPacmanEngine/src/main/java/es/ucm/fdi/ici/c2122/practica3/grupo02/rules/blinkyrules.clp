@@ -57,7 +57,7 @@
 ;(defrule BLINKYrunsAwayMSPACMANclosePPill
 ;	(MSPACMAN (mindistancePPill ?d)) (test (<= ?d 30)) 
 ;	=>  
-;	(assert (ACTION (id BLINKYrunsAway) 
+;	(assert (ACTION (id BLINKYRunsAway) 
 ;			(info "MSPacMan cerca PPill"))) )
 
 (defrule BLINKYrunsAway
@@ -72,7 +72,7 @@
 	(BLINKY (outOfLair true))
 	(BLINKY (distanceToPacman ?d))
 	(CONSTANTS (ghostChaseDistance ?g))
-	(test (<= ?d ?g))
+	(test (> ?d ?g))
 	=> 
 	(assert (ACTION (id BLINKYAgressive)
 			(info "No comestible --> perseguir")

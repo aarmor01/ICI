@@ -26,8 +26,11 @@ public class Agressive implements RulesAction {
 		if (game.doesGhostRequireAction(ghostType)) {
 			int pacmanNode = game.getPacmanCurrentNodeIndex();
 			int ghostNode = game.getGhostCurrentNodeIndex(ghostType);
-			return game.getNextMoveTowardsTarget(ghostNode, pacmanNode, 
-					game.getGhostLastMoveMade(ghostType), DM.PATH);
+			MOVE move = game.getGhostLastMoveMade(ghostType);
+			
+			System.out.print(game.getNextMoveTowardsTarget(ghostNode, pacmanNode, move, DM.PATH) + "\n");
+			
+			return game.getNextMoveTowardsTarget(ghostNode, pacmanNode, move, DM.PATH);
 		}
 		return MOVE.NEUTRAL;
 	}

@@ -57,18 +57,18 @@
 ;(defrule INKYrunsAwayMSPACMANclosePPill
 ;	(MSPACMAN (mindistancePPill ?d)) (test (<= ?d 30)) 
 ;	=>  
-;	(assert (ACTION (id INKYrunsAway) 
+;	(assert (ACTION (id INKYRunsAway) 
 ;			(info "MSPacMan cerca PPill"))) )
 
-(defrule BLINKYrunsAway
-	(BLINKY (edible true)) 
+(defrule INKYrunsAway
+	(INKY (edible true)) 
 	=>  
 	(assert (ACTION (id INKYRunsAway)
 			(info "Comestible --> huir")
 			(priority 1))) )
 	
-(defrule BLINKYchases
-	(BLINKY (edible false)) 
+(defrule INKYchases
+	(INKY (edible false)) 
 	=> 
 	(assert (ACTION (id INKYAgressive)
 			(info "No comestible --> perseguir")

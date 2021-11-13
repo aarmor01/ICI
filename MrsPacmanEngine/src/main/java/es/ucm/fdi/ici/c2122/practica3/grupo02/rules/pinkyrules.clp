@@ -54,21 +54,21 @@
 	(slot priority (type NUMBER)) )   
 	
 ; -- RULES --
-;(defrule BLINKYrunsAwayMSPACMANclosePPill
+;(defrule PINKYrunsAwayMSPACMANclosePPill
 ;	(MSPACMAN (mindistancePPill ?d)) (test (<= ?d 30)) 
 ;	=>  
-;	(assert (ACTION (id PINKYrunsAway) 
+;	(assert (ACTION (id PINKYRunsAway) 
 ;			(info "MSPacMan cerca PPill"))) )
 
-(defrule BLINKYrunsAway
-	(BLINKY (edible true)) 
+(defrule PINKYrunsAway
+	(PINKY (edible true)) 
 	=>  
 	(assert (ACTION (id PINKYRunsAway)
 			(info "Comestible --> huir")
 			(priority 1))) )
 	
-(defrule BLINKYchases
-	(BLINKY (edible false)) 
+(defrule PINKYchases
+	(PINKY (edible false)) 
 	=> 
 	(assert (ACTION (id PINKYAgressive)
 			(info "No comestible --> perseguir")

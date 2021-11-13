@@ -245,8 +245,19 @@ public class GhostInput extends Input {
 		return distanceSUEToPacman;
 	}
 
-	public boolean anotherGhostInRunAwayPath() {
-		return anotherGhostInPath;
+	public boolean anotherGhostInRunAwayPath(GHOST ghost) {
+		switch(ghost) {
+		case BLINKY:
+			return BLINKYanotherGhostInPath;
+		case PINKY:
+			return PINKYanotherGhostInPath;
+		case INKY:
+			return INKYanotherGhostInPath;
+		case SUE:
+			return SUEanotherGhostInPath;
+		default:
+			return false;
+		}
 	}
 
 	private void seerPill(int pacmanNode) {
@@ -269,10 +280,30 @@ public class GhostInput extends Input {
 	private void checkGhostsInPath(GHOST ghost) {
 		int ghostNode = game.getGhostCurrentNodeIndex(ghost);
 
-		anotherGhostInPath = false;
+		boolean auxAnotherGhostInPath;
+		switch(ghost) {
+		case BLINKY:
+			auxAnotherGhostInPath = BLINKYanotherGhostInPath;
+			BLINKYanotherGhostInPath = false;
+			break;
+		case PINKY:
+			auxAnotherGhostInPath = PINKYanotherGhostInPath;
+			PINKYanotherGhostInPath = false;
+			break;
+		case INKY:
+			auxAnotherGhostInPath = INKYanotherGhostInPath;
+			INKYanotherGhostInPath = false;
+			break;
+		case SUE:
+			auxAnotherGhostInPath = SUEanotherGhostInPath;
+			SUEanotherGhostInPath = false;
+			break;
+		default:
+			auxAnotherGhostInPath = false;
+		}
 
 		for (GHOST ghostToEvade : GHOST.values()) {
-			if (anotherGhostInPath)
+			if (auxAnotherGhostInPath)
 				return;
 
 			if (ghostToEvade == ghost || game.getGhostLairTime(ghostToEvade) > 0)
@@ -286,8 +317,22 @@ public class GhostInput extends Input {
 				if (game.isJunction(node)) 
 					break;
 				
-			if(node == path.length)
-				anotherGhostInPath = true;
+			if(node == path.length) {
+				switch(ghost) {
+				case BLINKY:
+					BLINKYanotherGhostInPath = true;
+					break;
+				case PINKY:
+					PINKYanotherGhostInPath = true;
+					break;
+				case INKY:
+					INKYanotherGhostInPath = true;
+					break;
+				case SUE:
+					SUEanotherGhostInPath = true;
+					break;
+				}
+			}
 		}
 	}
 }
