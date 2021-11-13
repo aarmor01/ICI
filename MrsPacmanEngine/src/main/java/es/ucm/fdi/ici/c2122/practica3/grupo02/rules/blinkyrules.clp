@@ -43,7 +43,7 @@
 	(slot nextPillPacManBySeer (type NUMBER)) )
 	
 (deftemplate CONSTANTS
-	(slot pacmanChaseDistance (type NUMBER))
+	(slot ghostChaseDistance (type NUMBER))
 	(slot minPredictionDistance (type NUMBER))
 	(slot minIntersectionsBeforeChange (type NUMBER)) )
 
@@ -61,14 +61,18 @@
 ;			(info "MSPacMan cerca PPill"))) )
 
 (defrule BLINKYrunsAway
-	(BLINKY (edible true)) 
+	(BLINKY (edible true))
 	=>  
 	(assert (ACTION (id BLINKYRunsAway)
 			(info "Comestible --> huir")
 			(priority 1))) )
 	
 (defrule BLINKYchases
-	(BLINKY (edible false)) 
+	(BLINKY (edible false))
+	(BLINKY (outOfLair true))
+	(BLINKY (distanceToPacman ?d))
+	(CONSTANTS (ghostChaseDistance ?g))
+	(test (<= ?d ?g))
 	=> 
 	(assert (ACTION (id BLINKYAgressive)
 			(info "No comestible --> perseguir")

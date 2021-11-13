@@ -43,7 +43,7 @@
 	(slot nextPillPacManBySeer (type NUMBER)) )
 	
 (deftemplate CONSTANTS
-	(slot pacmanChaseDistance (type NUMBER))
+	(slot ghostChaseDistance (type NUMBER))
 	(slot minPredictionDistance (type NUMBER))
 	(slot minIntersectionsBeforeChange (type NUMBER)) )
 
