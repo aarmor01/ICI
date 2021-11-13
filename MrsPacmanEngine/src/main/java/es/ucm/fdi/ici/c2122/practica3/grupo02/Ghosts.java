@@ -31,12 +31,34 @@ public class Ghosts extends GhostController {
 			// -- ACTIONS --
 			HashMap<String, RulesAction> actionsMap = new HashMap<String, RulesAction>();
 
-			RulesAction agressive = new Agressive(ghost);
-			actionsMap.put(agressive.getActionId(), agressive);
-
+			RulesAction chase = new ChasePrimaryPath(ghost);
+			actionsMap.put(chase.getActionId(), chase);
+			
 			RulesAction runaway = new RunAwayFromPacMan(ghost);
 			actionsMap.put(runaway.getActionId(), runaway);
 
+			switch (ghost) {
+			case BLINKY:
+				RulesAction seer = new Seer(ghost);
+				actionsMap.put(seer.getActionId(), seer);
+				break;
+			case PINKY:
+				RulesAction mole = new Mole(ghost);
+				actionsMap.put(mole.getActionId(), mole);
+				break;
+			case INKY:
+				RulesAction ambush = new Ambush(ghost);
+				actionsMap.put(ambush.getActionId(), ambush);
+				break;
+			case SUE:
+				RulesAction agressive = new Agressive(ghost);
+				actionsMap.put(agressive.getActionId(), agressive);
+				break;
+				
+			default:
+				break;
+			}
+			
 			// -- RULES --
 			String rulesFile = String.format("%s%srules.clp", GameConstants.RULES_PATH, ghost.name().toLowerCase());
 			RuleEngine engine = new RuleEngine(ghost.name(), rulesFile, actionsMap);

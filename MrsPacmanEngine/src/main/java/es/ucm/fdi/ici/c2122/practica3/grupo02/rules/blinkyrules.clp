@@ -74,8 +74,21 @@
 	(CONSTANTS (ghostChaseDistance ?g))
 	(test (>= ?d ?g))
 	=> 
-	(assert (ACTION (id BLINKYAgressive)
+	(assert (ACTION (id BLINKYChase)
 			(info "No comestible --> perseguir")
 			(priority 10))) )	
+			
+(defrule Seer
+	(BLINKY (edible false))
+	(BLINKY (outOfLair true))
+	(BLINKY (distanceToPacman ?d))
+	(CONSTANTS (minPredictionDistance ?g))
+	(MSPACMAN (pacmanDistancePowerPill ?p))
+	(test (> ?d ?g))
+	(test (> ?p 20))
+	=> 
+	(assert (ACTION (id BLINKYSeer)
+			(info "Seer predicts pill")
+			(priority 10))) )
 	
 	
