@@ -364,6 +364,10 @@ public class GhostInput extends RulesInput {
 		facts.add(String.format("(MSPACMAN (mindistancePPill %d) (pacmanDistancePowerPill %d) (nextPillPacManBySeer %d))",
 				(int)30, (int)this.pacmanDistancePowerPill, (int)this.nextPillPacManBySeer));
 		
+		//CONSTANTS
+		facts.add(String.format("(CONSTANTS (pacmanChaseDistance %d) (minPredictionDistance %d) (minIntersectionsBeforeChange %d))",
+				(int)40, (int)15, (int)2));
+		
 //		facts.add(String.format("(INKY (edible %s))", this.INKYedible));
 //		facts.add(String.format("(PINKY (edible %s))", this.PINKYedible));
 //		facts.add(String.format("(SUE (edible %s))", this.SUEedible));

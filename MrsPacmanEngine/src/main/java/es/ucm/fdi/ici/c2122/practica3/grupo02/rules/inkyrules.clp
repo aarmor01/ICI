@@ -41,6 +41,11 @@
     (slot mindistancePPill (type NUMBER))
     (slot pacmanDistancePowerPill (type NUMBER))
 	(slot nextPillPacManBySeer (type NUMBER)) )
+	
+(deftemplate CONSTANTS
+	(slot pacmanChaseDistance (type NUMBER))
+	(slot minPredictionDistance (type NUMBER))
+	(slot minIntersectionsBeforeChange (type NUMBER)) )
 
 ; --- ACTION ---
 (deftemplate ACTION
