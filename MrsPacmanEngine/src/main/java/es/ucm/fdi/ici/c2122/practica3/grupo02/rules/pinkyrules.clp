@@ -65,11 +65,15 @@
 	=>  
 	(assert (ACTION (id PINKYRunsAway)
 			(info "Comestible --> huir")
-			(priority 1))) )
+			(priority 9))) )
 	
 (defrule PINKYchases
-	(PINKY (edible false)) 
+	(PINKY (edible false))
+	(PINKY (outOfLair true))
+	(PINKY (distanceToPacman ?d))
+	(CONSTANTS (ghostChaseDistance ?g))
+	(test (>= ?d ?g))
 	=> 
 	(assert (ACTION (id PINKYAgressive)
 			(info "No comestible --> perseguir")
-			(priority 1))) )	
+			(priority 10))) )	

@@ -65,17 +65,17 @@
 	=>  
 	(assert (ACTION (id BLINKYRunsAway)
 			(info "Comestible --> huir")
-			(priority 1))) )
+			(priority 9))) )
 	
 (defrule BLINKYchases
 	(BLINKY (edible false))
 	(BLINKY (outOfLair true))
 	(BLINKY (distanceToPacman ?d))
 	(CONSTANTS (ghostChaseDistance ?g))
-	(test (> ?d ?g))
+	(test (>= ?d ?g))
 	=> 
 	(assert (ACTION (id BLINKYAgressive)
 			(info "No comestible --> perseguir")
-			(priority 1))) )	
+			(priority 10))) )	
 	
 	

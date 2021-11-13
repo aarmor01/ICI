@@ -65,11 +65,15 @@
 	=>  
 	(assert (ACTION (id SUERunsAway)
 			(info "Comestible --> huir")
-			(priority 1))) )
+			(priority 9))) )
 	
 (defrule SUEchases
-	(SUE (edible false)) 
+	(SUE (edible false))
+	(SUE (outOfLair true))
+	(SUE (distanceToPacman ?d))
+	(CONSTANTS (ghostChaseDistance ?g))
+	(test (>= ?d ?g))
 	=> 
 	(assert (ACTION (id SUEAgressive)
 			(info "No comestible --> perseguir")
-			(priority 1))) )	
+			(priority 10))) )	

@@ -1,11 +1,9 @@
 package es.ucm.fdi.ici.c2122.practica3.grupo02;
 
-import pacman.game.Constants.DM;
 import pacman.game.Constants.GHOST;
 import pacman.game.Constants.MOVE;
 
 import java.awt.Color;
-import java.io.File;
 import java.util.Random;
 
 import pacman.game.Game;

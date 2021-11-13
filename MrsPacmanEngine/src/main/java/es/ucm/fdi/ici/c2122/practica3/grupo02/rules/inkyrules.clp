@@ -65,13 +65,17 @@
 	=>  
 	(assert (ACTION (id INKYRunsAway)
 			(info "Comestible --> huir")
-			(priority 1))) )
+			(priority 9))) )
 	
 (defrule INKYchases
-	(INKY (edible false)) 
+	(INKY (edible false))
+	(INKY (outOfLair true))
+	(INKY (distanceToPacman ?d))
+	(CONSTANTS (ghostChaseDistance ?g))
+	(test (>= ?d ?g))
 	=> 
 	(assert (ACTION (id INKYAgressive)
 			(info "No comestible --> perseguir")
-			(priority 1))) )	
+			(priority 10))) )
 	
 	

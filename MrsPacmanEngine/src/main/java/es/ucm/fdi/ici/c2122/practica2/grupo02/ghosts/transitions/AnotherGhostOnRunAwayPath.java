@@ -18,7 +18,7 @@ public class AnotherGhostOnRunAwayPath implements Transition {
 	public boolean evaluate(Input in) {
 		GhostInput input = (GhostInput)in;
 		
-		return input.anotherGhostInRunAwayPath();
+		return input.anotherGhostInRunAwayPath(ghost);
 	}
 	
 	@Override
