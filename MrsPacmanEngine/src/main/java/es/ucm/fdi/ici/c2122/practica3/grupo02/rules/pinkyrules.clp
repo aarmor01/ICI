@@ -52,7 +52,8 @@
 	(slot id)
 	(slot info (default ""))
 	(slot priority (type NUMBER))
-	(slot runAwayType (type NUMBER)) )   
+	(slot runAwayType (type NUMBER))
+	(slot chaseType (type NUMBER)) )   
 	
 ; -- RULES --
 ;(defrule PINKYrunsAwayMSPACMANclosePPill
@@ -66,7 +67,7 @@
 	=>  
 	(assert (ACTION (id PINKYRunsAway)
 			(info "Comestible --> huir")
-			(priority 9)
+			(priority 4)
 			(runAwayType 1))) )
 
 (defrule PINKYrunsAwayMSPACMANclosePPill
@@ -77,7 +78,7 @@
 	=>  
 	(assert (ACTION (id PINKYRunsAway)
 			(info "MsPacman cerca de PowerPill --> huir")
-			(priority 9)
+			(priority 5)
 			(runAwayType 1))) )
 	
 (defrule PINKYrunsAwayToBLINKY
@@ -87,7 +88,7 @@
 	=>  
 	(assert (ACTION (id PINKYRunsAway)
 			(info "Comestible & BLINKY No Comestible --> huir a SUE")
-			(priority 10)
+			(priority 6)
 			(runAwayType 2))) )
 
 (defrule PINKYrunsAwayToINKY
@@ -97,7 +98,7 @@
 	=>  
 	(assert (ACTION (id PINKYRunsAway)
 			(info "Comestible & INKY No Comestible --> huir a INKY")
-			(priority 10)
+			(priority 6)
 			(runAwayType 2))) )
 
 (defrule PINKYrunsAwayToSUE
@@ -107,8 +108,17 @@
 	=>  
 	(assert (ACTION (id PINKYRunsAway)
 			(info "Comestible & SUE No Comestible --> huir a SUE")
-			(priority 10)
+			(priority 6)
 			(runAwayType 2))) )
+			
+(defrule PINKYrunAlternative
+	(PINKY (edible true))
+	(PINKY (anotherGhostInPath))
+	=>  
+	(assert (ACTION (id PINKYRunsAway)
+			(info "Comestible & Ghost en camino de huida --> huir por otro camino")
+			(priority 7)
+			(runAwayType 3))) )
 
 (defrule PINKYchases
 	(PINKY (edible false))
@@ -119,7 +129,7 @@
 	=> 
 	(assert (ACTION (id PINKYChase)
 			(info "No comestible --> perseguir")
-			(priority 7)
+			(priority 2)
 			(chaseType 1))) )
 			
 (defrule PINKYchasesAlternative
@@ -133,7 +143,7 @@
 	=> 
 	(assert (ACTION (id PINKYChase)
 			(info "No comestible --> perseguir distinto camino")
-			(priority 8)
+			(priority 3)
 			(chaseType 2))) )	
 	
 (defrule Mole
@@ -147,4 +157,4 @@
 	=> 
 	(assert (ACTION (id PINKYMole)
 			(info "Mole predicts road with more pills")
-			(priority 6))) )
+			(priority 1))) )

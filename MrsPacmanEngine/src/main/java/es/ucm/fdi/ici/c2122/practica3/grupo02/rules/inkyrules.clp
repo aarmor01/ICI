@@ -67,7 +67,7 @@
 	=>  
 	(assert (ACTION (id INKYRunsAway)
 			(info "Comestible --> huir")
-			(priority 9)
+			(priority 4)
 			(runAwayType 1))) )
 
 (defrule INKYrunsAwayMSPACMANclosePPill
@@ -78,7 +78,7 @@
 	=>  
 	(assert (ACTION (id INKYRunsAway)
 			(info "MsPacman cerca de PowerPill --> huir")
-			(priority 9)
+			(priority 5)
 			(runAwayType 1))) )
 	
 (defrule INKYrunsAwayToBLINKY
@@ -86,9 +86,9 @@
 	(BLINKY (outOfLair true))
 	(BLINKY (edible false))
 	=>  
-	(assert (ACTION (id PINKYRunsAway)
+	(assert (ACTION (id INKYRunsAway)
 			(info "Comestible & BLINKY No Comestible --> huir a SUE")
-			(priority 10)
+			(priority 6)
 			(runAwayType 2))) )
 
 (defrule INKYrunsAwayToPINKY
@@ -96,9 +96,9 @@
 	(PINKY (outOfLair true))
 	(PINKY (edible false))
 	=>  
-	(assert (ACTION (id PINKYRunsAway)
+	(assert (ACTION (id INKYRunsAway)
 			(info "Comestible & PINKY No Comestible --> huir a INKY")
-			(priority 10)
+			(priority 6)
 			(runAwayType 2))) )
 
 (defrule INKYrunsAwayToSUE
@@ -106,10 +106,19 @@
 	(SUE (outOfLair true))
 	(SUE (edible false))
 	=>  
-	(assert (ACTION (id PINKYRunsAway)
+	(assert (ACTION (id INKYRunsAway)
 			(info "Comestible & SUE No Comestible --> huir a SUE")
-			(priority 10)
+			(priority 6)
 			(runAwayType 2))) )
+			
+(defrule INKYrunAlternative
+	(INKY (edible true))
+	(INKY (anotherGhostInPath))
+	=>  
+	(assert (ACTION (id INKYRunsAway)
+			(info "Comestible & Ghost en camino de huida --> huir por otro camino")
+			(priority 7)
+			(runAwayType 3))) )
 
 (defrule INKYchases
 	(INKY (edible false))
@@ -120,7 +129,7 @@
 	=> 
 	(assert (ACTION (id INKYChase)
 			(info "No comestible --> perseguir")
-			(priority 7)
+			(priority 2)
 			(chaseType 1))) )
 	
 (defrule INKYchasesAlternative
@@ -134,7 +143,7 @@
 	=> 
 	(assert (ACTION (id INKYChase)
 			(info "No comestible --> perseguir distinto camino")
-			(priority 8)
+			(priority 3)
 			(chaseType 2))) )	
 
 (defrule Ambush
@@ -148,4 +157,4 @@
 	=> 
 	(assert (ACTION (id INKYAmbush)
 			(info "Ambush predicts pacman movement")
-			(priority 6))) )
+			(priority 1))) )

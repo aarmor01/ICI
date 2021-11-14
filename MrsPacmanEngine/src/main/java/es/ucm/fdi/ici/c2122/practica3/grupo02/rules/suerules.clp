@@ -52,7 +52,8 @@
 	(slot id)
 	(slot info (default ""))
 	(slot priority (type NUMBER))
-	(slot runAwayType (type NUMBER)) )   
+	(slot runAwayType (type NUMBER))
+	(slot chaseType (type NUMBER)) )   
 	
 ; -- RULES --
 ;(defrule SUErunsAwayMSPACMANclosePPill
@@ -66,7 +67,7 @@
 	=>  
 	(assert (ACTION (id SUERunsAway)
 			(info "Comestible --> huir")
-			(priority 9)
+			(priority 4)
 			(runAwayType 1))) )
 
 (defrule SUErunsAwayMSPACMANclosePPill
@@ -77,7 +78,7 @@
 	=>  
 	(assert (ACTION (id SUERunsAway)
 			(info "MsPacman cerca de PowerPill --> huir")
-			(priority 9)
+			(priority 5)
 			(runAwayType 1))) )
 	
 (defrule SUErunsAwayToBLINKY
@@ -85,9 +86,9 @@
 	(BLINKY (outOfLair true))
 	(BLINKY (edible false))
 	=>  
-	(assert (ACTION (id PINKYRunsAway)
+	(assert (ACTION (id SUERunsAway)
 			(info "Comestible & BLINKY No Comestible --> huir a SUE")
-			(priority 10)
+			(priority 6)
 			(runAwayType 2))) )
 
 (defrule SUErunsAwayToPINKY
@@ -95,9 +96,9 @@
 	(PINKY (outOfLair true))
 	(PINKY (edible false))
 	=>  
-	(assert (ACTION (id PINKYRunsAway)
+	(assert (ACTION (id SUERunsAway)
 			(info "Comestible & PINKY No Comestible --> huir a INKY")
-			(priority 10)
+			(priority 6)
 			(runAwayType 2))) )
 
 (defrule SUErunsAwayToINKY
@@ -105,10 +106,19 @@
 	(INKY (outOfLair true))
 	(INKY (edible false))
 	=>  
-	(assert (ACTION (id PINKYRunsAway)
+	(assert (ACTION (id SUERunsAway)
 			(info "Comestible & INKY No Comestible --> huir a SUE")
-			(priority 10)
+			(priority 6)
 			(runAwayType 2))) )
+			
+(defrule SUErunAlternative
+	(SUE (edible true))
+	(SUE (anotherGhostInPath))
+	=>  
+	(assert (ACTION (id SUERunsAway)
+			(info "Comestible & Ghost en camino de huida --> huir por otro camino")
+			(priority 7)
+			(runAwayType 3))) )
 
 (defrule SUEchases
 	(SUE (edible false))
@@ -119,7 +129,7 @@
 	=> 
 	(assert (ACTION (id SUEChase)
 			(info "No comestible --> perseguir")
-			(priority 7)
+			(priority 2)
 			(chaseType 1))) )
 
 (defrule SUEchasesAlternative
@@ -133,7 +143,7 @@
 	=> 
 	(assert (ACTION (id SUEChase)
 			(info "No comestible --> perseguir distinto camino")
-			(priority 8)
+			(priority 3)
 			(chaseType 2))) )		
 			
 (defrule Agressive
@@ -147,4 +157,4 @@
 	=> 
 	(assert (ACTION (id SUEAgressive)
 			(info "Agressive chases pacman")
-			(priority 6))) )
+			(priority 1))) )
