@@ -1,11 +1,12 @@
-package es.ucm.fdi.ici.c2122.practica3.grupo02.rules.pacman.actionsPochas;
+package es.ucm.fdi.ici.c2122.practica3.grupo02.rules.pacman.actions;
 
-import es.ucm.fdi.ici.Action;
+import es.ucm.fdi.ici.rules.RulesAction;
+import jess.Fact;
 import pacman.game.Constants.DM;
 import pacman.game.Constants.MOVE;
 import pacman.game.Game;
 
-public class ReachClosestPowerPill implements Action {
+public class ReachClosestPowerPill implements RulesAction {
 
 	public ReachClosestPowerPill() {
 		// TODO Auto-generated constructor stub
@@ -14,7 +15,7 @@ public class ReachClosestPowerPill implements Action {
 	@Override
 	public String getActionId() {
 		// TODO Auto-generated method stub
-		return "Reach Closest PowerPill";
+		return "ReachClosestPowerPill";
 	}
 
 	@Override
@@ -38,6 +39,12 @@ public class ReachClosestPowerPill implements Action {
 			return MOVE.NEUTRAL;
 		else
 			return game.getApproximateNextMoveTowardsTarget(pcNode,	nearestPP, game.getPacmanLastMoveMade(), DM.PATH);
+	}
+
+	@Override
+	public void parseFact(Fact actionFact) {
+		// TODO Auto-generated method stub
+		
 	}
 
 }

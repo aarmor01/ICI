@@ -16,10 +16,10 @@
 	)
 	
 (deftemplate MSPACMAN
-	(slot existenPillsAbajo (type SYMBOL))
 	(slot caminoBloqueado (type SYMBOL))
 	(slot puedeComer (type SYMBOL))
 	(slot tiempoComerFantasma (type NUMBER))
+	(slot pPillMasCercana (type SYMBOL))
 	)
 	
 (deftemplate CONSTANTS
@@ -50,21 +50,21 @@
 	(assert (ACTION (id ReachClosestPill) 
 					(info "MSPacMan farmeando") 
 					(priority 1) )) 
-					)
-	
-(defrule CleanBottomPill
-	(MSPACMAN (existenPillsAbajo true))
-	=>  
-	(assert (ACTION (id PCcleansBottom) 
-					(info "MSPacMan limpia fondo") 
-					(priority 0) )) 
 					)	
-	
-(defrule PathBlocked
+
+(defrule EatPowerPill
+	(MSPACMAN (caminoBloqueado true) (pPillMasCercana true))
+	=>  
+	(assert (ACTION (id ReachClosestPowerPill) 
+					(info "MsPacMan va a por PPill") 
+					(priority 6) )) 
+					)
+
+(defrule Runaway
 	(MSPACMAN (caminoBloqueado true))
 	=>  
 	(assert (ACTION (id RunawayFromClosestGhost) 
-					(info "camino del MSPacMan bloqueado --> Huir / busca nuevo camino") 
+					(info "MSPacMan bloqueado --> Huir") 
 					(priority 6) )) 
 					)	
 	

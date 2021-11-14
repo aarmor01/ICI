@@ -48,7 +48,7 @@ public class RunawayFromClosestGhost implements RulesAction {
 		
 		//in case there are not ghost blocking nor near, we runaway randomly.
 		if (indexGhost != -1) {
-			if(/*GameConstants.DEBUG*/true) {
+			if(GameConstants.DEBUG) {
 				GameView.addPoints(game, java.awt.Color.magenta, game.getShortestPath(indexGhost, pacmanNode));	
 			}
 			

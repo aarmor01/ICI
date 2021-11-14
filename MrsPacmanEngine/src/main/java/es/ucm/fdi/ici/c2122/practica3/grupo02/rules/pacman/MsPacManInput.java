@@ -23,9 +23,9 @@ public class MsPacManInput extends RulesInput {
 
 	private int nearestGhostDistance;
 	
-	private boolean existenPillsAbajo;
-	
 	private boolean caminoBloqueado;
+	
+	private boolean pPillNear;
 	
 	private Random rnd = new Random();
 	
@@ -36,15 +36,16 @@ public class MsPacManInput extends RulesInput {
 	@Override
 	public void parseInput() {
 		
-		existenPillsAbajo = ExistingBottomPills();
-		
 		caminoBloqueado = PathMayBeObstructed();
 		
 		canEatGhost = game.isGhostEdible(GHOST.BLINKY) || game.isGhostEdible(GHOST.PINKY)
 				|| game.isGhostEdible(GHOST.INKY) || game.isGhostEdible(GHOST.SUE);
 				
-//		ghostOutsideLair = !(game.getGhostLairTime(GHOST.BLINKY) > 0) || !(game.getGhostLairTime(GHOST.PINKY) > 0)
-//				|| !(game.getGhostLairTime(GHOST.INKY) > 0) || !(game.getGhostLairTime(GHOST.SUE) > 0);
+//		
+		pPillNear = pPillsInRange(4*10);
+		
+		ghostOutsideLair = !(game.getGhostLairTime(GHOST.BLINKY) > 0) || !(game.getGhostLairTime(GHOST.PINKY) > 0)
+				|| !(game.getGhostLairTime(GHOST.INKY) > 0) || !(game.getGhostLairTime(GHOST.SUE) > 0);
 //		
 //		GHOST g = Tools.nearestGhost(game); 
 //		
@@ -77,6 +78,20 @@ public class MsPacManInput extends RulesInput {
 		return false;
 	}
 	
+	public boolean pPillsInRange(int range) {
+		int pcNode = game.getPacmanCurrentNodeIndex();
+		int[] activeP_Pills = game.getActivePowerPillsIndices();
+		for (int activePill : activeP_Pills) {
+			int distance = game.getShortestPathDistance(pcNode, activePill, game.getPacmanLastMoveMade());
+			if(distance <= range) {
+				return true;
+			}
+		}
+		
+		return false;
+	}
+
+	
 	public boolean MoreThanOnePillsInRange() {
 		int pcNode = game.getPacmanCurrentNodeIndex();
 		MOVE[] possibleMoves = game.getPossibleMoves(pcNode);
@@ -107,7 +122,7 @@ public class MsPacManInput extends RulesInput {
 			//For each Ghost we check if blocks up the MsPacMan path or may block it up.
 			
 			//Min distance to predict if the nearest Ghost can block up MsPacMan's path 
-			int obstructionRange = 4 * 10;
+			int obstructionRange = 6 * 10;
 			for(int i = 0; i < path.length; i++) {
 				//We make a deep search iterate over the adjacent  paths in a range of obstructionRange
 				int i_node = 0;
@@ -154,8 +169,8 @@ public class MsPacManInput extends RulesInput {
 							}
 						}
 					}	
-					
-					GameView.addPoints(game, java.awt.Color.lightGray, assumedPM_NewPos);
+					if(GameConstants.DEBUG)
+						GameView.addPoints(game, java.awt.Color.lightGray, assumedPM_NewPos);
 					
 					assumedPM_Move = game.getMoveToMakeToReachDirectNeighbour(assumedPM_LastPos, assumedPM_NewPos);
 					i_nodeIterator++;
@@ -182,9 +197,8 @@ public class MsPacManInput extends RulesInput {
 	@Override
 	public Collection<String> getFacts() {
 		Vector<String> facts = new Vector<String>();
-		facts.add(String.format("(MSPACMAN (existenPillsAbajo %s) "
-							  + "(caminoBloqueado %s) (puedeComer %s) (tiempoComerFantasma %s))", 
-							  false/*this.existenPillsAbajo*/, this.caminoBloqueado, this.canEatGhost, Utils.ghostFleeFromType != null ? game.getGhostEdibleTime(Utils.ghostFleeFromType) : 0 ));
+		facts.add(String.format("(MSPACMAN (caminoBloqueado %s) (puedeComer %s) (tiempoComerFantasma %s) (pPillMasCercana %s))", 
+							  this.caminoBloqueado, this.canEatGhost, Utils.ghostFleeFromType != null ? game.getGhostEdibleTime(Utils.ghostFleeFromType) : 0 , this.pPillNear));
 		facts.add(String.format("(CONSTANTS (tiempoMinimoComerFantasma %s))", GameConstants.maxEdibleTime * 0.2));
 //		facts.add(String.format("(INKY (edible %s))", this.INKYedible));
 //		facts.add(String.format("(PINKY (edible %s))", this.PINKYedible));
