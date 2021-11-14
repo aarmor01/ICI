@@ -82,7 +82,7 @@
 	=>  
 	(assert (ACTION (id PINKYRunsAway)
 			(info "Comestible & BLINKY No Comestible --> huir a SUE")
-			(priority 6)
+			(priority 7)
 			(runAwayType 2))) )
 
 (defrule PINKYrunsAwayToINKY
@@ -92,7 +92,7 @@
 	=>  
 	(assert (ACTION (id PINKYRunsAway)
 			(info "Comestible & INKY No Comestible --> huir a INKY")
-			(priority 6)
+			(priority 7)
 			(runAwayType 2))) )
 
 (defrule PINKYrunsAwayToSUE
@@ -102,7 +102,7 @@
 	=>  
 	(assert (ACTION (id PINKYRunsAway)
 			(info "Comestible & SUE No Comestible --> huir a SUE")
-			(priority 6)
+			(priority 7)
 			(runAwayType 2))) )
 			
 (defrule PINKYrunAlternative
@@ -111,7 +111,7 @@
 	=>  
 	(assert (ACTION (id PINKYRunsAway)
 			(info "Comestible & Ghost en camino de huida --> huir por otro camino")
-			(priority 7)
+			(priority 6)
 			(runAwayType 3))) )
 
 (defrule PINKYchases

@@ -71,7 +71,7 @@ public class Chase implements RulesAction {
 
     	// if two possible moves, we go the opposite way (away instead of towards)
 		if (numChoices == 2) 
-			return game.getApproximateNextMoveAwayFromTarget(ghostNode, pacmanNode,lastMove, DM.PATH);
+			return game.getApproximateNextMoveAwayFromTarget(ghostNode, pacmanNode, lastMove, DM.PATH);
 		else { 
 			// if three possible moves, we go to the one that isn't the furthest nor the closest to the Pacman
 			MOVE optimalMove = game.getApproximateNextMoveTowardsTarget(ghostNode, pacmanNode, lastMove, DM.PATH);

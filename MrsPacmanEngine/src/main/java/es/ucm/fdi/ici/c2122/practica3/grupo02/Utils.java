@@ -15,6 +15,8 @@ public final class Utils {
 	public static int ghostNodeToFleeFrom = -1;
 	public static GHOST ghostFleeFromType = null;
 	
+	public static int seerPill = 0;
+	
 	public static Random rnd = new Random();
 	
 	public static GHOST nearestGhostInRange(Game game, int chaseLimit) {

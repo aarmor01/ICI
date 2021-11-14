@@ -1,6 +1,7 @@
 package es.ucm.fdi.ici.c2122.practica3.grupo02.rules.ghosts;
 
 import es.ucm.fdi.ici.c2122.practica3.grupo02.GameConstants;
+import es.ucm.fdi.ici.c2122.practica3.grupo02.Utils;
 import es.ucm.fdi.ici.rules.RulesInput;
 
 import java.util.Collection;
@@ -85,7 +86,7 @@ public class GhostInput extends RulesInput {
 		this.distanceSUEToPacman = game.getShortestPathDistance(pacmanNode, SUEposition);
 
 		this.pacmanDistancePowerPill = Double.MAX_VALUE;
-		for (int ppill : game.getPowerPillIndices()) {
+		for (int ppill : game.getActivePowerPillsIndices()) {
 			double distance = game.getDistance(pacmanNode, ppill, DM.PATH);
 			this.pacmanDistancePowerPill = Math.min(distance, this.pacmanDistancePowerPill);
 		}
@@ -139,7 +140,7 @@ public class GhostInput extends RulesInput {
 			}
 		}
 
-		nextPillPacManBySeer = nearestPillNode;
+		Utils.seerPill = nextPillPacManBySeer = nearestPillNode;
 	}
 
 	private void checkGhostsInPath(GHOST ghost) {
