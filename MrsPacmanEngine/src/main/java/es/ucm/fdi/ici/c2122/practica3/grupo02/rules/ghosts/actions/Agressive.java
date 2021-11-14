@@ -1,9 +1,9 @@
 package es.ucm.fdi.ici.c2122.practica3.grupo02.rules.ghosts.actions;
 
-import es.ucm.fdi.ici.c2122.practica2.grupo02.GameConstants;
+import es.ucm.fdi.ici.c2122.practica3.grupo02.GameConstants;
 
-import jess.Fact;
 import es.ucm.fdi.ici.rules.RulesAction;
+import jess.Fact;
 
 import pacman.game.Game;
 import pacman.game.GameView;
@@ -27,7 +27,6 @@ public class Agressive implements RulesAction {
 
 	@Override
 	public MOVE execute(Game game) {
-
 		if (game.doesGhostRequireAction(ghostType)) {
 			int pacmanNode = game.getPacmanCurrentNodeIndex();
 			int ghostNode = game.getGhostCurrentNodeIndex(ghostType);

@@ -38,12 +38,12 @@
 	(slot chaseCount (type NUMBER)) )
 
 (deftemplate MSPACMAN 
-    (slot mindistancePPill (type NUMBER))
     (slot pacmanDistancePowerPill (type NUMBER))
 	(slot nextPillPacManBySeer (type NUMBER)) )
 	
 (deftemplate CONSTANTS
 	(slot ghostChaseDistance (type NUMBER))
+	(slot mindistancePPill (type NUMBER))
 	(slot minPredictionDistance (type NUMBER))
 	(slot minIntersectionsBeforeChange (type NUMBER)) )
 
@@ -51,7 +51,9 @@
 (deftemplate ACTION
 	(slot id)
 	(slot info (default ""))
-	(slot priority (type NUMBER)) )   
+	(slot priority (type NUMBER))
+	(slot runAwayType (type NUMBER)) 
+	(slot chaseType (type NUMBER)) ) 
 	
 ; -- RULES --
 ;(defrule INKYrunsAwayMSPACMANclosePPill
@@ -61,12 +63,54 @@
 ;			(info "MSPacMan cerca PPill"))) )
 
 (defrule INKYrunsAway
-	(INKY (edible true)) 
+	(INKY (edible true))
 	=>  
 	(assert (ACTION (id INKYRunsAway)
 			(info "Comestible --> huir")
-			(priority 9))) )
+			(priority 9)
+			(runAwayType 1))) )
+
+(defrule INKYrunsAwayMSPACMANclosePPill
+	(INKY (edible false)) 
+	(MSPACMAN (pacmanDistancePowerPill ?p))
+	(CONSTANTS (mindistancePPill ?m))
+	(test (<= ?p ?m)) 
+	=>  
+	(assert (ACTION (id INKYRunsAway)
+			(info "MsPacman cerca de PowerPill --> huir")
+			(priority 9)
+			(runAwayType 1))) )
 	
+(defrule INKYrunsAwayToBLINKY
+	(INKY (edible true))
+	(BLINKY (outOfLair true))
+	(BLINKY (edible false))
+	=>  
+	(assert (ACTION (id PINKYRunsAway)
+			(info "Comestible & BLINKY No Comestible --> huir a SUE")
+			(priority 10)
+			(runAwayType 2))) )
+
+(defrule INKYrunsAwayToPINKY
+	(INKY (edible true))
+	(PINKY (outOfLair true))
+	(PINKY (edible false))
+	=>  
+	(assert (ACTION (id PINKYRunsAway)
+			(info "Comestible & PINKY No Comestible --> huir a INKY")
+			(priority 10)
+			(runAwayType 2))) )
+
+(defrule INKYrunsAwayToSUE
+	(INKY (edible true))
+	(SUE (outOfLair true))
+	(SUE (edible false))
+	=>  
+	(assert (ACTION (id PINKYRunsAway)
+			(info "Comestible & SUE No Comestible --> huir a SUE")
+			(priority 10)
+			(runAwayType 2))) )
+
 (defrule INKYchases
 	(INKY (edible false))
 	(INKY (outOfLair true))
@@ -76,7 +120,8 @@
 	=> 
 	(assert (ACTION (id INKYChase)
 			(info "No comestible --> perseguir")
-			(priority 10))) )
+			(priority 8)
+			(chaseType 1))) )
 	
 (defrule Ambush
 	(INKY (edible false))
@@ -89,4 +134,4 @@
 	=> 
 	(assert (ACTION (id INKYAmbush)
 			(info "Ambush predicts pacman movement")
-			(priority 10))) )
+			(priority 7))) )

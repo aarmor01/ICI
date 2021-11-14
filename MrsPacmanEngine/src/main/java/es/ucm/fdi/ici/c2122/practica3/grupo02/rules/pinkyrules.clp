@@ -38,12 +38,12 @@
 	(slot chaseCount (type NUMBER)) )
 
 (deftemplate MSPACMAN 
-    (slot mindistancePPill (type NUMBER))
     (slot pacmanDistancePowerPill (type NUMBER))
 	(slot nextPillPacManBySeer (type NUMBER)) )
 	
 (deftemplate CONSTANTS
 	(slot ghostChaseDistance (type NUMBER))
+	(slot mindistancePPill (type NUMBER))
 	(slot minPredictionDistance (type NUMBER))
 	(slot minIntersectionsBeforeChange (type NUMBER)) )
 
@@ -51,7 +51,8 @@
 (deftemplate ACTION
 	(slot id)
 	(slot info (default ""))
-	(slot priority (type NUMBER)) )   
+	(slot priority (type NUMBER))
+	(slot runAwayType (type NUMBER)) )   
 	
 ; -- RULES --
 ;(defrule PINKYrunsAwayMSPACMANclosePPill
@@ -61,12 +62,54 @@
 ;			(info "MSPacMan cerca PPill"))) )
 
 (defrule PINKYrunsAway
-	(PINKY (edible true)) 
+	(PINKY (edible true))
 	=>  
 	(assert (ACTION (id PINKYRunsAway)
 			(info "Comestible --> huir")
-			(priority 9))) )
+			(priority 9)
+			(runAwayType 1))) )
+
+(defrule PINKYrunsAwayMSPACMANclosePPill
+	(PINKY (edible false)) 
+	(MSPACMAN (pacmanDistancePowerPill ?p))
+	(CONSTANTS (mindistancePPill ?m))
+	(test (<= ?p ?m)) 
+	=>  
+	(assert (ACTION (id PINKYRunsAway)
+			(info "MsPacman cerca de PowerPill --> huir")
+			(priority 9)
+			(runAwayType 1))) )
 	
+(defrule PINKYrunsAwayToBLINKY
+	(PINKY (edible true))
+	(BLINKY (outOfLair true))
+	(BLINKY (edible false))
+	=>  
+	(assert (ACTION (id PINKYRunsAway)
+			(info "Comestible & BLINKY No Comestible --> huir a SUE")
+			(priority 10)
+			(runAwayType 2))) )
+
+(defrule PINKYrunsAwayToINKY
+	(PINKY (edible true))
+	(INKY (outOfLair true))
+	(INKY (edible false))
+	=>  
+	(assert (ACTION (id PINKYRunsAway)
+			(info "Comestible & INKY No Comestible --> huir a INKY")
+			(priority 10)
+			(runAwayType 2))) )
+
+(defrule PINKYrunsAwayToSUE
+	(PINKY (edible true))
+	(SUE (outOfLair true))
+	(SUE (edible false))
+	=>  
+	(assert (ACTION (id PINKYRunsAway)
+			(info "Comestible & SUE No Comestible --> huir a SUE")
+			(priority 10)
+			(runAwayType 2))) )
+
 (defrule PINKYchases
 	(PINKY (edible false))
 	(PINKY (outOfLair true))
@@ -76,7 +119,7 @@
 	=> 
 	(assert (ACTION (id PINKYChase)
 			(info "No comestible --> perseguir")
-			(priority 10))) )	
+			(priority 8))) )	
 			
 (defrule Mole
 	(PINKY (edible false))
@@ -89,4 +132,4 @@
 	=> 
 	(assert (ACTION (id PINKYMole)
 			(info "Mole predicts road with more pills")
-			(priority 10))) )
+			(priority 7))) )

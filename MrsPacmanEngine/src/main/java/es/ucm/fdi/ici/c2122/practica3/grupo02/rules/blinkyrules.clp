@@ -38,12 +38,12 @@
 	(slot chaseCount (type NUMBER)) )
 
 (deftemplate MSPACMAN 
-    (slot mindistancePPill (type NUMBER))
     (slot pacmanDistancePowerPill (type NUMBER))
 	(slot nextPillPacManBySeer (type NUMBER)) )
 	
 (deftemplate CONSTANTS
 	(slot ghostChaseDistance (type NUMBER))
+	(slot mindistancePPill (type NUMBER))
 	(slot minPredictionDistance (type NUMBER))
 	(slot minIntersectionsBeforeChange (type NUMBER)) )
 
@@ -51,7 +51,8 @@
 (deftemplate ACTION
 	(slot id)
 	(slot info (default ""))
-	(slot priority (type NUMBER)) )   
+	(slot priority (type NUMBER))
+	(slot runAwayType (type NUMBER)) )   
 	
 ; -- RULES --
 ;(defrule BLINKYrunsAwayMSPACMANclosePPill
@@ -65,8 +66,50 @@
 	=>  
 	(assert (ACTION (id BLINKYRunsAway)
 			(info "Comestible --> huir")
-			(priority 9))) )
+			(priority 9)
+			(runAwayType 1))) )
+
+(defrule BLINKYrunsAwayMSPACMANclosePPill
+	(BLINKY (edible false))
+	(MSPACMAN (pacmanDistancePowerPill ?p))
+	(CONSTANTS (mindistancePPill ?m))
+	(test (<= ?p ?m)) 
+	=>  
+	(assert (ACTION (id BLINKYRunsAway)
+			(info "MsPacman cerca de PowerPill --> huir")
+			(priority 9)
+			(runAwayType 1))) )
 	
+(defrule BLINKYrunsAwayToPINKY
+	(BLINKY (edible true))
+	(PINKY (outOfLair true))
+	(PINKY (edible false))
+	=>  
+	(assert (ACTION (id PINKYRunsAway)
+			(info "Comestible & PINKY No Comestible --> huir a SUE")
+			(priority 10)
+			(runAwayType 2))) )
+
+(defrule BLINKYrunsAwayToINKY
+	(BLINKY (edible true))
+	(INKY (outOfLair true))
+	(INKY (edible false))
+	=>  
+	(assert (ACTION (id PINKYRunsAway)
+			(info "Comestible & INKY No Comestible --> huir a INKY")
+			(priority 10)
+			(runAwayType 2))) )
+
+(defrule BLINKYrunsAwayToSUE
+	(BLINKY (edible true))
+	(SUE (outOfLair true))
+	(SUE (edible false))
+	=>  
+	(assert (ACTION (id PINKYRunsAway)
+			(info "Comestible & SUE No Comestible --> huir a SUE")
+			(priority 10)
+			(runAwayType 2))) )
+
 (defrule BLINKYchases
 	(BLINKY (edible false))
 	(BLINKY (outOfLair true))
@@ -76,7 +119,7 @@
 	=> 
 	(assert (ACTION (id BLINKYChase)
 			(info "No comestible --> perseguir")
-			(priority 10))) )	
+			(priority 8))) )	
 			
 (defrule Seer
 	(BLINKY (edible false))
@@ -89,6 +132,6 @@
 	=> 
 	(assert (ACTION (id BLINKYSeer)
 			(info "Seer predicts pill")
-			(priority 10))) )
+			(priority 7))) )
 	
 	

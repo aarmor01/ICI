@@ -243,12 +243,12 @@ public class GhostInput extends RulesInput {
 				(boolean)this.SUEedible, (int)this.SUEedTimeLeft, (boolean)this.SUEoutOfLair, (int)this.SUEposition, (int)this.distanceSUEToPacman, (boolean)this.SUEanotherGhostInPath, (int)this.chaseCountSUE));
 		
 		//MSPACMAN
-		facts.add(String.format("(MSPACMAN (mindistancePPill %d) (pacmanDistancePowerPill %d) (nextPillPacManBySeer %d))",
-				(int)30, (int)this.pacmanDistancePowerPill, (int)this.nextPillPacManBySeer));
+		facts.add(String.format("(MSPACMAN (pacmanDistancePowerPill %d) (nextPillPacManBySeer %d))",
+				 (int)this.pacmanDistancePowerPill, (int)this.nextPillPacManBySeer));
 		
 		//CONSTANTS
-		facts.add(String.format("(CONSTANTS (ghostChaseDistance %d) (minPredictionDistance %d) (minIntersectionsBeforeChange %d))",
-				(int)50, (int)15, (int)2));
+		facts.add(String.format("(CONSTANTS (ghostChaseDistance %d) (mindistancePPill %d) (minPredictionDistance %d) (minIntersectionsBeforeChange %d))",
+				(int)50, (int)10, (int)15, (int)2));
 		
 //		facts.add(String.format("(INKY (edible %s))", this.INKYedible));
 //		facts.add(String.format("(PINKY (edible %s))", this.PINKYedible));

@@ -31,10 +31,10 @@ public class Ghosts extends GhostController {
 			// -- ACTIONS --
 			HashMap<String, RulesAction> actionsMap = new HashMap<String, RulesAction>();
 
-			RulesAction chase = new ChasePrimaryPath(ghost);
+			RulesAction chase = new Chase(ghost);
 			actionsMap.put(chase.getActionId(), chase);
 			
-			RulesAction runaway = new RunAwayFromPacMan(ghost);
+			RulesAction runaway = new RunAway(ghost);
 			actionsMap.put(runaway.getActionId(), runaway);
 
 			switch (ghost) {

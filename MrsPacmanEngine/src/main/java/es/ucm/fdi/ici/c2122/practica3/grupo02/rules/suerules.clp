@@ -38,12 +38,12 @@
 	(slot chaseCount (type NUMBER)) )
 
 (deftemplate MSPACMAN 
-    (slot mindistancePPill (type NUMBER))
     (slot pacmanDistancePowerPill (type NUMBER))
 	(slot nextPillPacManBySeer (type NUMBER)) )
 	
 (deftemplate CONSTANTS
 	(slot ghostChaseDistance (type NUMBER))
+	(slot mindistancePPill (type NUMBER))
 	(slot minPredictionDistance (type NUMBER))
 	(slot minIntersectionsBeforeChange (type NUMBER)) )
 
@@ -51,7 +51,8 @@
 (deftemplate ACTION
 	(slot id)
 	(slot info (default ""))
-	(slot priority (type NUMBER)) )   
+	(slot priority (type NUMBER))
+	(slot runAwayType (type NUMBER)) )   
 	
 ; -- RULES --
 ;(defrule SUErunsAwayMSPACMANclosePPill
@@ -65,8 +66,50 @@
 	=>  
 	(assert (ACTION (id SUERunsAway)
 			(info "Comestible --> huir")
-			(priority 9))) )
+			(priority 9)
+			(runAwayType 1))) )
+
+(defrule SUErunsAwayMSPACMANclosePPill
+	(SUE (edible false)) 
+	(MSPACMAN (pacmanDistancePowerPill ?p))
+	(CONSTANTS (mindistancePPill ?m))
+	(test (<= ?p ?m)) 
+	=>  
+	(assert (ACTION (id SUERunsAway)
+			(info "MsPacman cerca de PowerPill --> huir")
+			(priority 9)
+			(runAwayType 1))) )
 	
+(defrule SUErunsAwayToBLINKY
+	(SUE (edible true))
+	(BLINKY (outOfLair true))
+	(BLINKY (edible false))
+	=>  
+	(assert (ACTION (id PINKYRunsAway)
+			(info "Comestible & BLINKY No Comestible --> huir a SUE")
+			(priority 10)
+			(runAwayType 2))) )
+
+(defrule SUErunsAwayToPINKY
+	(SUE (edible true))
+	(PINKY (outOfLair true))
+	(PINKY (edible false))
+	=>  
+	(assert (ACTION (id PINKYRunsAway)
+			(info "Comestible & PINKY No Comestible --> huir a INKY")
+			(priority 10)
+			(runAwayType 2))) )
+
+(defrule SUErunsAwayToINKY
+	(SUE (edible true))
+	(INKY (outOfLair true))
+	(INKY (edible false))
+	=>  
+	(assert (ACTION (id PINKYRunsAway)
+			(info "Comestible & INKY No Comestible --> huir a SUE")
+			(priority 10)
+			(runAwayType 2))) )
+
 (defrule SUEchases
 	(SUE (edible false))
 	(SUE (outOfLair true))
@@ -76,17 +119,17 @@
 	=> 
 	(assert (ACTION (id SUEChase)
 			(info "No comestible --> perseguir")
-			(priority 10))) )	
+			(priority 8))) )	
 			
 (defrule Agressive
 	(SUE (edible false))
 	(SUE (outOfLair true))
 	(SUE (distanceToPacman ?d))
-	(CONSTANTS (minPredictionDistance ?g))
 	(MSPACMAN (pacmanDistancePowerPill ?p))
+	(CONSTANTS (minPredictionDistance ?g))
 	(test (> ?d ?g))
 	(test (> ?p 20))
 	=> 
 	(assert (ACTION (id SUEAgressive)
 			(info "Agressive chases pacman")
-			(priority 10))) )
+			(priority 7))) )
