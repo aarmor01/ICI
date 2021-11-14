@@ -1,14 +1,13 @@
 package es.ucm.fdi.ici.c2122.practica3.grupo02.rules.ghosts;
 
+import es.ucm.fdi.ici.c2122.practica2.grupo02.GameConstants;
 import es.ucm.fdi.ici.rules.RulesInput;
 
 import java.util.Collection;
 import java.util.Vector;
 
-import es.ucm.fdi.ici.c2122.practica2.grupo02.GameConstants;
 import pacman.game.Constants.DM;
 import pacman.game.Constants.GHOST;
-import pacman.game.Constants.MOVE;
 import pacman.game.Game;
 
 public class GhostInput extends RulesInput {
@@ -91,34 +90,17 @@ public class GhostInput extends RulesInput {
 			this.pacmanDistancePowerPill = Math.min(distance, this.pacmanDistancePowerPill);
 		}
 
-		// Seer prediction
-		if (game.doesGhostRequireAction(GHOST.BLINKY)) {
-
-		}
-
 		for (GHOST ghost : GHOST.values()) {
-
+			// Seer prediction
 			if (game.doesGhostRequireAction(ghost)) {
 				if (ghost == GHOST.BLINKY)
 					seerPill(pacmanNode);
-
-				if (!game.isGhostEdible(ghost) && game.getShortestPathDistance(game.getGhostCurrentNodeIndex(ghost),
-						pacmanNode) < GameConstants.ghostChaseDistance) {
-					switch (ghost) {
-					case BLINKY:
-						chaseCountBLINKY++;
-						break;
-					case INKY:
-						chaseCountINKY++;
-						break;
-					case PINKY:
-						chaseCountPINKY++;
-						break;
-					case SUE:
-						chaseCountSUE++;
-						break;
-					}
-				}
+				
+				if (game.isGhostEdible(ghost) || game.getGhostLairTime(ghost) > 0 ||
+						game.getShortestPathDistance(game.getGhostCurrentNodeIndex(ghost), pacmanNode) >= GameConstants.ghostChaseDistance) 
+					resetCount(ghost);
+				else
+					addCount(ghost);
 
 				checkGhostsInPath(ghost);
 			}
@@ -127,22 +109,20 @@ public class GhostInput extends RulesInput {
 
 	public void resetCount(GHOST ghost) {
 		switch (ghost) {
-		case BLINKY:
-			chaseCountBLINKY = 0;
-		case INKY:
-			chaseCountINKY = 0;
-		case PINKY:
-			chaseCountPINKY = 0;
-		case SUE:
-			chaseCountSUE = 0;
+		case BLINKY: chaseCountBLINKY = 0; break;
+		case INKY: chaseCountINKY = 0; break;
+		case PINKY: chaseCountPINKY = 0; break;
+		case SUE: chaseCountSUE = 0; break;
 		}
 	}
-
-	public void resetAllCounts() {
-		chaseCountBLINKY = 0;
-		chaseCountINKY = 0;
-		chaseCountPINKY = 0;
-		chaseCountSUE = 0;
+	
+	public void addCount(GHOST ghost) {
+		switch (ghost) {
+		case BLINKY: chaseCountBLINKY++; break;
+		case INKY: chaseCountINKY++; break;
+		case PINKY: chaseCountPINKY++; break;
+		case SUE: chaseCountSUE++; break;
+		}
 	}
 
 	private void seerPill(int pacmanNode) {
@@ -153,7 +133,7 @@ public class GhostInput extends RulesInput {
 		// We get the next possible destination of the Pacman
 		for (int activePill : activePills) {
 			int distance = game.getShortestPathDistance(pacmanNode, activePill, game.getPacmanLastMoveMade());
-			if (distance < shortestDistance && distance > GameConstants.minPredictionDistance) {
+			if (distance > GameConstants.minPredictionDistance && distance < shortestDistance) {
 				nearestPillNode = activePill;
 				shortestDistance = distance;
 			}
@@ -167,25 +147,11 @@ public class GhostInput extends RulesInput {
 
 		boolean auxAnotherGhostInPath;
 		switch(ghost) {
-		case BLINKY:
-			auxAnotherGhostInPath = BLINKYanotherGhostInPath;
-			BLINKYanotherGhostInPath = false;
-			break;
-		case PINKY:
-			auxAnotherGhostInPath = PINKYanotherGhostInPath;
-			PINKYanotherGhostInPath = false;
-			break;
-		case INKY:
-			auxAnotherGhostInPath = INKYanotherGhostInPath;
-			INKYanotherGhostInPath = false;
-			break;
-		case SUE:
-			auxAnotherGhostInPath = SUEanotherGhostInPath;
-			SUEanotherGhostInPath = false;
-			break;
-		default:
-			auxAnotherGhostInPath = false;
-			break;
+		case BLINKY: auxAnotherGhostInPath = BLINKYanotherGhostInPath = false; break;
+		case PINKY: auxAnotherGhostInPath = PINKYanotherGhostInPath = false; break;
+		case INKY: auxAnotherGhostInPath = INKYanotherGhostInPath = false; break;
+		case SUE: auxAnotherGhostInPath = SUEanotherGhostInPath = false; break;
+		default: auxAnotherGhostInPath = false; break;
 		}
 
 		for (GHOST ghostToEvade : GHOST.values()) {
@@ -199,24 +165,15 @@ public class GhostInput extends RulesInput {
 			int[] path = game.getShortestPath(ghostNode, ghostEvNode, game.getGhostLastMoveMade(ghost));
 
 			int node = 0;
-			for (; node < path.length; node++) 
-				if (game.isJunction(node)) 
-					break;
+			while(node < path.length && !game.isJunction(node)) 
+				node++;
 				
-			if(node == path.length) {
+			if (node == path.length) {
 				switch(ghost) {
-				case BLINKY:
-					BLINKYanotherGhostInPath = true;
-					break;
-				case PINKY:
-					PINKYanotherGhostInPath = true;
-					break;
-				case INKY:
-					INKYanotherGhostInPath = true;
-					break;
-				case SUE:
-					SUEanotherGhostInPath = true;
-					break;
+				case BLINKY: auxAnotherGhostInPath = BLINKYanotherGhostInPath = true; break;
+				case PINKY: auxAnotherGhostInPath = PINKYanotherGhostInPath = true; break;
+				case INKY: auxAnotherGhostInPath = INKYanotherGhostInPath = true; break;
+				case SUE: auxAnotherGhostInPath = SUEanotherGhostInPath = true; break;
 				}
 			}
 		}
@@ -227,34 +184,63 @@ public class GhostInput extends RulesInput {
 		Vector<String> facts = new Vector<String>();
 		
 		//BLINKY
-		facts.add(String.format("(BLINKY (edible %b) (edTimeLeft %d) (outOfLair %b) (position %d) (distanceToPacman %d) (anotherGhostInPath %b) (chaseCount %d))",
-				(boolean)this.BLINKYedible, (int)this.BLINKYedTimeLeft, (boolean)this.BLINKYoutOfLair, (int)this.BLINKYposition, (int)this.distanceBLINKYToPacman, (boolean)this.BLINKYanotherGhostInPath, (int)this.chaseCountBLINKY));
+		facts.add(String.format("(BLINKY (edible %b) "
+				+ "(edTimeLeft %d) "
+				+ "(outOfLair %b) "
+				+ "(position %d) "
+				+ "(distanceToPacman %d) "
+				+ "(anotherGhostInPath %b) "
+				+ "(chaseCount %d))",
+				(boolean)this.BLINKYedible, (int)this.BLINKYedTimeLeft, (boolean)this.BLINKYoutOfLair, (int)this.BLINKYposition, 
+				(int)this.distanceBLINKYToPacman, (boolean)this.BLINKYanotherGhostInPath, (int)this.chaseCountBLINKY));
 		
 		//INKY
-		facts.add(String.format("(INKY (edible %b) (edTimeLeft %d) (outOfLair %b) (position %d) (distanceToPacman %d) (anotherGhostInPath %b) (chaseCount %d))",
-				(boolean)this.INKYedible, (int)this.INKYedTimeLeft, (boolean)this.INKYoutOfLair, (int)this.INKYposition, (int)this.distanceINKYToPacman, (boolean)this.INKYanotherGhostInPath, (int)this.chaseCountINKY));
+		facts.add(String.format("(INKY (edible %b) "
+				+ "(edTimeLeft %d) "
+				+ "(outOfLair %b) "
+				+ "(position %d) "
+				+ "(distanceToPacman %d) "
+				+ "(anotherGhostInPath %b) "
+				+ "(chaseCount %d))",
+				(boolean)this.INKYedible, (int)this.INKYedTimeLeft, (boolean)this.INKYoutOfLair, (int)this.INKYposition, 
+				(int)this.distanceINKYToPacman, (boolean)this.INKYanotherGhostInPath, (int)this.chaseCountINKY));
 		
 		//PINKY
-		facts.add(String.format("(PINKY (edible %b) (edTimeLeft %d) (outOfLair %b) (position %d) (distanceToPacman %d) (anotherGhostInPath %b) (chaseCount %d))",
-				(boolean)this.PINKYedible, (int)this.PINKYedTimeLeft, (boolean)this.PINKYoutOfLair, (int)this.PINKYposition, (int)this.distancePINKYToPacman, (boolean)this.PINKYanotherGhostInPath, (int)this.chaseCountPINKY));
+		facts.add(String.format("(PINKY (edible %b) "
+				+ "(edTimeLeft %d) "
+				+ "(outOfLair %b) "
+				+ "(position %d) "
+				+ "(distanceToPacman %d) "
+				+ "(anotherGhostInPath %b) "
+				+ "(chaseCount %d))",
+				(boolean)this.PINKYedible, (int)this.PINKYedTimeLeft, (boolean)this.PINKYoutOfLair, (int)this.PINKYposition, 
+				(int)this.distancePINKYToPacman, (boolean)this.PINKYanotherGhostInPath, (int)this.chaseCountPINKY));
 		
 		//SUE
-		facts.add(String.format("(SUE (edible %b) (edTimeLeft %d) (outOfLair %b) (position %d) (distanceToPacman %d) (anotherGhostInPath %b) (chaseCount %d))",
-				(boolean)this.SUEedible, (int)this.SUEedTimeLeft, (boolean)this.SUEoutOfLair, (int)this.SUEposition, (int)this.distanceSUEToPacman, (boolean)this.SUEanotherGhostInPath, (int)this.chaseCountSUE));
+		facts.add(String.format("(SUE (edible %b) "
+				+ "(edTimeLeft %d) "
+				+ "(outOfLair %b) "
+				+ "(position %d) "
+				+ "(distanceToPacman %d) "
+				+ "(anotherGhostInPath %b) "
+				+ "(chaseCount %d))",
+				(boolean)this.SUEedible, (int)this.SUEedTimeLeft, (boolean)this.SUEoutOfLair, (int)this.SUEposition, 
+				(int)this.distanceSUEToPacman, (boolean)this.SUEanotherGhostInPath, (int)this.chaseCountSUE));
 		
 		//MSPACMAN
-		facts.add(String.format("(MSPACMAN (pacmanDistancePowerPill %d) (nextPillPacManBySeer %d))",
+		facts.add(String.format("(MSPACMAN "
+				+ "(pacmanDistancePowerPill %d) "
+				+ "(nextPillPacManBySeer %d))",
 				 (int)this.pacmanDistancePowerPill, (int)this.nextPillPacManBySeer));
 		
 		//CONSTANTS
-		facts.add(String.format("(CONSTANTS (ghostChaseDistance %d) (mindistancePPill %d) (minPredictionDistance %d) (minIntersectionsBeforeChange %d))",
-				(int)50, (int)10, (int)15, (int)2));
-		
-//		facts.add(String.format("(INKY (edible %s))", this.INKYedible));
-//		facts.add(String.format("(PINKY (edible %s))", this.PINKYedible));
-//		facts.add(String.format("(SUE (edible %s))", this.SUEedible));
-//		facts.add(String.format("(MSPACMAN (mindistancePPill %d))", 
-//								(int)this.minPacmanDistancePPill));
+		facts.add(String.format("(CONSTANTS (ghostChaseDistance %d) "
+				+ "(mindistancePPill %d) "
+				+ "(minPredictionDistance %d) "
+				+ "(minIntersectionsBeforeChange %d))",
+				(int)GameConstants.ghostChaseDistance, (int)GameConstants.minRangePacmanPowerPill, 
+				(int)GameConstants.minPredictionDistance, (int)GameConstants.numIntersectionsBeforeChange));
+
 		return facts;
 	}
 }

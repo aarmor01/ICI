@@ -18,5 +18,5 @@ public class GameConstants {
 
 	public static int numIntersectionsBeforeChange = 2;
 
-	public static boolean DEBUG = true;
+	public static boolean DEBUG = false;
 }

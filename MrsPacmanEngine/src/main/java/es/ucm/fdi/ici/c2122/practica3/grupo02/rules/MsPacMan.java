@@ -39,9 +39,10 @@ public class MsPacMan extends PacmanController {
 		//-------------------------------
 		String fileRule = PACMAN_RULES_PATH;
 		mspacmanRuleEngine = new RuleEngine(PACMAN_NAME, fileRule, actionsMap);
-		
-		ConsoleRuleEngineObserver observer = new ConsoleRuleEngineObserver(PACMAN_NAME, true);
-		mspacmanRuleEngine.addObserver(observer);
+		if(GameConstants.DEBUG) {
+			ConsoleRuleEngineObserver observer = new ConsoleRuleEngineObserver(PACMAN_NAME, true);
+			mspacmanRuleEngine.addObserver(observer);
+		}
 	}
 	
 	public void oldBehaviour() {

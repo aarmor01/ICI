@@ -1,15 +1,17 @@
 package es.ucm.fdi.ici.c2122.practica3.grupo02.rules.ghosts.actions;
 
-import java.awt.Color;
-
 import es.ucm.fdi.ici.rules.RulesAction;
 import es.ucm.fdi.ici.c2122.practica2.grupo02.GameConstants;
+
+import java.awt.Color;
+
 import jess.Fact;
-import pacman.game.Constants.DM;
-import pacman.game.Constants.GHOST;
-import pacman.game.Constants.MOVE;
+
 import pacman.game.Game;
 import pacman.game.GameView;
+import pacman.game.Constants.DM;
+import pacman.game.Constants.MOVE;
+import pacman.game.Constants.GHOST;
 
 public class Seer implements RulesAction {
 	
@@ -30,6 +32,7 @@ public class Seer implements RulesAction {
 		if (game.doesGhostRequireAction(ghostType)) {
 			int pacmanNode = game.getPacmanCurrentNodeIndex();
 			int ghostNode = game.getGhostCurrentNodeIndex(ghostType);
+			MOVE lastMove = game.getGhostLastMoveMade(ghostType);
 			
 			int[] activePills = game.getActivePillsIndices();
 			int nearestPillNode = -1;
@@ -48,8 +51,7 @@ public class Seer implements RulesAction {
 			if (GameConstants.DEBUG)
 				GameView.addLines(game, Color.CYAN, ghostNode, nearestPillNode);
 			
-			return game.getApproximateNextMoveTowardsTarget(ghostNode, nearestPillNode,
-					game.getGhostLastMoveMade(ghostType), DM.PATH);
+			return game.getApproximateNextMoveTowardsTarget(ghostNode, nearestPillNode, lastMove, DM.PATH);
 		}
 		
 		return MOVE.NEUTRAL;
@@ -57,7 +59,6 @@ public class Seer implements RulesAction {
 	
 	@Override
 	public void parseFact(Fact actionFact) {
-		// TODO Auto-generated method stub
 		
 	}
 }

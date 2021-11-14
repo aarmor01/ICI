@@ -56,12 +56,6 @@
 	(slot chaseType (type NUMBER)) ) 
 	
 ; -- RULES --
-;(defrule INKYrunsAwayMSPACMANclosePPill
-;	(MSPACMAN (mindistancePPill ?d)) (test (<= ?d 30)) 
-;	=>  
-;	(assert (ACTION (id INKYRunsAway) 
-;			(info "MSPacMan cerca PPill"))) )
-
 (defrule INKYrunsAway
 	(INKY (edible true))
 	=>  
@@ -113,7 +107,7 @@
 			
 (defrule INKYrunAlternative
 	(INKY (edible true))
-	(INKY (anotherGhostInPath))
+	(INKY (anotherGhostInPath true))
 	=>  
 	(assert (ACTION (id INKYRunsAway)
 			(info "Comestible & Ghost en camino de huida --> huir por otro camino")
@@ -138,8 +132,9 @@
 	(INKY (distanceToPacman ?d))
 	(INKY (chaseCount ?c))
 	(CONSTANTS (ghostChaseDistance ?g))
+	(CONSTANTS (minIntersectionsBeforeChange ?m))
 	(test (<= ?d ?g))
-	(test (> ?c 2))
+	(test (> ?c ?m))
 	=> 
 	(assert (ACTION (id INKYChase)
 			(info "No comestible --> perseguir distinto camino")

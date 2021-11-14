@@ -56,12 +56,6 @@
 	(slot chaseType (type NUMBER)) )   
 	
 ; -- RULES --
-;(defrule BLINKYrunsAwayMSPACMANclosePPill
-;	(MSPACMAN (mindistancePPill ?d)) (test (<= ?d 30)) 
-;	=>  
-;	(assert (ACTION (id BLINKYRunsAway) 
-;			(info "MSPacMan cerca PPill"))) )
-
 (defrule BLINKYrunsAway
 	(BLINKY (edible true))
 	=>  
@@ -113,7 +107,7 @@
 			
 (defrule BLINKYrunAlternative
 	(BLINKY (edible true))
-	(BLINKY (anotherGhostInPath))
+	(BLINKY (anotherGhostInPath true))
 	=>  
 	(assert (ACTION (id BLINKYRunsAway)
 			(info "Comestible & Ghost en camino de huida --> huir por otro camino")
@@ -138,8 +132,9 @@
 	(BLINKY (distanceToPacman ?d))
 	(BLINKY (chaseCount ?c))
 	(CONSTANTS (ghostChaseDistance ?g))
+	(CONSTANTS (minIntersectionsBeforeChange ?m))
 	(test (<= ?d ?g))
-	(test (> ?c 2))
+	(test (> ?c ?m))
 	=> 
 	(assert (ACTION (id BLINKYChase)
 			(info "No comestible --> perseguir distinto camino")

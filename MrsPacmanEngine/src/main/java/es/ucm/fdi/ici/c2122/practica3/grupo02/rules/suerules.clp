@@ -56,12 +56,6 @@
 	(slot chaseType (type NUMBER)) )   
 	
 ; -- RULES --
-;(defrule SUErunsAwayMSPACMANclosePPill
-;	(MSPACMAN (mindistancePPill ?d)) (test (<= ?d 30)) 
-;	=>  
-;	(assert (ACTION (id SUERunsAway) 
-;			(info "MSPacMan cerca PPill"))) )
-
 (defrule SUErunsAway
 	(SUE (edible true)) 
 	=>  
@@ -113,7 +107,7 @@
 			
 (defrule SUErunAlternative
 	(SUE (edible true))
-	(SUE (anotherGhostInPath))
+	(SUE (anotherGhostInPath true))
 	=>  
 	(assert (ACTION (id SUERunsAway)
 			(info "Comestible & Ghost en camino de huida --> huir por otro camino")
@@ -138,8 +132,9 @@
 	(SUE (distanceToPacman ?d))
 	(SUE (chaseCount ?c))
 	(CONSTANTS (ghostChaseDistance ?g))
+	(CONSTANTS (minIntersectionsBeforeChange ?m))
 	(test (<= ?d ?g))
-	(test (> ?c 2))
+	(test (> ?c ?m))
 	=> 
 	(assert (ACTION (id SUEChase)
 			(info "No comestible --> perseguir distinto camino")

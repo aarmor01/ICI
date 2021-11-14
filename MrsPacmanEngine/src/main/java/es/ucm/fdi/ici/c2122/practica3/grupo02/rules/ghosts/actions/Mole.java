@@ -1,15 +1,17 @@
 package es.ucm.fdi.ici.c2122.practica3.grupo02.rules.ghosts.actions;
 
-import java.awt.Color;
-
 import es.ucm.fdi.ici.c2122.practica3.grupo02.GameConstants;
 import es.ucm.fdi.ici.rules.RulesAction;
+
+import java.awt.Color;
+
 import jess.Fact;
+
 import pacman.game.Game;
 import pacman.game.GameView;
 import pacman.game.Constants.DM;
-import pacman.game.Constants.GHOST;
 import pacman.game.Constants.MOVE;
+import pacman.game.Constants.GHOST;
 
 public class Mole implements RulesAction {
 	
@@ -97,7 +99,6 @@ public class Mole implements RulesAction {
 	
 	@Override
 	public void parseFact(Fact actionFact) {
-		// TODO Auto-generated method stub
 		
 	}
 }

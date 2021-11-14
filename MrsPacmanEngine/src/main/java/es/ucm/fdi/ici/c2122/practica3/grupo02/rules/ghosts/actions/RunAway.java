@@ -1,8 +1,8 @@
 package es.ucm.fdi.ici.c2122.practica3.grupo02.rules.ghosts.actions;
 
 import es.ucm.fdi.ici.c2122.practica3.grupo02.GameConstants;
-
 import es.ucm.fdi.ici.rules.RulesAction;
+
 import jess.Fact;
 import jess.Value;
 import jess.JessException;
@@ -10,8 +10,8 @@ import jess.JessException;
 import pacman.game.Game;
 import pacman.game.GameView;
 import pacman.game.Constants.DM;
-import pacman.game.Constants.GHOST;
 import pacman.game.Constants.MOVE;
+import pacman.game.Constants.GHOST;
 
 public class RunAway implements RulesAction {
 

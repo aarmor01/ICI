@@ -56,12 +56,6 @@
 	(slot chaseType (type NUMBER)) )   
 	
 ; -- RULES --
-;(defrule PINKYrunsAwayMSPACMANclosePPill
-;	(MSPACMAN (mindistancePPill ?d)) (test (<= ?d 30)) 
-;	=>  
-;	(assert (ACTION (id PINKYRunsAway) 
-;			(info "MSPacMan cerca PPill"))) )
-
 (defrule PINKYrunsAway
 	(PINKY (edible true))
 	=>  
@@ -113,7 +107,7 @@
 			
 (defrule PINKYrunAlternative
 	(PINKY (edible true))
-	(PINKY (anotherGhostInPath))
+	(PINKY (anotherGhostInPath true))
 	=>  
 	(assert (ACTION (id PINKYRunsAway)
 			(info "Comestible & Ghost en camino de huida --> huir por otro camino")
@@ -131,15 +125,16 @@
 			(info "No comestible --> perseguir")
 			(priority 2)
 			(chaseType 1))) )
-			
+
 (defrule PINKYchasesAlternative
 	(PINKY (edible false))
 	(PINKY (outOfLair true))
 	(PINKY (distanceToPacman ?d))
 	(PINKY (chaseCount ?c))
 	(CONSTANTS (ghostChaseDistance ?g))
+	(CONSTANTS (minIntersectionsBeforeChange ?m))
 	(test (<= ?d ?g))
-	(test (> ?c 2))
+	(test (> ?c ?m))
 	=> 
 	(assert (ACTION (id PINKYChase)
 			(info "No comestible --> perseguir distinto camino")
