@@ -1,7 +1,10 @@
 package es.ucm.fdi.ici.c2122.practica3.grupo02.rules.pacman.actions;
 
+import org.graphstream.ui.graphicGraph.stylesheet.Color;
+
 import es.ucm.fdi.ici.c2122.practica2.grupo02.GameConstants;
 import es.ucm.fdi.ici.c2122.practica2.grupo02.Tools;
+import es.ucm.fdi.ici.c2122.practica3.grupo02.Utils;
 import es.ucm.fdi.ici.rules.RulesAction;
 import jess.Fact;
 import pacman.game.Constants.DM;
@@ -26,16 +29,34 @@ public class RunawayFromClosestGhost implements RulesAction {
 	@Override
 	public MOVE execute(Game game) {
 		int pacmanNode = game.getPacmanCurrentNodeIndex();
-		GHOST nearestGhostType = Tools.nearestGhostInRange(game, runawayDistance);
+		int indexGhost = -1;
+		GHOST nearestGhostType = null;
 		
-		if (nearestGhostType != null) {
-			if(GameConstants.DEBUG) {
-				GameView.addPoints(game, GameConstants.colours[nearestGhostType.ordinal()],
-						game.getShortestPath(game.getGhostCurrentNodeIndex(nearestGhostType), pacmanNode));				
+		//If exists a ghost blocking the path, we got its index
+		if(Utils.ghostNodeToFleeFrom != -1) {
+			indexGhost = Utils.ghostNodeToFleeFrom;
+			nearestGhostType = Utils.ghostFleeFromType;
+ 		}
+		//if theres a ghost near, we take its type
+		else nearestGhostType = Tools.nearestGhostInRange(game, runawayDistance);
+		
+		//if there isn't ghost blocking but theres is some near, we take its index
+		if(indexGhost == -1 && nearestGhostType != null) {
+			indexGhost = game.getGhostCurrentNodeIndex(nearestGhostType);
+			Utils.ghostFleeFromType = nearestGhostType;
+		}
+		
+		//in case there are not ghost blocking nor near, we runaway randomly.
+		if (indexGhost != -1) {
+			if(/*GameConstants.DEBUG*/true) {
+				GameView.addPoints(game, java.awt.Color.magenta, game.getShortestPath(indexGhost, pacmanNode));	
 			}
 			
-			return game.getApproximateNextMoveAwayFromTarget(pacmanNode,
-					game.getGhostCurrentNodeIndex(nearestGhostType), game.getPacmanLastMoveMade(), DM.PATH);
+			MOVE moveAway = game.getApproximateNextMoveAwayFromTarget(pacmanNode,
+					indexGhost, game.getPacmanLastMoveMade(), DM.PATH);
+			
+			Utils.nodePacManTarget = game.getNeighbour(pacmanNode, moveAway);
+			return moveAway;
 		}
 		
 		MOVE[] possibleMoves = game.getPossibleMoves(pacmanNode, game.getPacmanLastMoveMade());

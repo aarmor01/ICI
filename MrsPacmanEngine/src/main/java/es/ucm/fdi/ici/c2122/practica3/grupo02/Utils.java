@@ -11,7 +11,9 @@ import pacman.game.GameView;
 
 public final class Utils {
 	
-	public static int nodeTarget = 0;
+	public static int nodePacManTarget = -1;
+	public static int ghostNodeToFleeFrom = -1;
+	public static GHOST ghostFleeFromType = null;
 	
 	public static Random rnd = new Random();
 	
@@ -87,7 +89,7 @@ public final class Utils {
 			bestWayNode = neightbour[rnd.nextInt(neightbour.length)];
 		}
 		
-		nodeTarget = bestWayNode;
+		nodePacManTarget = bestWayNode;
 		return bestWayNode;
 	}
 	

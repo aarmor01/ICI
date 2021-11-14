@@ -1,9 +1,7 @@
-package es.ucm.fdi.ici.c2122.practica3.grupo02.rules;
+package es.ucm.fdi.ici.c2122.practica3.grupo02;
 
 import java.util.HashMap;
 
-import es.ucm.fdi.ici.c2122.practica3.grupo02.Utils;
-import es.ucm.fdi.ici.c2122.practica3.grupo02.GameConstants;
 import es.ucm.fdi.ici.c2122.practica3.grupo02.rules.pacman.MsPacManInput;
 import es.ucm.fdi.ici.c2122.practica3.grupo02.rules.pacman.actions.*;
 import es.ucm.fdi.ici.rules.RuleEngine;
@@ -33,8 +31,14 @@ public class MsPacMan extends PacmanController {
 		RulesAction PCcleansBottom = new CleanBottomAction();  
 		actionsMap.put(PCcleansBottom.getActionId(), PCcleansBottom);
 		
-		RulesAction runaway = new RunawayFromClosestGhost();  
-		actionsMap.put(runaway.getActionId(), runaway);
+		RulesAction Runaway = new RunawayFromClosestGhost();  
+		actionsMap.put(Runaway.getActionId(), Runaway);
+		
+		RulesAction catchC_P = new ReachClosestPill();  
+		actionsMap.put(catchC_P.getActionId(), catchC_P);
+		
+		RulesAction chase = new ChaseGhost();  
+		actionsMap.put(chase.getActionId(), chase);
 		
 		//-------------------------------
 		String fileRule = PACMAN_RULES_PATH;

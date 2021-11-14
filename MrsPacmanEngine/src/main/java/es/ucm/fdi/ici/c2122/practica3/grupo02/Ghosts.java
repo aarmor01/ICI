@@ -64,7 +64,7 @@ public class Ghosts extends GhostController {
 			RuleEngine engine = new RuleEngine(ghost.name(), rulesFile, actionsMap);
 			ghostsRuleEngines.put(ghost, engine);
 
-			if (GameConstants.DEBUG) {
+			if (false/*GameConstants.DEBUG*/) {
 				// -- RULES OBSERVERS --
 				ConsoleRuleEngineObserver observer = new ConsoleRuleEngineObserver(ghost.name(), true);
 				ghostsRuleEngines.get(ghost).addObserver(observer);

@@ -10,8 +10,13 @@ public class GameConstants {
 			+ File.separator + "rules" + File.separator;
 
 	public static Color[] colours = { Color.RED, Color.PINK, Color.CYAN, Color.YELLOW };
+	
+	public static int maxEdibleTime = 200;
 
 	public static int pacmanChaseDistance = 40;
+	
+	public static int pacmanRunawayDistance = 40;
+	
 	public static int ghostChaseDistance = 50;
 
 	public static int minPredictionDistance = 15;

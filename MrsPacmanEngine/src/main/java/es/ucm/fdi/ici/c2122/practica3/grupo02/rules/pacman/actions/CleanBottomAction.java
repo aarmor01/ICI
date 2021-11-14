@@ -47,7 +47,7 @@ public class CleanBottomAction implements RulesAction {
 		if (nearestPillNode != -1 && GameConstants.DEBUG)
 			GameView.addLines(game, Color.CYAN, pcNode, nearestPillNode);
 		
-		Utils.nodeTarget = nearestPillNode;
+		Utils.nodePacManTarget = nearestPillNode;
 		
 		return game.getApproximateNextMoveTowardsTarget(pcNode, nearestPillNode, game.getPacmanLastMoveMade(), DM.PATH);
 	}

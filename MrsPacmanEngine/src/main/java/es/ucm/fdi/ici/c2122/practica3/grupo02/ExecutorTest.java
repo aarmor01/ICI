@@ -1,6 +1,5 @@
 package es.ucm.fdi.ici.c2122.practica3.grupo02;
 
-import es.ucm.fdi.ici.c2122.practica3.grupo02.rules.MsPacMan;
 import pacman.Executor;
 import pacman.controllers.GhostController;
 import pacman.controllers.PacmanController;
@@ -19,6 +18,6 @@ public class ExecutorTest {
 		PacmanController pacMan = new MsPacMan();
 		GhostController ghosts = new Ghosts();
 		
-		System.out.println(executor.runGame(pacMan, ghosts, 25));
+		System.out.println(executor.runGame(pacMan, ghosts, 40));
 	}
 }
