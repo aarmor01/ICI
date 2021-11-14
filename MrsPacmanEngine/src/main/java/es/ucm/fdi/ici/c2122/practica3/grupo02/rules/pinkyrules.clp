@@ -119,8 +119,23 @@
 	=> 
 	(assert (ACTION (id PINKYChase)
 			(info "No comestible --> perseguir")
-			(priority 8))) )	
+			(priority 7)
+			(chaseType 1))) )
 			
+(defrule PINKYchasesAlternative
+	(PINKY (edible false))
+	(PINKY (outOfLair true))
+	(PINKY (distanceToPacman ?d))
+	(PINKY (chaseCount ?c))
+	(CONSTANTS (ghostChaseDistance ?g))
+	(test (<= ?d ?g))
+	(test (> ?c 2))
+	=> 
+	(assert (ACTION (id PINKYChase)
+			(info "No comestible --> perseguir distinto camino")
+			(priority 8)
+			(chaseType 2))) )	
+	
 (defrule Mole
 	(PINKY (edible false))
 	(PINKY (outOfLair true))
@@ -132,4 +147,4 @@
 	=> 
 	(assert (ACTION (id PINKYMole)
 			(info "Mole predicts road with more pills")
-			(priority 7))) )
+			(priority 6))) )

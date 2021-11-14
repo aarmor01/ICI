@@ -120,9 +120,23 @@
 	=> 
 	(assert (ACTION (id INKYChase)
 			(info "No comestible --> perseguir")
-			(priority 8)
+			(priority 7)
 			(chaseType 1))) )
 	
+(defrule INKYchasesAlternative
+	(INKY (edible false))
+	(INKY (outOfLair true))
+	(INKY (distanceToPacman ?d))
+	(INKY (chaseCount ?c))
+	(CONSTANTS (ghostChaseDistance ?g))
+	(test (<= ?d ?g))
+	(test (> ?c 2))
+	=> 
+	(assert (ACTION (id INKYChase)
+			(info "No comestible --> perseguir distinto camino")
+			(priority 8)
+			(chaseType 2))) )	
+
 (defrule Ambush
 	(INKY (edible false))
 	(INKY (outOfLair true))
@@ -134,4 +148,4 @@
 	=> 
 	(assert (ACTION (id INKYAmbush)
 			(info "Ambush predicts pacman movement")
-			(priority 7))) )
+			(priority 6))) )

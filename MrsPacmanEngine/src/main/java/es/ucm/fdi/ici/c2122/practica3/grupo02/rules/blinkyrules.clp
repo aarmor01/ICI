@@ -119,8 +119,23 @@
 	=> 
 	(assert (ACTION (id BLINKYChase)
 			(info "No comestible --> perseguir")
-			(priority 8))) )	
-			
+			(priority 7)
+			(chaseType 1))) )	
+
+(defrule BLINKYchasesAlternative
+	(BLINKY (edible false))
+	(BLINKY (outOfLair true))
+	(BLINKY (distanceToPacman ?d))
+	(BLINKY (chaseCount ?c))
+	(CONSTANTS (ghostChaseDistance ?g))
+	(test (<= ?d ?g))
+	(test (> ?c 2))
+	=> 
+	(assert (ACTION (id BLINKYChase)
+			(info "No comestible --> perseguir distinto camino")
+			(priority 8)
+			(chaseType 2))) )	
+
 (defrule Seer
 	(BLINKY (edible false))
 	(BLINKY (outOfLair true))
@@ -132,6 +147,6 @@
 	=> 
 	(assert (ACTION (id BLINKYSeer)
 			(info "Seer predicts pill")
-			(priority 7))) )
+			(priority 6))) )
 	
 	
