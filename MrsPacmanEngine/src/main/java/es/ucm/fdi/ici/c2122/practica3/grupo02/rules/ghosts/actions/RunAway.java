@@ -99,43 +99,45 @@ public class RunAway implements RulesAction {
 	
 	private MOVE runAwayAlternatively(Game game, int ghostNode, int pacmanNode, MOVE lastMove) {
 		int[] neighbouringNodes;
-		neighbouringNodes = game.getNeighbouringNodes(pacmanNode, game.getPacmanLastMoveMade());
+		neighbouringNodes = game.getNeighbouringNodes(ghostNode, lastMove);
 		
-		int lastNode = pacmanNode;
+		int lastNode = ghostNode;
 		boolean intersectionFound = false;
 		boolean[] ghostInTheWay = {false, false, false};
 		int[] destinationNodes = {0,0,0};
 		int contador = 0;
 		while(!intersectionFound) {
 			contador = 0;
-			for (int node : neighbouringNodes) {
-				MOVE lastMoveMade = MOVE.NEUTRAL;					
-				if (game.getNodeYCood(node) - game.getNodeYCood(lastNode) == 1 || game.getNodeYCood(node) - game.getNodeYCood(lastNode) < -10)
-					lastMoveMade = MOVE.DOWN;
-				else if (game.getNodeYCood(node) - game.getNodeYCood(lastNode) == -1 || game.getNodeYCood(node) - game.getNodeYCood(lastNode) > 10)
-					lastMoveMade = MOVE.UP;
-				else if(game.getNodeXCood(node) - game.getNodeXCood(lastNode) == 1 || game.getNodeXCood(node) - game.getNodeXCood(lastNode) < -10)
-					lastMoveMade = MOVE.RIGHT;
-				else if (game.getNodeXCood(node) - game.getNodeXCood(lastNode) == -1 || game.getNodeXCood(node) - game.getNodeXCood(lastNode) > 10)
-					lastMoveMade = MOVE.LEFT;
-				
-				for(GHOST ghost : GHOST.values()) {
-					if (game.getGhostCurrentNodeIndex(ghost) == node)
-						ghostInTheWay[contador] = true;
+			if (neighbouringNodes != null) {
+				for (int node : neighbouringNodes) {
+					MOVE lastMoveMade = MOVE.NEUTRAL;					
+					if (game.getNodeYCood(node) - game.getNodeYCood(lastNode) == 1 || game.getNodeYCood(node) - game.getNodeYCood(lastNode) < -10)
+						lastMoveMade = MOVE.DOWN;
+					else if (game.getNodeYCood(node) - game.getNodeYCood(lastNode) == -1 || game.getNodeYCood(node) - game.getNodeYCood(lastNode) > 10)
+						lastMoveMade = MOVE.UP;
+					else if(game.getNodeXCood(node) - game.getNodeXCood(lastNode) == 1 || game.getNodeXCood(node) - game.getNodeXCood(lastNode) < -10)
+						lastMoveMade = MOVE.RIGHT;
+					else if (game.getNodeXCood(node) - game.getNodeXCood(lastNode) == -1 || game.getNodeXCood(node) - game.getNodeXCood(lastNode) > 10)
+						lastMoveMade = MOVE.LEFT;
+					
+					for(GHOST ghost : GHOST.values()) {
+						if (game.getGhostCurrentNodeIndex(ghost) == node)
+							ghostInTheWay[contador] = true;
+					}
+					
+					if (game.isJunction(node)) {
+						intersectionFound = true;
+						destinationNodes[contador] = node;
+					}else {
+						//We move the node to the next position
+						lastNode = node;
+						if (game.getNeighbouringNodes(node, lastMoveMade) != null)
+							neighbouringNodes[contador] = game.getNeighbouringNodes(node, lastMoveMade)[0];
+						else
+							return MOVE.NEUTRAL;
+					}
+					contador++;
 				}
-				
-				if (game.isJunction(node)) {
-					intersectionFound = true;
-					destinationNodes[contador] = node;
-				}else {
-					//We move the node to the next position
-					lastNode = node;
-					if (game.getNeighbouringNodes(node, lastMoveMade) != null)
-						neighbouringNodes[contador] = game.getNeighbouringNodes(node, lastMoveMade)[0];
-					else
-						return MOVE.NEUTRAL;
-				}
-				contador++;
 			}
 		}
 		
