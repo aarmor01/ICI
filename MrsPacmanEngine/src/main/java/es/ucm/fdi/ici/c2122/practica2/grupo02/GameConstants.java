@@ -12,8 +12,6 @@ public class GameConstants {
 	public static int minPredictionDistance = 15;
 	
 	public static int numIntersectionsBeforeChange = 2;
-
-	public static int minRangePacmanPowerPill = 10;
 	
 	public static boolean DEBUG = false;
 }

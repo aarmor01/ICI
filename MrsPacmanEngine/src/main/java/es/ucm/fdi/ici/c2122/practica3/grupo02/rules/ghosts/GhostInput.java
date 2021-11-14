@@ -1,6 +1,6 @@
 package es.ucm.fdi.ici.c2122.practica3.grupo02.rules.ghosts;
 
-import es.ucm.fdi.ici.c2122.practica2.grupo02.GameConstants;
+import es.ucm.fdi.ici.c2122.practica3.grupo02.GameConstants;
 import es.ucm.fdi.ici.rules.RulesInput;
 
 import java.util.Collection;
