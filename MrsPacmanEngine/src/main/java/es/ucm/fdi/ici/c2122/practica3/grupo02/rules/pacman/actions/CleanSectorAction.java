@@ -12,10 +12,10 @@ import pacman.game.Constants.MOVE;
 import pacman.game.Game;
 import pacman.game.GameView;
 
-public class CleanBottomAction implements RulesAction {
+public class CleanSectorAction implements RulesAction {
 	
 	int initYCoordPM = 0;
-	public CleanBottomAction() {
+	public CleanSectorAction() {
 	
 	}
 	
