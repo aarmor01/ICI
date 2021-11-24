@@ -9,39 +9,42 @@ import es.ucm.fdi.ici.fuzzy.FuzzyInput;
 
 public class MsPacManInput extends FuzzyInput {
 
-	double[] distance = {50,50,50,50};
-	double[] confidence = {100,100,100,100};
+	private double[] distance;
+	
 	
 	public MsPacManInput(Game game) {
 		super(game);
-
 	}
 	
 	@Override
 	public void parseInput() {
-		if(distance == null)
-		{
-			distance = new double[]{50,50,50,50};
-			confidence = new double[]{100,100,100,100};
-		}
+
+		distance = new double[] {-1,-1,-1,-1};
+
 		
 		for(GHOST g: GHOST.values()) {
 			int index = g.ordinal();
 			int pos = game.getGhostCurrentNodeIndex(g);
 			if(pos != -1) {
 				distance[index] = game.getDistance(game.getPacmanCurrentNodeIndex(), pos, DM.PATH);
-				confidence[index] = 100;
-			} else if (confidence[index] > 0)
-				confidence[index]-=.5;
+			}
+			else
+				distance[index] = -1;
 		}
 	}
+	
+	public boolean isVisible(GHOST ghost)
+	{
+		return distance[ghost.ordinal()]!=-1;
+	}
+	
+	
 
 	@Override
 	public HashMap<String, Double> getFuzzyValues() {
 		HashMap<String,Double> vars = new HashMap<String,Double>();
 		for(GHOST g: GHOST.values()) {
 			vars.put(g.name()+"distance",   distance[g.ordinal()]);
-			vars.put(g.name()+"confidence", confidence[g.ordinal()]);			
 		}
 		return vars;
 	}

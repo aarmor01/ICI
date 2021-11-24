@@ -1,12 +1,14 @@
 package es.ucm.fdi.ici.practica4.demofuzzy;
 
 import java.io.File;
+import java.util.HashMap;
 
 import es.ucm.fdi.ici.Action;
 import es.ucm.fdi.ici.fuzzy.ActionSelector;
 import es.ucm.fdi.ici.fuzzy.FuzzyEngine;
 import es.ucm.fdi.ici.fuzzy.observers.ConsoleFuzzyEngineObserver;
 import es.ucm.fdi.ici.practica4.demofuzzy.mspacman.MaxActionSelector;
+import es.ucm.fdi.ici.practica4.demofuzzy.mspacman.MsPacManFuzzyMemory;
 import es.ucm.fdi.ici.practica4.demofuzzy.mspacman.MsPacManInput;
 import es.ucm.fdi.ici.practica4.demofuzzy.mspacman.actions.GoToPPillAction;
 import es.ucm.fdi.ici.practica4.demofuzzy.mspacman.actions.RunAwayAction;
@@ -16,8 +18,10 @@ import pacman.game.Game;
 
 public class MsPacMan extends PacmanController {
 
-	private static final String RULES_PATH = "src"+File.separator+"es"+File.separator+"ucm"+File.separator+"fdi"+File.separator+"ici"+File.separator+"practica4"+File.separator+"demofuzzy"+File.separator+"mspacman"+File.separator;
+	private static final String RULES_PATH = "bin"+File.separator+"es"+File.separator+"ucm"+File.separator+"fdi"+File.separator+"ici"+File.separator+"practica4"+File.separator+"demofuzzy"+File.separator+"mspacman"+File.separator;
 	FuzzyEngine fuzzyEngine;
+	MsPacManFuzzyMemory fuzzyMemory;
+	
 	
 	public MsPacMan()
 	{
@@ -30,6 +34,8 @@ public class MsPacMan extends PacmanController {
 		ConsoleFuzzyEngineObserver observer = new ConsoleFuzzyEngineObserver("MsPacMan","MsPacManRules");
 		fuzzyEngine = new FuzzyEngine("MsPacMan",RULES_PATH+"mspacman.fcl","FuzzyMsPacMan",actionSelector);
 		fuzzyEngine.addObserver(observer);
+		
+		fuzzyMemory = new MsPacManFuzzyMemory();
 	}
 	
 	
@@ -37,7 +43,12 @@ public class MsPacMan extends PacmanController {
 	public MOVE getMove(Game game, long timeDue) {
 		MsPacManInput input = new MsPacManInput(game);
 		input.parseInput();
-		return fuzzyEngine.run(input.getFuzzyValues(),game);
+		fuzzyMemory.getInput(input);
+		
+		HashMap<String, Double> fvars = input.getFuzzyValues();
+		fvars.putAll(fuzzyMemory.getFuzzyValues());
+		
+		return fuzzyEngine.run(fvars,game);
 	}
 
 }

@@ -20,7 +20,8 @@ public class MsPacManFuzzy extends PacmanController {
 	FuzzyEngine fuzzyEngine;
 	
 	public MsPacManFuzzy() {
-		setName("MsPacMan XX");
+		setName("Definitely Not MsPacman");
+		setTeam("G2_ICIsports");
 
 		Action[] actions = {new GoToPPillAction(), new RunAwayAction()};
 		
