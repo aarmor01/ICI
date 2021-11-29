@@ -60,7 +60,7 @@ END_FUZZIFY
 
 DEFUZZIFY Runaway			// Defzzzify output variable 'tip' : {'cheap', 'average', 'generous' }
 	TERM calm := (0,1) (5,1) (15,0);
-	TERM nervious := gauss 15 5;
+	TERM nervious := gauss 15 5; // 15 es la media y 5 la desviacion tipica, es decir que los datos estan mas juntos a la mediana  
 	TERM emergency := (15,0) (25,1) (30,1);
 	METHOD : COG;		// Use 'Center Of Gravity' defuzzification method
 	DEFAULT := 0;		// Default value is 0 (if no rule activates defuzzifier)

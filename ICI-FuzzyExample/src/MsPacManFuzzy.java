@@ -1,4 +1,4 @@
-package es.ucm.fdi.ici.c2122.practica4.grupo02;
+
 
 import java.io.File;
 import java.util.HashMap;
@@ -7,23 +7,26 @@ import es.ucm.fdi.ici.Action;
 import es.ucm.fdi.ici.fuzzy.ActionSelector;
 import es.ucm.fdi.ici.fuzzy.FuzzyEngine;
 import es.ucm.fdi.ici.fuzzy.observers.ConsoleFuzzyEngineObserver;
-import es.ucm.fdi.ici.c2122.practica4.grupo02.mspacman.*;
-import es.ucm.fdi.ici.c2122.practica4.grupo02.mspacman.actions.*;
+import es.ucm.fdi.ici.practica4.demofuzzy.mspacman.MaxActionSelector;
+import es.ucm.fdi.ici.practica4.demofuzzy.mspacman.MsPacManFuzzyMemory;
+import es.ucm.fdi.ici.practica4.demofuzzy.mspacman.MsPacManInput;
+import es.ucm.fdi.ici.practica4.demofuzzy.mspacman.actions.GoToPPillAction;
+import es.ucm.fdi.ici.practica4.demofuzzy.mspacman.actions.RunAwayAction;
 import pacman.controllers.PacmanController;
 import pacman.game.Constants.MOVE;
 import pacman.game.Game;
 
 public class MsPacManFuzzy extends PacmanController {
 
-	private static final String RULES_PATH = "src"+File.separator+"main"+File.separator+"java"+File.separator+"es"+File.separator+"ucm"+File.separator+"fdi"+File.separator+"ici"+File.separator+"c2122"+File.separator+"practica4"+File.separator+"grupo02"+File.separator+"mspacman"+File.separator;
+	private static final String RULES_PATH = "bin"+File.separator+"es"+File.separator+"ucm"+File.separator+"fdi"+File.separator+"ici"+File.separator+"practica4"+File.separator+"demofuzzy"+File.separator+"mspacman"+File.separator;
 	FuzzyEngine fuzzyEngine;
 	MsPacManFuzzyMemory fuzzyMemory;
 	
 	
-	public MsPacManFuzzy(){
-		setName("If you don't see it, ");
-		setTeam("G2_ICIsports");
-		
+	public MsPacManFuzzy()
+	{
+		setName("MsPacMan XX");
+
 		Action[] actions = {new GoToPPillAction(), new RunAwayAction()};
 		
 		ActionSelector actionSelector = new MaxActionSelector(actions);

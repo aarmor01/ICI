@@ -16,14 +16,14 @@ import pacman.controllers.PacmanController;
 import pacman.game.Constants.MOVE;
 import pacman.game.Game;
 
-public class MsPacMan extends PacmanController {
+public class MsPacManFuzzy extends PacmanController {
 
 	private static final String RULES_PATH = "bin"+File.separator+"es"+File.separator+"ucm"+File.separator+"fdi"+File.separator+"ici"+File.separator+"practica4"+File.separator+"demofuzzy"+File.separator+"mspacman"+File.separator;
 	FuzzyEngine fuzzyEngine;
 	MsPacManFuzzyMemory fuzzyMemory;
 	
 	
-	public MsPacMan()
+	public MsPacManFuzzy()
 	{
 		setName("MsPacMan XX");
 

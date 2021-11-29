@@ -24,6 +24,8 @@ public class GameConstants {
 	public static int numIntersectionsBeforeChange = 2;
 	
 	public static int minRangePacmanPowerPill = 10;
+	
+	public static int sightLimit = 50;
 
 	public static boolean DEBUG = false;
 }

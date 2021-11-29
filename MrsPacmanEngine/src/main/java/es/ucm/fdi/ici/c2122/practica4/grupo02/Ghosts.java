@@ -22,7 +22,7 @@ public class Ghosts extends GhostController {
 
 	public Ghosts() {
 
-		setName("Definitely Not Ghosts");
+		setName("It doesn't exits");
 		setTeam("G2_ICIsports");
 
 		ghostsRuleEngines = new EnumMap<GHOST, RuleEngine>(GHOST.class);

@@ -17,11 +17,9 @@ public class MsPacManInput extends FuzzyInput {
 	}
 	
 	@Override
-	public void parseInput() {
-
+	public void parseInput() {		
 		distance = new double[] {-1,-1,-1,-1};
 
-		
 		for(GHOST g: GHOST.values()) {
 			int index = g.ordinal();
 			int pos = game.getGhostCurrentNodeIndex(g);
@@ -33,8 +31,7 @@ public class MsPacManInput extends FuzzyInput {
 		}
 	}
 	
-	public boolean isVisible(GHOST ghost)
-	{
+	public boolean isVisible(GHOST ghost) {
 		return distance[ghost.ordinal()]!=-1;
 	}
 	
