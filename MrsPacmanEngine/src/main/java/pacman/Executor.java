@@ -52,7 +52,8 @@ public class Executor {
     private final Function<Game, String> peek;
     private final Logger logger = LoggerFactory.getLogger(Executor.class);
 	private boolean pacmanPOvisual;
-    private static String VERSION = "3.2.2 (ICI 21-22 random init)";
+	private boolean ghostsPOvisual;
+	private static String VERSION = "3.4.0(ICI 21-22 major improvements PO)";
 
     public static class Builder {
         private boolean pacmanPO = false;
@@ -68,6 +69,8 @@ public class Executor {
         private int sightLimit = 50;
         private Function<Game, String> peek = null;
 		private boolean pacmanPOvisual;
+		private boolean ghostsPOvisual;
+		
 
         public Builder setPacmanPO(boolean po) {
             this.pacmanPO = po;
@@ -137,11 +140,16 @@ public class Executor {
 
         public Executor build() {
         	System.err.println("MsPacMan Engine - Ingeniería de Comportamientos Inteligentes. Version "+Executor.VERSION);
-            return new Executor(pacmanPO, ghostPO, ghostsMessage, messenger, scaleFactor, setDaemon, visuals, tickLimit, timeLimit, poType, sightLimit, peek, pacmanPOvisual);
+            return new Executor(pacmanPO, ghostPO, ghostsMessage, messenger, scaleFactor, setDaemon, visuals, tickLimit, timeLimit, poType, sightLimit, peek, pacmanPOvisual, ghostsPOvisual);
         }
 
 		public Builder setPacmanPOvisual(boolean b) {
 			this.pacmanPOvisual = b;
+			return this;
+		}
+		
+		public Builder setGhostsPOvisual(boolean b) {
+			this.ghostsPOvisual = b;
 			return this;
 		}
     }
@@ -159,7 +167,8 @@ public class Executor {
             POType poType,
             int sightLimit,
             Function<Game, String> peek,
-            boolean pacmanPOvisual
+            boolean pacmanPOvisual,
+            boolean ghostsPOvisual
             ) {
         this.pacmanPO = pacmanPO;
         this.ghostPO = ghostPO;
@@ -174,6 +183,7 @@ public class Executor {
         this.sightLimit = sightLimit;
         this.peek = peek;
         this.pacmanPOvisual = pacmanPOvisual;
+        this.ghostsPOvisual = ghostsPOvisual;
     }
 
     private static void writeStat(FileWriter writer, Stats stat, int i) throws IOException {
@@ -385,11 +395,12 @@ public class Executor {
         gv = new GameView(game, setDaemon);
         gv.setScaleFactor(scaleFactor);
         gv.showGame();
-        if(pacmanPOvisual) gv.setPO(this.pacmanPO);
+        if(pacmanPOvisual) gv.setPacManPO(this.pacmanPO);
+        if(ghostsPOvisual) gv.setGhostPO(this.ghostPO);
         if (pacManController instanceof HumanController) {
             gv.setFocusable(true);
             gv.requestFocus();
-            gv.setPO(this.pacmanPO);
+            gv.setPacManPO(this.pacmanPO);
             gv.addKeyListener(((HumanController) pacManController).getKeyboardInput());
         }
 

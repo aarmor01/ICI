@@ -53,8 +53,8 @@ public final class GameView extends JComponent {
     private GameFrame frame;
     private Graphics bufferGraphics;
     private BufferedImage offscreen;
-    private boolean isPO = false;
-    private GHOST ghost = null;
+    private boolean isPacManPO = false;
+    private boolean isGhostPO = false;
     private double scaleFactor = 1.0;
     private boolean exitOnClose = false;
     private Point desiredLocation;
@@ -211,15 +211,17 @@ public final class GameView extends JComponent {
         drawGhosts();
         drawLives();
         drawGameInfo();
-        if (isPO) {
-            if (ghost == null) {
-                drawPacManVisibility();
-            } else {
-                drawGhostVisibility(ghost);
-            }
-            //            drawNodes();
-        }
-        //        drawPacManPredictions();
+        if (isGhostPO && isPacManPO)
+        	drawAllVisibility();
+        else if(isPacManPO)
+        	drawPacManVisibility();
+        else if(isGhostPO)
+        	drawGhostsVisibility();
+
+
+            
+        //drawNodes();
+        //drawPacManPredictions();
 
         drawables.stream().filter(Drawable::enabled).forEach(x -> x.draw((Graphics2D) bufferGraphics));
 
@@ -372,6 +374,115 @@ public final class GameView extends JComponent {
         drawVisibility(ghostLocation, ghostGame);
     }
 
+    private void drawGhostsVisibility() {
+    	int[] locations = new int[4];
+    	Game ghostGame = game.copy(Game.ANY_GHOST);
+
+        for(GHOST ghost: GHOST.values())
+        {
+        	locations[ghost.ordinal()] = game.getGhostCurrentNodeIndex(ghost);
+        }
+        drawGhostsVisibility(locations, ghostGame);
+    }
+    
+    private void drawAllVisibility()
+    {
+    	int[] locations = new int[5];
+    	Game pacmanGame = game.copy(Game.PACMAN);
+        locations[4] = game.getPacmanCurrentNodeIndex();
+    	Game ghostGame = game.copy(Game.ANY_GHOST);
+
+        for(GHOST ghost: GHOST.values())
+        {
+        	locations[ghost.ordinal()] = game.getGhostCurrentNodeIndex(ghost);
+        }
+        drawAllVisibility(locations,pacmanGame, ghostGame);
+    }
+
+    private void drawGhostsVisibility(int[] locations, Game ghostGames) {
+        BufferedImage image = new BufferedImage(GV_WIDTH * MAG, GV_HEIGHT * MAG, BufferedImage.TYPE_4BYTE_ABGR);
+
+        Graphics2D overlay = (Graphics2D) image.getGraphics();
+
+        overlay.setColor(Color.GRAY);
+        for (int i = 0; i < game.getNumberOfNodes(); i++) {
+            if (!ghostGames.isNodeObservable(i)) {
+                overlay.fillRect(
+                        game.getNodeXCood(i) * MAG - 1,
+                        game.getNodeYCood(i) * MAG + 3,
+                        14, 14);
+            }
+        }
+
+        overlay.setColor(Color.WHITE);
+
+        overlay.setComposite(AlphaComposite.Clear);
+        
+        for(int index=0; index<locations.length; index++)
+        {
+        	int location = locations[index];
+        	Game pogame = ghostGames;
+	        for (MOVE move : MOVE.values()) {
+	            int nextPoint = location;
+	            while (pogame.isNodeObservable(nextPoint)) {
+	                // Don't need to do this - can wait till the last one.
+	                overlay.fillRect(
+	                        game.getNodeXCood(nextPoint) * MAG - 1,
+	                        game.getNodeYCood(nextPoint) * MAG + 3,
+	                        14, 14
+	                );
+	                nextPoint = game.getNeighbour(nextPoint, move);
+	            }
+	        }
+        }
+
+        bufferGraphics.drawImage(image, 0, 0, null);
+    }
+    
+    
+    private void drawAllVisibility(int[] locations, Game pacmanGame, Game ghostGames) {
+        BufferedImage image = new BufferedImage(GV_WIDTH * MAG, GV_HEIGHT * MAG, BufferedImage.TYPE_4BYTE_ABGR);
+
+        Graphics2D overlay = (Graphics2D) image.getGraphics();
+
+        overlay.setColor(Color.GRAY);
+        for (int i = 0; i < game.getNumberOfNodes(); i++) {
+            if (!pacmanGame.isNodeObservable(i)&& !ghostGames.isNodeObservable(i)) {
+                overlay.fillRect(
+                        game.getNodeXCood(i) * MAG - 1,
+                        game.getNodeYCood(i) * MAG + 3,
+                        14, 14);
+            }
+        }
+
+        overlay.setColor(Color.WHITE);
+
+        overlay.setComposite(AlphaComposite.Clear);
+        
+        for(int index=0; index<locations.length; index++)
+        {
+        	int location = locations[index];
+        	Game pogame = ghostGames;
+        	if(index==4)
+        		pogame = pacmanGame;
+	        for (MOVE move : MOVE.values()) {
+	            int nextPoint = location;
+	            while (pogame.isNodeObservable(nextPoint)) {
+	                // Don't need to do this - can wait till the last one.
+	                overlay.fillRect(
+	                        game.getNodeXCood(nextPoint) * MAG - 1,
+	                        game.getNodeYCood(nextPoint) * MAG + 3,
+	                        14, 14
+	                );
+	                nextPoint = game.getNeighbour(nextPoint, move);
+	            }
+	        }
+        }
+
+        bufferGraphics.drawImage(image, 0, 0, null);
+    }
+    
+    
     private void drawVisibility(int location, Game pacmanGame) {
         BufferedImage image = new BufferedImage(GV_WIDTH * MAG, GV_HEIGHT * MAG, BufferedImage.TYPE_4BYTE_ABGR);
 
@@ -501,24 +612,21 @@ public final class GameView extends JComponent {
     }
 
     /**
-     * Set the po status for ghost of this view
+     * Set the po status for MsPacMan of this view
      *
-     * @param po Are we po?
+     * @param po Is MsPacMan po?
      */
-    public void setPO(boolean po) {
-        this.isPO = po;
-        this.ghost = null;
+    public void setPacManPO(boolean po) {
+        this.isPacManPO = po;
     }
 
     /**
      * Set the po status and ghost for this view
      *
-     * @param po    Are we po?
-     * @param ghost Which ghost to be
+     * @param po    Are ghosts po?
      */
-    public void setPO(boolean po, GHOST ghost) {
-        this.isPO = po;
-        this.ghost = ghost;
+    public void setGhostPO(boolean po) {
+        this.isGhostPO = po;
     }
 
     /**
