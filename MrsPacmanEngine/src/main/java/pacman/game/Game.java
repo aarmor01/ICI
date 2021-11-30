@@ -188,7 +188,9 @@ public final class Game {
             return ghosts.get(GHOST.values()[agent]).currentNodeIndex;
         }
     }
-
+    
+    
+/*
     @SuppressWarnings({"WeakerAccess", "unused"})
     public boolean isNodeObservable(int nodeIndex) {
         if (!po) {
@@ -216,7 +218,63 @@ public final class Game {
         }
         return false;
     }
+*/
+    private int[] getNodeIndexesOfOwner() {
+        if (agent == PACMAN) {
+            return new int[] {internalPacman.currentNodeIndex};
+        } else {
+        	int[] nodes = new int[4];
+        	for(GHOST g : GHOST.values())
+        		nodes[g.ordinal()] = ghosts.get(g).currentNodeIndex;
+            return nodes;
+        }
+    }
+    
+    @SuppressWarnings({"WeakerAccess", "unused"})
+    public boolean isNodeObservable(int nodeIndex) {
+        if (!po) {
+            return true;
+        }
+        if (nodeIndex == -1) {
+            return false;
+        }
 
+        if(nodeIndex>=mazes[mazeIndex].graph.length)
+			return false;
+        
+        
+        Node check = (mazes[mazeIndex]).graph[nodeIndex];
+        
+        int[] positionNodes = getNodeIndexesOfOwner();
+        
+        for(int node : positionNodes)
+        {
+        	Node currentNode = (mazes[mazeIndex]).graph[node];
+            
+            switch (poType) {
+                case LOS:
+                    if(handleLOS(currentNode, check)) 
+                    	if (straightRouteBlocked(currentNode, check))
+                    	return true;
+                    break;
+                case RADIUS:
+                    double manhattan = getManhattanDistance(currentNode.nodeIndex, check.nodeIndex);
+                    if(manhattan <= sightLimit)
+                    	return true;
+                    break;
+                case FF_LOS:
+                    Boolean x = handleFFLOS(currentNode, check);
+                    if (x != null) 
+                    	if(x)
+                    		return x;
+                    break;
+            }	
+        }
+        
+        return false;
+    }
+    
+    
     private Boolean handleFFLOS(Node currentNode, Node check) {
         if (currentNode.x == check.x || currentNode.y == check.y) {
             // Get direction currently going in
@@ -302,7 +360,8 @@ public final class Game {
         }while(initialNode == currentMaze.lairNodeIndex);
         MOVE[] poss = this.getPossibleMoves(initialNode);
         initialMove = poss[0].opposite();
-        //currentMaze.initialPacManNodeIndex = initialNode;		
+        //currentMaze.initialPacManNodeIndex = initialNode;	
+        
     }
     
     int initialNode = 0;
@@ -519,7 +578,7 @@ public final class Game {
         copy.pillWasEaten = pillWasEaten;
         copy.powerPillWasEaten = powerPillWasEaten;
         copy.internalPacman = internalPacman.copy();
-
+        copy.initialNode = initialNode;
         copy.ghostsPresent = ghostsPresent;
         copy.pillsPresent = pillsPresent;
         copy.powerPillsPresent = powerPillsPresent;
@@ -1186,7 +1245,10 @@ public final class Game {
     @SuppressWarnings({"WeakerAccess", "unused"})
     public int getPacManInitialNodeIndex() {
         //return currentMaze.initialPacManNodeIndex;
-    	return initialNode;
+    	if (isNodeObservable(initialNode))
+    		return initialNode;
+    	else
+    		return -1;
     }
 
     /**
