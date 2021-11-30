@@ -8,6 +8,7 @@ import pacman.game.Constants.MOVE;
 import pacman.game.Game;
 import es.ucm.fdi.ici.fuzzy.FuzzyInput;
 import es.ucm.fdi.ici.c2122.practica4.grupo02.GameConstants;
+import es.ucm.fdi.ici.c2122.practica4.grupo02.mspacman.MsPacManFuzzyMemory.PillState;
 public class MsPacManInput extends FuzzyInput {
 
 	private double[] distance;
@@ -17,24 +18,34 @@ public class MsPacManInput extends FuzzyInput {
 		super(game);
 	}
 	
-	public void searchForPills() {
+	public void searchForPills(HashMap<Integer,PillState> pills) {
 		int pcNode = game.getPacmanCurrentNodeIndex();
-		int[] adjacentPathsNode = game.getNeighbouringNodes(pcNode, game.getPacmanLastMoveMade());
+		int[] adjacentPathsNode = game.getNeighbouringNodes(pcNode);
 		MOVE move;
 		for(int i = 0; i < adjacentPathsNode.length; ++i) {
-			move = game.getMoveToMakeToReachDirectNeighbour(pcNode, i);
+			move = game.getMoveToMakeToReachDirectNeighbour(pcNode, adjacentPathsNode[i]);
 			int k = 0;
 			boolean noEnd = false;
+			int assumedPos = pcNode;
 			while(k < GameConstants.sightLimit && !noEnd) {
-				
-				int node = game.getNeighbour(pcNode, move);
+				int node = game.getNeighbour(assumedPos, move);
 				if(node != -1) {
-					//Comparar si en este nodo hay una powerPill
-					boolean avail = game.isPowerPillStillAvailable(i);
-					
-					//determinar si ya esta en el vector, de lo contrario, meterla
+					//Comparar si en este nodo hay una Pill
+					int indexPill = game.getPillIndex(node);
+					if( indexPill != -1) {
+						if(!pills.containsKey(node)) { //Si no está la pill en el vector, la metemos
+							PillState p = new PillState();
+							p.indexPill = indexPill;
+							p.x = game.getNodeXCood(node);
+							p.y = game.getNodeXCood(node);
+							p.avail = true; // Como es la primera vez que se mete, está activa
+							pills.put(node, p);
+						}
+					}
+					assumedPos = node;
+					++k;
 				}else noEnd = true; //No hay mas visibilidad
-				++k;
+				
 			}
 		}
 	}

@@ -1,5 +1,4 @@
 FUNCTION_BLOCK FuzzyMsPacMan	// Block definition (there may be more than one block per file)
-
 VAR_INPUT				// Define input variables
 	BLINKYdistance : REAL;
 	PINKYdistance : REAL;
@@ -15,7 +14,7 @@ VAR_OUTPUT				// Define output variable
 	Runaway : REAL;
 	GoToPPill: REAL;
 END_VAR
-
+//DISTANCES
 FUZZIFY BLINKYdistance			// Fuzzify input variable 'service': {'poor', 'good' , 'excellent'}
 	TERM near := (0, 1) (60, 0) ; 
 	TERM medium := gauss 75 25;
@@ -36,7 +35,7 @@ FUZZIFY SUEdistance			// Fuzzify input variable 'service': {'poor', 'good' , 'ex
 	TERM medium := gauss 75 25;
 	TERM far := (90, 0) (150, 1) (200, 1);
 END_FUZZIFY
-
+//CONFIDENCES
 FUZZIFY BLINKYconfidence			// Fuzzify input variable 'service': {'poor', 'good' , 'excellent'}
 	TERM low := (0,1)(25,1)(50,0) ; 
 	TERM medium := gauss 50 25;

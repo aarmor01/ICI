@@ -4,7 +4,9 @@ import java.util.HashMap;
 
 import pacman.game.Constants.DM;
 import pacman.game.Constants.GHOST;
+import pacman.game.Constants.MOVE;
 import pacman.game.Game;
+import es.ucm.fdi.ici.c2122.practica4.grupo02.GameConstants;
 import es.ucm.fdi.ici.fuzzy.FuzzyInput;
 
 public class MsPacManInput extends FuzzyInput {
@@ -34,8 +36,6 @@ public class MsPacManInput extends FuzzyInput {
 	public boolean isVisible(GHOST ghost) {
 		return distance[ghost.ordinal()]!=-1;
 	}
-	
-	
 
 	@Override
 	public HashMap<String, Double> getFuzzyValues() {

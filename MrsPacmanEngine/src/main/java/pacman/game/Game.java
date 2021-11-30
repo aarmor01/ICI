@@ -1197,7 +1197,7 @@ public final class Game {
      */
     @SuppressWarnings({"WeakerAccess", "unused"})
     public Boolean isPillStillAvailable(int pillIndex) {
-        if (po) {
+        if (po) { //Partially Observable
             int pillLocation = currentMaze.pillIndices[pillIndex];
             if (!isNodeObservable(pillLocation)) {
                 return null;

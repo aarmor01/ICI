@@ -7,13 +7,15 @@ import pacman.game.Constants.GHOST;
 
 public class MsPacManFuzzyMemory {
 	
-	public class PillState{
+	static public class PillState{
+		public int indexPill; //Index in the array
 	    public int x; 
 	    public int y;  
 	    public boolean avail; 
 	 };
 	 
-	 public class PowerPillState {
+	 static public class PowerPillState {
+		public int indexPPill;
 	    public int x; 
 	    public int y;  
 	    public boolean avail; 
@@ -23,28 +25,18 @@ public class MsPacManFuzzyMemory {
 	
 	double[] confidence = {100,100,100,100};
 	
-	Vector<PillState> pills = new Vector<PillState>(); 
-	Vector powerPills = new Vector();
+	//NodeIndex, PillState
+	HashMap<Integer,PillState> pills = new HashMap<Integer,PillState>(); 
+//	Vector powerPills = new Vector();
 	
 	
 	
 	public MsPacManFuzzyMemory() {
 		mem = new HashMap<String,Double>();
 	}
-	
-	public void searchForPills() {
-//		int[] adjacentPathsNode = game.getNeighbouringNodes(assumedPM_LastPos, lastMoveMade);
-	}
-	
+		
 	public void getInput(MsPacManInput input){
-		
-		PillState p = new PillState();
-		p.x = 2;
-		p.y = 2;
-		p.avail = true;
-		pills.addElement(p);
-		
-		
+		input.searchForPills(pills);
 		
 		for(GHOST g: GHOST.values()) {
 			double conf = confidence[g.ordinal()];
