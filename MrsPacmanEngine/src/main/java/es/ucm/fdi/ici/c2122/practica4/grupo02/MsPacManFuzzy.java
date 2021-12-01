@@ -23,8 +23,9 @@ public class MsPacManFuzzy extends PacmanController {
 	public MsPacManFuzzy(){
 		setName("If you don't see it, ");
 		setTeam("G2_ICIsports");
+		fuzzyMemory = new MsPacManFuzzyMemory();
 		
-		Action[] actions = {new GoToPPillAction(), new RunAwayAction()};
+		Action[] actions = {new GoToPillAction(fuzzyMemory), new RunAwayAction()};
 		
 		ActionSelector actionSelector = new MaxActionSelector(actions);
 		 
@@ -32,7 +33,6 @@ public class MsPacManFuzzy extends PacmanController {
 		fuzzyEngine = new FuzzyEngine("MsPacMan",RULES_PATH+"mspacman.fcl","FuzzyMsPacMan",actionSelector);
 		fuzzyEngine.addObserver(observer);
 		
-		fuzzyMemory = new MsPacManFuzzyMemory();
 	}
 	
 	

@@ -11,14 +11,14 @@ public class MsPacManFuzzyMemory {
 		public int indexPill; //Index in the array
 	    public int x; 
 	    public int y;  
-	    public boolean avail; 
+	    public boolean eaten; 
 	 };
 	 
 	 static public class PowerPillState {
 		public int indexPPill;
 	    public int x; 
 	    public int y;  
-	    public boolean avail; 
+	    public boolean eaten; 
 	 };
 	
 	HashMap<String,Double> mem;
@@ -27,9 +27,6 @@ public class MsPacManFuzzyMemory {
 	
 	//NodeIndex, PillState
 	HashMap<Integer,PillState> pills = new HashMap<Integer,PillState>(); 
-//	Vector powerPills = new Vector();
-	
-	
 	
 	public MsPacManFuzzyMemory() {
 		mem = new HashMap<String,Double>();

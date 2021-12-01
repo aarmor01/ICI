@@ -5,6 +5,7 @@ import java.util.HashMap;
 import pacman.game.Constants.DM;
 import pacman.game.Constants.GHOST;
 import pacman.game.Constants.MOVE;
+import pacman.game.Constants;
 import pacman.game.Game;
 import es.ucm.fdi.ici.fuzzy.FuzzyInput;
 import es.ucm.fdi.ici.c2122.practica4.grupo02.GameConstants;
@@ -38,7 +39,7 @@ public class MsPacManInput extends FuzzyInput {
 							p.indexPill = indexPill;
 							p.x = game.getNodeXCood(node);
 							p.y = game.getNodeXCood(node);
-							p.avail = true; // Como es la primera vez que se mete, está activa
+							p.eaten = false; // Como es la primera vez que se mete, está activa
 							pills.put(node, p);
 						}
 					}
@@ -50,14 +51,15 @@ public class MsPacManInput extends FuzzyInput {
 		}
 	}
 	
-	
 	@Override
 	public void parseInput() {		
 		distance = new double[] {-1,-1,-1,-1};
-
+		
+		int time = game.getCurrentLevelTime();
+		int timeLimit = Constants.LEVEL_LIMIT;
 		for(GHOST g: GHOST.values()) {
 			int index = g.ordinal();
-			int pos = game.getGhostCurrentNodeIndex(g);
+			int pos = game.getGhostCurrentNodeIndex(g); //returns its positions if it's visible
 			if(pos != -1) {
 				distance[index] = game.getDistance(game.getPacmanCurrentNodeIndex(), pos, DM.PATH);
 			}
@@ -67,7 +69,7 @@ public class MsPacManInput extends FuzzyInput {
 	}
 	
 	public boolean isVisible(GHOST ghost) {
-		return distance[ghost.ordinal()]!=-1;
+		return distance[ghost.ordinal()] != -1;
 	}
 	
 	

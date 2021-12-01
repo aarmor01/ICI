@@ -13,7 +13,7 @@ END_VAR
 
 VAR_OUTPUT				// Define output variable
 	Runaway : REAL;
-	GoToPPill: REAL;
+	GoToPill: REAL;
 END_VAR
 
 FUZZIFY BLINKYdistance			// Fuzzify input variable 'service': {'poor', 'good' , 'excellent'}
@@ -67,7 +67,7 @@ DEFUZZIFY Runaway			// Defzzzify output variable 'tip' : {'cheap', 'average', 'g
 	DEFAULT := 0;		// Default value is 0 (if no rule activates defuzzifier)
 END_DEFUZZIFY
 
-DEFUZZIFY GoToPPill			// Defzzzify output variable 'tip' : {'cheap', 'average', 'generous' }
+DEFUZZIFY GoToPill			// Defzzzify output variable 'tip' : {'cheap', 'average', 'generous' }
 	TERM calm := (0,1) (5,1) (15,0);
 	TERM nervious := gauss 15 5;
 	TERM emergency := (15,0) (25,1) (30,1);
@@ -85,14 +85,19 @@ RULEBLOCK MsPacManRules
 	RULE 2 : IF PINKYdistance IS near AND PINKYconfidence IS high THEN Runaway IS emergency;
 	RULE 3 : IF INKYdistance IS near AND INKYconfidence IS high THEN Runaway IS emergency;
 	RULE 4 : IF SUEdistance IS near AND SUEconfidence IS high THEN Runaway IS emergency;
-	RULE 5 : IF BLINKYconfidence IS medium THEN GoToPPill IS nervious;
-	RULE 6 : IF PINKYconfidence IS medium THEN GoToPPill IS nervious;
-	RULE 7 : IF INKYconfidence IS medium THEN GoToPPill IS nervious;
-	RULE 8 : IF SUEconfidence IS medium THEN GoToPPill IS nervious;
+	RULE 5 : IF BLINKYconfidence IS medium THEN GoToPill IS nervious;
+	RULE 6 : IF PINKYconfidence IS medium THEN GoToPill IS nervious;
+	RULE 7 : IF INKYconfidence IS medium THEN GoToPill IS nervious;
+	RULE 8 : IF SUEconfidence IS medium THEN GoToPill IS nervious;
+	//Esto es terrible
 	RULE 9 : IF BLINKYdistance IS far THEN Runaway IS calm;
+	RULE 9 : IF BLINKYdistance IS far THEN GoToPill IS emergency;
 	RULE 10 : IF PINKYdistance IS far THEN Runaway IS calm;
-	RULE 11 : IF INKYdistance IS far THEN Runaway IS calm;
-	RULE 12 : IF SUEdistance IS far THEN Runaway IS calm;
+	RULE 11 : IF PINKYdistance IS far THEN GoToPill IS emergency;
+	RULE 12 : IF INKYdistance IS far THEN Runaway IS calm;
+	RULE 13 : IF INKYdistance IS far THEN GoToPill IS emergency;
+	RULE 14 : IF SUEdistance IS far THEN Runaway IS calm;
+	RULE 15 : IF SUEdistance IS far THEN GoToPill IS emergency;
 END_RULEBLOCK
 
 END_FUNCTION_BLOCK
