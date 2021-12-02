@@ -1,6 +1,8 @@
 package es.ucm.fdi.ici.c2122.practica4.grupo02.ghosts.actions;
 
 import es.ucm.fdi.ici.Action;
+import es.ucm.fdi.ici.c2122.practica4.grupo02.ghosts.GhostsFuzzyMemory;
+import es.ucm.fdi.ici.c2122.practica4.grupo02.GameConstants;
 import pacman.game.Constants.DM;
 import pacman.game.Constants.GHOST;
 import pacman.game.Constants.MOVE;
@@ -9,8 +11,10 @@ import pacman.game.Game;
 public class RunAwayGhosts implements Action {
     
     GHOST ghost;
-	public RunAwayGhosts(GHOST g) {
+    GhostsFuzzyMemory mem;
+	public RunAwayGhosts(GHOST g, GhostsFuzzyMemory mem_) {
 		this.ghost = g;
+		this.mem = mem_;
 	}
 	
 	@Override

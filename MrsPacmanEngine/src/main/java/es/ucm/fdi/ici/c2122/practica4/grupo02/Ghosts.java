@@ -1,15 +1,17 @@
 package es.ucm.fdi.ici.c2122.practica4.grupo02;
 
+import java.io.File;
 import java.util.EnumMap;
 import java.util.HashMap;
 
-import es.ucm.fdi.ici.c2122.practica3.grupo02.rules.ghosts.GhostInput;
-import es.ucm.fdi.ici.c2122.practica3.grupo02.rules.ghosts.actions.*;
-
-import es.ucm.fdi.ici.rules.RuleEngine;
-import es.ucm.fdi.ici.rules.RulesAction;
-import es.ucm.fdi.ici.rules.RulesInput;
-import es.ucm.fdi.ici.rules.observers.ConsoleRuleEngineObserver;
+import es.ucm.fdi.ici.Action;
+import es.ucm.fdi.ici.c2122.practica4.grupo02.ghosts.GhostsFuzzyMemory;
+import es.ucm.fdi.ici.c2122.practica4.grupo02.ghosts.GhostsInput;
+import es.ucm.fdi.ici.c2122.practica4.grupo02.ghosts.actions.*;
+import es.ucm.fdi.ici.c2122.practica4.grupo02.mspacman.MaxActionSelector;
+import es.ucm.fdi.ici.fuzzy.ActionSelector;
+import es.ucm.fdi.ici.fuzzy.FuzzyEngine;
+import es.ucm.fdi.ici.fuzzy.observers.ConsoleFuzzyEngineObserver;
 
 import pacman.game.Game;
 import pacman.game.Constants.MOVE;
@@ -18,57 +20,76 @@ import pacman.controllers.GhostController;
 
 public class Ghosts extends GhostController {
 
-	EnumMap<GHOST, RuleEngine> ghostsRuleEngines;
+	EnumMap<GHOST, FuzzyEngine> ghostsFuzzyEngine;
+
+	private static final String RULES_PATH = "src" + File.separator + "main" + File.separator + "java" + File.separator
+			+ "es" + File.separator + "ucm" + File.separator + "fdi" + File.separator + "ici" + File.separator + "c2122"
+			+ File.separator + "practica4" + File.separator + "grupo02" + File.separator + "ghosts" + File.separator;
+	FuzzyEngine fuzzyEngine;
+	GhostsFuzzyMemory fuzzyMemory;
 
 	public Ghosts() {
 
 		setName("It doesn't exits");
 		setTeam("G2_ICIsports");
 
-		ghostsRuleEngines = new EnumMap<GHOST, RuleEngine>(GHOST.class);
+		ghostsFuzzyEngine = new EnumMap<GHOST, FuzzyEngine>(GHOST.class);
 
 		for (GHOST ghost : GHOST.values()) {
 			// -- ACTIONS --
-			HashMap<String, RulesAction> actionsMap = new HashMap<String, RulesAction>();
+//			HashMap<String, RulesAction> actionsMap = new HashMap<String, RulesAction>();
+//
+//			RulesAction chase = new Chase(ghost);
+//			actionsMap.put(chase.getActionId(), chase);
+//			
+//			RulesAction runaway = new RunAway(ghost);
+//			actionsMap.put(runaway.getActionId(), runaway);
+//
+//			switch (ghost) {
+//			case BLINKY:
+//				RulesAction seer = new Seer(ghost);
+//				actionsMap.put(seer.getActionId(), seer);
+//				break;
+//			case PINKY:
+//				RulesAction mole = new Mole(ghost);
+//				actionsMap.put(mole.getActionId(), mole);
+//				break;
+//			case INKY:
+//				RulesAction ambush = new Ambush(ghost);
+//				actionsMap.put(ambush.getActionId(), ambush);
+//				break;
+//			case SUE:
+//				RulesAction agressive = new Agressive(ghost);
+//				actionsMap.put(agressive.getActionId(), agressive);
+//				break;
+//				
+//			default:
+//				break;
+//			}
+//			
+//			// -- RULES --
+//			String rulesFile = String.format("%s%srules.clp", GameConstants.RULES_PATH, ghost.name().toLowerCase());
+//			RuleEngine engine = new RuleEngine(ghost.name(), rulesFile, actionsMap);
+//			ghostsRuleEngines.put(ghost, engine);
+//
+//			if (false/*GameConstants.DEBUG*/) {
+//				// -- RULES OBSERVERS --
+//				ConsoleRuleEngineObserver observer = new ConsoleRuleEngineObserver(ghost.name(), true);
+//				ghostsRuleEngines.get(ghost).addObserver(observer);
+//			}
 
-			RulesAction chase = new Chase(ghost);
-			actionsMap.put(chase.getActionId(), chase);
+			fuzzyMemory = new GhostsFuzzyMemory();
 			
-			RulesAction runaway = new RunAway(ghost);
-			actionsMap.put(runaway.getActionId(), runaway);
+			Action[] actions = { new ChasePacMan(ghost, fuzzyMemory), new RunAwayGhosts(ghost, fuzzyMemory) };
 
-			switch (ghost) {
-			case BLINKY:
-				RulesAction seer = new Seer(ghost);
-				actionsMap.put(seer.getActionId(), seer);
-				break;
-			case PINKY:
-				RulesAction mole = new Mole(ghost);
-				actionsMap.put(mole.getActionId(), mole);
-				break;
-			case INKY:
-				RulesAction ambush = new Ambush(ghost);
-				actionsMap.put(ambush.getActionId(), ambush);
-				break;
-			case SUE:
-				RulesAction agressive = new Agressive(ghost);
-				actionsMap.put(agressive.getActionId(), agressive);
-				break;
-				
-			default:
-				break;
+			ActionSelector actionSelector = new MaxActionSelector(actions);
+			
+			if (GameConstants.DEBUG) {
+				ConsoleFuzzyEngineObserver observer = new ConsoleFuzzyEngineObserver("MsPacMan", "MsPacManRules");
+				fuzzyEngine.addObserver(observer);
 			}
 			
-			// -- RULES --
-			String rulesFile = String.format("%s%srules.clp", GameConstants.RULES_PATH, ghost.name().toLowerCase());
-			RuleEngine engine = new RuleEngine(ghost.name(), rulesFile, actionsMap);
-			ghostsRuleEngines.put(ghost, engine);
-
-			if (false/*GameConstants.DEBUG*/) {
-				// -- RULES OBSERVERS --
-				ConsoleRuleEngineObserver observer = new ConsoleRuleEngineObserver(ghost.name(), true);
-				ghostsRuleEngines.get(ghost).addObserver(observer);
-			}
+			fuzzyEngine = new FuzzyEngine("Ghosts" + ghost.name(), RULES_PATH + "ghosts.fcl", ghost.name()+"Rules", actionSelector);
 		}
 
 //		RulesAction BLINKYchases = new ChaseAction(GHOST.BLINKY);
@@ -216,12 +237,15 @@ public class Ghosts extends GhostController {
 		EnumMap<GHOST, MOVE> result = new EnumMap<GHOST, MOVE>(GHOST.class);
 
 		for (GHOST ghost : GHOST.values()) {
-			RulesInput inGhost = new GhostInput(game);
+			GhostsInput inGhost = new GhostsInput(game);
 
-			ghostsRuleEngines.get(ghost).reset();
-			ghostsRuleEngines.get(ghost).assertFacts(inGhost.getFacts());
-
-			result.put(ghost, ghostsRuleEngines.get(ghost).run(game));
+			inGhost.parseInput();
+			fuzzyMemory.getInput(inGhost);
+			
+			HashMap<String, Double> fvars = inGhost.getFuzzyValues();
+			fvars.putAll(fuzzyMemory.getFuzzyValues());
+			
+			result.put(ghost, ghostsFuzzyEngine.get(ghost).run(fvars, game));
 		}
 
 		return result;

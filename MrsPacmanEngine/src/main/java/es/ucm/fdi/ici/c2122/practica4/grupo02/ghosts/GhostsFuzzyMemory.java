@@ -26,4 +26,8 @@ public class GhostsFuzzyMemory {
 	public void getInput(GhostsInput input) {
 		
 	}
+	
+	public HashMap<String, Double> getFuzzyValues() {
+		return mem;
+	}
 }

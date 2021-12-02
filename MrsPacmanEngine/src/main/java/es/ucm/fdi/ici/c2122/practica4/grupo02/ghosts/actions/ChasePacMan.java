@@ -2,6 +2,8 @@ package es.ucm.fdi.ici.c2122.practica4.grupo02.ghosts.actions;
 
 import pacman.game.Game;
 import es.ucm.fdi.ici.Action;
+import es.ucm.fdi.ici.c2122.practica4.grupo02.ghosts.GhostsFuzzyMemory;
+import es.ucm.fdi.ici.c2122.practica4.grupo02.GameConstants;
 import pacman.game.Constants.DM;
 import pacman.game.Constants.GHOST;
 import pacman.game.Constants.MOVE;
@@ -9,8 +11,10 @@ import pacman.game.Constants.MOVE;
 public class ChasePacMan implements Action{
 
     GHOST ghost;
-	public ChasePacMan(GHOST g) {
+    GhostsFuzzyMemory mem;
+	public ChasePacMan(GHOST g, GhostsFuzzyMemory mem_) {
 		this.ghost = g;
+		this.mem = mem_;
 	}
 	
 	@Override
