@@ -1,16 +1,15 @@
 package es.ucm.fdi.ici.c2122.practica4.grupo02;
 
-import java.io.File;
 import java.util.EnumMap;
 import java.util.HashMap;
 
 import es.ucm.fdi.ici.Action;
-import es.ucm.fdi.ici.c2122.practica4.grupo02.ghosts.GhostsFuzzyMemory;
-import es.ucm.fdi.ici.c2122.practica4.grupo02.ghosts.GhostsInput;
+
+import es.ucm.fdi.ici.c2122.practica4.grupo02.ghosts.*;
 import es.ucm.fdi.ici.c2122.practica4.grupo02.ghosts.actions.*;
-import es.ucm.fdi.ici.c2122.practica4.grupo02.mspacman.MaxActionSelector;
-import es.ucm.fdi.ici.fuzzy.ActionSelector;
+
 import es.ucm.fdi.ici.fuzzy.FuzzyEngine;
+import es.ucm.fdi.ici.fuzzy.ActionSelector;
 import es.ucm.fdi.ici.fuzzy.observers.ConsoleFuzzyEngineObserver;
 
 import pacman.game.Game;
@@ -21,216 +20,34 @@ import pacman.controllers.GhostController;
 public class Ghosts extends GhostController {
 
 	EnumMap<GHOST, FuzzyEngine> ghostsFuzzyEngine;
-
-	private static final String RULES_PATH = "src" + File.separator + "main" + File.separator + "java" + File.separator
-			+ "es" + File.separator + "ucm" + File.separator + "fdi" + File.separator + "ici" + File.separator + "c2122"
-			+ File.separator + "practica4" + File.separator + "grupo02" + File.separator + "ghosts" + File.separator;
-	FuzzyEngine fuzzyEngine;
-	GhostsFuzzyMemory fuzzyMemory;
+	EnumMap<GHOST, GhostsFuzzyMemory> ghostsFuzzyMemory;
 
 	public Ghosts() {
-
-		setName("It doesn't exits");
+		setName("It doesn't exists");
 		setTeam("G2_ICIsports");
 
 		ghostsFuzzyEngine = new EnumMap<GHOST, FuzzyEngine>(GHOST.class);
-
+		ghostsFuzzyMemory = new EnumMap<GHOST, GhostsFuzzyMemory>(GHOST.class);
+		
 		for (GHOST ghost : GHOST.values()) {
-			// -- ACTIONS --
-//			HashMap<String, RulesAction> actionsMap = new HashMap<String, RulesAction>();
-//
-//			RulesAction chase = new Chase(ghost);
-//			actionsMap.put(chase.getActionId(), chase);
-//			
-//			RulesAction runaway = new RunAway(ghost);
-//			actionsMap.put(runaway.getActionId(), runaway);
-//
-//			switch (ghost) {
-//			case BLINKY:
-//				RulesAction seer = new Seer(ghost);
-//				actionsMap.put(seer.getActionId(), seer);
-//				break;
-//			case PINKY:
-//				RulesAction mole = new Mole(ghost);
-//				actionsMap.put(mole.getActionId(), mole);
-//				break;
-//			case INKY:
-//				RulesAction ambush = new Ambush(ghost);
-//				actionsMap.put(ambush.getActionId(), ambush);
-//				break;
-//			case SUE:
-//				RulesAction agressive = new Agressive(ghost);
-//				actionsMap.put(agressive.getActionId(), agressive);
-//				break;
-//				
-//			default:
-//				break;
-//			}
-//			
-//			// -- RULES --
-//			String rulesFile = String.format("%s%srules.clp", GameConstants.RULES_PATH, ghost.name().toLowerCase());
-//			RuleEngine engine = new RuleEngine(ghost.name(), rulesFile, actionsMap);
-//			ghostsRuleEngines.put(ghost, engine);
-//
-//			if (false/*GameConstants.DEBUG*/) {
-//				// -- RULES OBSERVERS --
-//				ConsoleRuleEngineObserver observer = new ConsoleRuleEngineObserver(ghost.name(), true);
-//				ghostsRuleEngines.get(ghost).addObserver(observer);
-//			}
+			ghostsFuzzyMemory.put(ghost, new GhostsFuzzyMemory());
 
-			fuzzyMemory = new GhostsFuzzyMemory();
-			
-			Action[] actions = { new ChasePacMan(ghost, fuzzyMemory), new RunAwayGhosts(ghost, fuzzyMemory) };
+			Action[] actions = { new ChasePacMan(ghost, ghostsFuzzyMemory.get(ghost)), 
+					new RunAwayGhosts(ghost, ghostsFuzzyMemory.get(ghost)) };
 
 			ActionSelector actionSelector = new MaxActionSelector(actions);
-			
+
+			ghostsFuzzyEngine.put(ghost, new FuzzyEngine("Ghosts" + ghost.name(), GameConstants.FUZZY_PATH + "ghosts.fcl",
+					ghost.name() + "Rules", actionSelector));
+
 			if (GameConstants.DEBUG) {
 				ConsoleFuzzyEngineObserver observer = new ConsoleFuzzyEngineObserver("MsPacMan", "MsPacManRules");
-				fuzzyEngine.addObserver(observer);
+				ghostsFuzzyEngine.get(ghost).addObserver(observer);
 			}
-			
-			fuzzyEngine = new FuzzyEngine("Ghosts" + ghost.name(), RULES_PATH + "ghosts.fcl", ghost.name()+"Rules", actionSelector);
 		}
-
-//		RulesAction BLINKYchases = new ChaseAction(GHOST.BLINKY);
-//		RulesAction INKYchases = new ChaseAction(GHOST.INKY);
-//		RulesAction PINKYchases = new ChaseAction(GHOST.PINKY);
-//		RulesAction SUEchases = new ChaseAction(GHOST.SUE);
-//		RulesAction BLINKYrunsAway = new RunAwayAction(GHOST.BLINKY);
-//		RulesAction INKYrunsAway = new RunAwayAction(GHOST.INKY);
-//		RulesAction PINKYrunsAway = new RunAwayAction(GHOST.PINKY);
-//		RulesAction SUErunsAway = new RunAwayAction(GHOST.SUE);
-
-//		map.put("BLINKYchases", BLINKYchases);
-//		map.put("INKYchases", INKYchases);
-//		map.put("PINKYchases", PINKYchases);
-//		map.put("SUEchases", SUEchases);	
-//		map.put("BLINKYrunsAway", BLINKYrunsAway);
-//		map.put("INKYrunsAway", INKYrunsAway);
-//		map.put("PINKYrunsAway", PINKYrunsAway);
-//		map.put("SUErunsAway", SUErunsAway);
-
-//		fsms = new EnumMap<GHOST,FSM>(GHOST.class);
-//		for(GHOST ghost: GHOST.values()) {
-//			FSM fsm = new FSM(ghost.name());
-//			fsm.addObserver(new ConsoleFSMObserver(ghost.name()));
-//			GraphFSMObserver graphObserver = new GraphFSMObserver(ghost.name());
-//			fsm.addObserver(graphObserver);
-//
-//			
-//			FSM fsmChase = new FSM("Chase compound");
-//			GraphFSMObserver c1observer = new GraphFSMObserver(fsmChase.toString());
-//	    	fsmChase.addObserver(c1observer);
-//	    	
-//	    	FSM fsmRun = new FSM("Run compound");
-//			GraphFSMObserver anotherObserver = new GraphFSMObserver(fsmRun.toString());
-//	    	fsmRun.addObserver(anotherObserver);
-//			
-//			SimpleState chasePrimaryPath = new SimpleState("Chase Primary", new ChasePrimaryPath(ghost));
-//			SimpleState chaseSecondaryPath = new SimpleState("Chase Secondary", new ChaseSecondaryPath(ghost));
-//			SimpleState runAwayFromPacMan = new SimpleState("Run Away From PacMan", new RunAwayFromPacMan(ghost));
-//			SimpleState runTowardsGhost = new SimpleState("Run Towards Ghost", new RunAwayToGhost(ghost));
-//			SimpleState runAlternative = new SimpleState("Run Alternate Path", new RunAwayAlternative(ghost));
-//			SimpleState lair = new SimpleState("Lair", new Lair());
-//			
-//			Transition mainRunAwayTransition = new GoToMainRunAway();
-//			Transition mainChaseTransition = new GoToMainChase();
-//			Transition isMsPacManNearTransition = new IsMsPacManNear(ghost);
-//			Transition lairTimeOverTransition = new LairTimeOver(ghost);
-//			Transition anotherGhostOnRunAway = new AnotherGhostOnRunAwayPath(ghost);
-//			Transition ghostNotEdibleTransition = new AnotherGhostIsntEdible(ghost);
-//			Transition startRunAwayGhostTransition = new StartRunAwayGhost(ghost);
-//			Transition startRunAwayGhostFromSpecificBehaviourTransition = new RunAwayFromSpecificBehaviourTransition(ghost);
-//			Transition stopRunAwayGhostTransition = new StopRunAwayGhost(ghost);
-//			Transition stopRunAwayAndChaseTransition = new StopRunAwayAndStartChase(ghost);
-//			Transition chaseSecondaryTransition = new ChaseSecondaryPathTransition(ghost);
-//			Transition hasBeenEaten = new GhostHasBeenEaten(ghost);
-//			Transition hasBeenEaten2 = new GhostHasBeenEaten2(ghost);
-//			Transition hasBeenEaten3 = new GhostHasBeenEaten3(ghost);
-//			
-//			fsmChase.add(chasePrimaryPath, chaseSecondaryTransition, chaseSecondaryPath);
-//			fsmChase.add(chaseSecondaryPath, mainChaseTransition, chasePrimaryPath);
-//			
-//			fsmChase.ready(chasePrimaryPath);
-//			
-//			CompoundState chase = new CompoundState(ghost + " starts chasing", fsmChase);
-//			
-//			fsmRun.add(runAwayFromPacMan, ghostNotEdibleTransition, runTowardsGhost);
-//			fsmRun.add(runAwayFromPacMan, anotherGhostOnRunAway, runAlternative);
-//			fsmRun.add(runAlternative, mainRunAwayTransition, runAwayFromPacMan);
-//			
-//			fsmRun.ready(runAwayFromPacMan);
-//			
-//			CompoundState run = new CompoundState(ghost + " starts running", fsmRun);
-//			
-//			fsm.add(chase, hasBeenEaten, lair);
-//			fsm.add(run, hasBeenEaten2, lair);
-//			
-//			switch(ghost) {
-//			case BLINKY:
-//				SimpleState seer = new SimpleState("Seer", new Seer(ghost));
-//				Transition seerChaseSpecificTransition = new SeerSpecialChaseStart(ghost);
-//				fsm.add(lair, lairTimeOverTransition, seer);
-//				fsm.add(seer, isMsPacManNearTransition, chase);
-//				fsm.add(seer, seerChaseSpecificTransition, chase);
-//				fsm.add(seer, startRunAwayGhostFromSpecificBehaviourTransition, run);
-//				fsm.add(chase, startRunAwayGhostTransition, run);
-//				fsm.add(run, stopRunAwayGhostTransition, seer);
-//				fsm.add(run, stopRunAwayAndChaseTransition, chase);
-//				fsm.add(seer, hasBeenEaten3, lair);
-//				break;
-//			case PINKY:
-//				SimpleState mole = new SimpleState("Mole", new Mole(ghost));
-//				fsm.add(lair, lairTimeOverTransition, mole);
-//				fsm.add(mole, isMsPacManNearTransition, chase);
-//				fsm.add(mole, startRunAwayGhostFromSpecificBehaviourTransition, run);
-//				fsm.add(chase, startRunAwayGhostTransition, run);
-//				fsm.add(run, stopRunAwayGhostTransition, mole);
-//				fsm.add(run, stopRunAwayAndChaseTransition, chase);
-//				fsm.add(mole, hasBeenEaten3, lair);
-//				break;
-//			case INKY:
-//				SimpleState ambush = new SimpleState(new Ambush(ghost));
-//				fsm.add(lair, lairTimeOverTransition, ambush);
-//				fsm.add(ambush, isMsPacManNearTransition, chase);
-//				fsm.add(ambush, startRunAwayGhostFromSpecificBehaviourTransition, run);
-//				fsm.add(chase, startRunAwayGhostTransition, run);
-//				fsm.add(run, stopRunAwayGhostTransition, ambush);
-//				fsm.add(run, stopRunAwayAndChaseTransition, chase);
-//				fsm.add(ambush, hasBeenEaten3, lair);
-//				break;
-//			case SUE:
-//				SimpleState agressive = new SimpleState("Agressive", new Agressive(ghost));
-//				fsm.add(lair, lairTimeOverTransition, agressive);
-//				fsm.add(agressive, isMsPacManNearTransition, chase);
-//				fsm.add(agressive, startRunAwayGhostFromSpecificBehaviourTransition, run);
-//				fsm.add(chase, startRunAwayGhostTransition, run);
-//				fsm.add(run, stopRunAwayGhostTransition, agressive);
-//				fsm.add(run, stopRunAwayAndChaseTransition, chase);
-//				fsm.add(agressive, hasBeenEaten3, lair);
-//				break;
-//			}
-//			
-//			fsm.ready(lair);
-//			
-//			fsms.put(ghost, fsm);
-//			
-//			if (GameConstants.DEBUG) {
-//				JFrame frame = new JFrame();
-//		    	JPanel main = new JPanel();
-//		    	main.setLayout(new BorderLayout());
-//		    	main.add(graphObserver.getAsPanel(true, null), BorderLayout.NORTH);
-//		    	main.add(c1observer.getAsPanel(true, null), BorderLayout.CENTER);
-//		    	main.add(anotherObserver.getAsPanel(true, null), BorderLayout.SOUTH);
-//		    	frame.getContentPane().add(main);
-//		    	frame.pack();
-//		    	frame.setVisible(true);
-//			}
-//		}
 	}
 
-	public void preCompute(String opponent) {
-	}
+	public void preCompute(String opponent) {}
 
 	@Override
 	public EnumMap<GHOST, MOVE> getMove(Game game, long timeDue) {
@@ -240,11 +57,11 @@ public class Ghosts extends GhostController {
 			GhostsInput inGhost = new GhostsInput(game);
 
 			inGhost.parseInput();
-			fuzzyMemory.getInput(inGhost);
-			
+			ghostsFuzzyMemory.get(ghost).getInput(inGhost);
+
 			HashMap<String, Double> fvars = inGhost.getFuzzyValues();
-			fvars.putAll(fuzzyMemory.getFuzzyValues());
-			
+			fvars.putAll(ghostsFuzzyMemory.get(ghost).getFuzzyValues());
+
 			result.put(ghost, ghostsFuzzyEngine.get(ghost).run(fvars, game));
 		}
 
