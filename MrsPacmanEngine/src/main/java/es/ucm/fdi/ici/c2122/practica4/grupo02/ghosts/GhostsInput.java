@@ -41,9 +41,8 @@ public class GhostsInput extends FuzzyInput {
 		HashMap<String,Double> vars = new HashMap<String,Double>();
 		
 		for(GHOST g : GHOST.values()) 
-			vars.put(g.name()+"distanceToPacMan",   distance[g.ordinal()]);
+			vars.put(g.name()+"distanceToPacMan", distance[g.ordinal()]);
 		
 		return vars;
 	}
-
 }

@@ -41,7 +41,7 @@ public class Ghosts extends GhostController {
 					ghost.name() + "Rules", actionSelector));
 
 			if (GameConstants.DEBUG) {
-				ConsoleFuzzyEngineObserver observer = new ConsoleFuzzyEngineObserver("MsPacMan", "MsPacManRules");
+				ConsoleFuzzyEngineObserver observer = new ConsoleFuzzyEngineObserver(ghost.name(), ghost.name() + "Rules");
 				ghostsFuzzyEngine.get(ghost).addObserver(observer);
 			}
 		}
