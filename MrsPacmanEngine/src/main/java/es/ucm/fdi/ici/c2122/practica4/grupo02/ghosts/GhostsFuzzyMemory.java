@@ -22,13 +22,17 @@ public class GhostsFuzzyMemory {
 	HashMap<String, Double> mem;
 
 	double[] confidence = { 100, 100, 100, 100 };
+	
+	public HashMap<Integer,PowerPillState> powerPillsSeen = new HashMap<Integer,PowerPillState>(); 
 
 	public GhostsFuzzyMemory() {
 		mem = new HashMap<String, Double>();
 	}
 
 	public void getInput(GhostsInput input) {
-
+		for (GHOST ghost : GHOST.values()) {
+			input.savePills(powerPillsSeen, ghost);
+		}
 	}
 	
 	public HashMap<String, Double> getFuzzyValues() {
