@@ -19,7 +19,7 @@ public class MsPacManInput extends FuzzyInput {
 		super(game);
 	}
 	
-	public void searchForPills(HashMap<Integer,PillState> pills) {
+	public void savePills(HashMap<Integer,PillState> pills) {
 		int pcNode = game.getPacmanCurrentNodeIndex();
 		int[] adjacentPathsNode = game.getNeighbouringNodes(pcNode);
 		MOVE move;
@@ -51,12 +51,20 @@ public class MsPacManInput extends FuzzyInput {
 		}
 	}
 	
+	void updatePillsState(HashMap<Integer,PillState> pills) {
+		int pcNode = game.getPacmanCurrentNodeIndex();
+		
+		int indexPill = game.getPillIndex(pcNode);
+		if(indexPill != -1)
+			pills.get(Integer.valueOf(indexPill)).eaten = true;
+	}
+	
 	@Override
-	public void parseInput() {		
+	public void parseInput() {
 		distance = new double[] {-1,-1,-1,-1};
 		
 		int time = game.getCurrentLevelTime();
-		int timeLimit = Constants.LEVEL_LIMIT;
+		int timeLimit = Constants.LEVEL_LIMIT;	
 		for(GHOST g: GHOST.values()) {
 			int index = g.ordinal();
 			int pos = game.getGhostCurrentNodeIndex(g); //returns its positions if it's visible

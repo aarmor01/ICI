@@ -1,5 +1,6 @@
 package es.ucm.fdi.ici.c2122.practica4.grupo02;
 
+import java.io.File;
 import java.util.HashMap;
 
 import es.ucm.fdi.ici.Action;
@@ -30,7 +31,7 @@ public class MsPacManFuzzy extends PacmanController {
 
 		ActionSelector actionSelector = new MaxActionSelector(actions);
 
-		fuzzyEngine = new FuzzyEngine("MsPacMan", GameConstants.FUZZY_PATH + "mspacman.fcl", "FuzzyMsPacMan",
+		fuzzyEngine = new FuzzyEngine("MsPacMan", GameConstants.FUZZY_PATH + "mspacman" + File.separator + "mspacman.fcl", "FuzzyMsPacMan",
 				actionSelector);
 
 		if (GameConstants.DEBUG) {

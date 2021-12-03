@@ -1,5 +1,6 @@
 package es.ucm.fdi.ici.c2122.practica4.grupo02;
 
+import java.io.File;
 import java.util.EnumMap;
 import java.util.HashMap;
 
@@ -28,17 +29,19 @@ public class Ghosts extends GhostController {
 
 		ghostsFuzzyEngine = new EnumMap<GHOST, FuzzyEngine>(GHOST.class);
 		ghostsFuzzyMemory = new EnumMap<GHOST, GhostsFuzzyMemory>(GHOST.class);
-		
+
 		for (GHOST ghost : GHOST.values()) {
 			ghostsFuzzyMemory.put(ghost, new GhostsFuzzyMemory());
 
-			Action[] actions = { new ChasePacMan(ghost, ghostsFuzzyMemory.get(ghost)), 
+			Action[] actions = { new ChasePacMan(ghost, ghostsFuzzyMemory.get(ghost)),
 					new RunAwayGhosts(ghost, ghostsFuzzyMemory.get(ghost)) };
 
 			ActionSelector actionSelector = new MaxActionSelector(actions);
 
-			ghostsFuzzyEngine.put(ghost, new FuzzyEngine("Ghosts" + ghost.name(), GameConstants.FUZZY_PATH + "ghosts.fcl",
-					ghost.name() + "Rules", actionSelector));
+			ghostsFuzzyEngine.put(ghost,
+					new FuzzyEngine("Ghosts" + ghost.name(),
+							GameConstants.FUZZY_PATH + "ghosts" + File.separator + "ghosts.fcl", ghost.name() + "Rules",
+							actionSelector));
 
 			if (GameConstants.DEBUG) {
 				ConsoleFuzzyEngineObserver observer = new ConsoleFuzzyEngineObserver(ghost.name(), ghost.name() + "Rules");
@@ -47,7 +50,8 @@ public class Ghosts extends GhostController {
 		}
 	}
 
-	public void preCompute(String opponent) {}
+	public void preCompute(String opponent) {
+	}
 
 	@Override
 	public EnumMap<GHOST, MOVE> getMove(Game game, long timeDue) {

@@ -1,14 +1,17 @@
 package es.ucm.fdi.ici.c2122.practica4.grupo02.mspacman.actions;
 
 
+import java.util.HashMap;
 import java.util.Random;
 
 import es.ucm.fdi.ici.Action;
 import es.ucm.fdi.ici.c2122.practica4.grupo02.GameConstants;
 import es.ucm.fdi.ici.c2122.practica4.grupo02.mspacman.MsPacManFuzzyMemory;
+import es.ucm.fdi.ici.c2122.practica4.grupo02.mspacman.MsPacManFuzzyMemory.PillState;
 import pacman.game.Constants.DM;
 import pacman.game.Constants.MOVE;
 import pacman.game.Game;
+import pacman.game.GameView;
 
 public class GoToPillAction implements Action {
     
@@ -19,6 +22,7 @@ public class GoToPillAction implements Action {
 		mem = mem_;
 	}
 	
+	//Buscamos la pill mas cercana en el rango de vision, si hay
 	int getNextPillInRange(Game game) {
 		//Nodo a la pill mas cercana
 		int nodeTarget = -1;
@@ -45,7 +49,7 @@ public class GoToPillAction implements Action {
 					int indexPill = game.getPillIndex(node); //indice en el array de pills
 					if(indexPill != -1) { //Existe pill en ese nodo
 						int aux = game.getShortestPathDistance(pcNode, node, pcLastMoveMade);
-						if(aux < minDistance ) {
+						if(aux < minDistance && game.isPillStillAvailable(node)) {
 							nodeTarget = node;
 							minDistance = aux;
 						}
@@ -59,13 +63,43 @@ public class GoToPillAction implements Action {
 		return nodeTarget;
 	}
 	
+	//Busca en el inventario de las pills, la mas cercana con respecto a su posicion
+	int searchNearestPillSaved(Game game) {
+		int target = -1;
+		int pcNode = game.getPacmanCurrentNodeIndex();
+		int distance = Integer.MAX_VALUE;
+		
+		int size = mem.pillsSeen.size();
+		for (HashMap.Entry<Integer, PillState> entry : mem.pillsSeen.entrySet()) {
+			int auxDis = game.getShortestPathDistance(pcNode, entry.getKey().intValue(), game.getPacmanLastMoveMade());
+			//Si es mas pequeña su distancia y si la pill está activa
+			if(auxDis < distance && game.isPillStillAvailable(entry.getKey().intValue())) {
+				distance = auxDis;
+				target = entry.getKey().intValue();
+			}
+		}
+		
+		return target;
+	}
+	
 	@Override
 	public MOVE execute(Game game) {
 		int target = getNextPillInRange(game);
-		MOVE move = game.getApproximateNextMoveTowardsTarget(game.getPacmanCurrentNodeIndex(), 
-															 target,
-															 game.getPacmanLastMoveMade(), 
-															 DM.PATH);
+		
+//		if(target == -1) {
+//			target = searchNearestPillSaved(game);
+//		}
+		
+		MOVE move = MOVE.NEUTRAL;
+		
+		
+		if(target != -1) {
+			GameView.addLines(game, java.awt.Color.RED, game.getPacmanCurrentNodeIndex(), target);	
+			move = game.getApproximateNextMoveTowardsTarget(game.getPacmanCurrentNodeIndex(), 
+					target,
+					game.getPacmanLastMoveMade(), 
+					DM.PATH);
+		}
 		
 //		return allMoves[rnd.nextInt(allMoves.length)];
 		return move;

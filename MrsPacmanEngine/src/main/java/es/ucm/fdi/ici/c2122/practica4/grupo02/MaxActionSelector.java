@@ -20,7 +20,7 @@ public class MaxActionSelector implements ActionSelector {
 	
 	@Override
 	public Action selectAction(HashMap<String, Double> fuzzyOutput) {
-		double max = Double.MIN_VALUE;
+		double max = Double.NEGATIVE_INFINITY;
 		String actionName = null;
 		for(Entry<String,Double> entry : fuzzyOutput.entrySet()) {
 			double value = entry.getValue();
