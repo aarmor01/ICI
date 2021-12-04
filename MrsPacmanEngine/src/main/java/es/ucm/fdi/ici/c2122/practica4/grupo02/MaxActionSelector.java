@@ -1,10 +1,10 @@
 package es.ucm.fdi.ici.c2122.practica4.grupo02;
 
-import java.util.HashMap;
-import java.util.Map.Entry;
-
 import es.ucm.fdi.ici.Action;
 import es.ucm.fdi.ici.fuzzy.ActionSelector;
+
+import java.util.HashMap;
+import java.util.Map.Entry;
 
 /*
  * Executes the action with the highest score
@@ -12,34 +12,31 @@ import es.ucm.fdi.ici.fuzzy.ActionSelector;
 public class MaxActionSelector implements ActionSelector {
 
 	Action[] actions;
-	
-	public MaxActionSelector(Action[] actions)
-	{
+
+	public MaxActionSelector(Action[] actions) {
 		this.actions = actions;
 	}
-	
+
 	@Override
 	public Action selectAction(HashMap<String, Double> fuzzyOutput) {
 		double max = Double.NEGATIVE_INFINITY;
 		String actionName = null;
-		for(Entry<String,Double> entry : fuzzyOutput.entrySet()) {
+
+		for (Entry<String, Double> entry : fuzzyOutput.entrySet()) {
 			double value = entry.getValue();
-			if(value > max)
-			{
+			if (value > max) {
 				max = value;
-				actionName = entry.getKey(); 
+				actionName = entry.getKey();
 			}
 		}
-		
-		if(actionName==null)
-			return null;
-		
-		for(Action a : actions)
-			if(a.getActionId().equals(actionName))
-				return a;
-		
-		return null;
-		
-	}
 
+		if (actionName == null)
+			return null;
+
+		for (Action a : actions)
+			if (a.getActionId().equals(actionName))
+				return a;
+
+		return null;
+	}
 }

@@ -13,28 +13,54 @@ import java.util.HashMap;
 
 public class GhostsInput extends FuzzyInput {
 
-	private double[] distance;
+	private double[] distances;
+	private double[] edibles;
 
 	public GhostsInput(Game game) {
 		super(game);
 	}
 
-	public void savePills(HashMap<Integer,PowerPillState> pills, GHOST ghost) {
+	@Override
+	public void parseInput() {
+		distances = new double[] { -1, -1, -1, -1 };
+		edibles = new double[] { 0, 0, 0, 0 };
+		
+		for (GHOST ghost : GHOST.values()) {
+			getEdible(ghost);
+			getPacmanDistance(ghost);
+		}
+	}
+	
+	private void getEdible(GHOST ghost) {
+		edibles[ghost.ordinal()] = game.isGhostEdible(ghost) ? 1 : 0;
+	}
+	
+	private void getPacmanDistance(GHOST ghost) {
+		int index = ghost.ordinal();
+		int pos = game.getGhostCurrentNodeIndex(ghost);
+		int pacManPos = game.getPacmanCurrentNodeIndex();
+
+		if (pacManPos != -1)
+			distances[index] = game.getDistance(pos, pacManPos, DM.PATH);
+	}
+
+	public void savePills(HashMap<Integer, PowerPillState> pills, GHOST ghost) {
 		int pcNode = game.getGhostCurrentNodeIndex(ghost);
 		int[] adjacentPathsNode = game.getNeighbouringNodes(pcNode);
 		MOVE move;
-		for(int i = 0; i < adjacentPathsNode.length; ++i) {
+
+		for (int i = 0; i < adjacentPathsNode.length; ++i) {
 			move = game.getMoveToMakeToReachDirectNeighbour(pcNode, adjacentPathsNode[i]);
 			int k = 0;
 			boolean noEnd = false;
 			int assumedPos = pcNode;
-			while(k < GameConstants.sightLimit && !noEnd) {
+			while (k < GameConstants.sightLimit && !noEnd) {
 				int node = game.getNeighbour(assumedPos, move);
-				if(node != -1) {
-					//Comparar si en este nodo hay una Pill
+				if (node != -1) {
+					// Comparar si en este nodo hay una Pill
 					int indexPill = game.getPowerPillIndex(node);
-					if( indexPill != -1) {
-						if(!pills.containsKey(node)) { //Si no está la pill en el vector, la metemos
+					if (indexPill != -1) {
+						if (!pills.containsKey(node)) { // Si no está la pill en el vector, la metemos
 							PowerPillState p = new PowerPillState();
 							p.indexPPill = indexPill;
 							p.x = game.getNodeXCood(node);
@@ -45,28 +71,15 @@ public class GhostsInput extends FuzzyInput {
 					}
 					assumedPos = node;
 					++k;
-				}else noEnd = true; //No hay mas visibilidad
-				
+				} 
+				else
+					noEnd = true; // No hay mas visibilidad
 			}
 		}
 	}
 	
-	@Override
-	public void parseInput() {
-		distance = new double[] { -1, -1, -1, -1 };
-
-		for (GHOST g : GHOST.values()) {
-			int index = g.ordinal();
-			int pos = game.getGhostCurrentNodeIndex(g);
-			int pacManPos = game.getPacmanCurrentNodeIndex();
-
-			if (pacManPos != -1)
-				distance[index] = game.getDistance(pos, pacManPos, DM.PATH);
-		}
-	}
-
 	public boolean isVisible(GHOST ghost) {
-		return distance[ghost.ordinal()] != -1;
+		return distances[ghost.ordinal()] != -1;
 	}
 
 	@Override
@@ -74,8 +87,10 @@ public class GhostsInput extends FuzzyInput {
 		// puts the values on the fcl file input values
 		HashMap<String, Double> vars = new HashMap<String, Double>();
 
-		for (GHOST g : GHOST.values())
-			vars.put(g.name() + "distanceToPacMan", distance[g.ordinal()]);
+		for (GHOST ghost : GHOST.values()) {
+			vars.put(ghost.name() + "distanceToPacMan", distances[ghost.ordinal()]);
+			vars.put(ghost.name() + "edible", edibles[ghost.ordinal()]);
+		}
 
 		return vars;
 	}

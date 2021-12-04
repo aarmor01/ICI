@@ -1,5 +1,5 @@
 // Block definition (there may be more than one block per file)
-FUNCTION_BLOCK FuzzyBlinky
+FUNCTION_BLOCK FuzzyGhosts
 
 // Define input variables
 VAR_INPUT				
@@ -7,13 +7,13 @@ VAR_INPUT
 	PINKYedible : REAL;
 	INKYedible : REAL;
 	SUEedible : REAL;
-	PacManDistancePowerPill : REAL;
-	PacManDistancePowerPillConfidence : REAL;
 	BLINKYdistanceToPacMan : REAL;
 	PINKYdistanceToPacMan : REAL;
 	INKYdistanceToPacMan : REAL;
 	SUEdistanceToPacMan : REAL;
 	distanceToPacManConfidence : REAL;
+	PacManDistancePowerPill : REAL;
+	PacManDistancePowerPillConfidence : REAL;
 	numPills : REAL;
 	score : REAL;
 	currentTime : REAL;

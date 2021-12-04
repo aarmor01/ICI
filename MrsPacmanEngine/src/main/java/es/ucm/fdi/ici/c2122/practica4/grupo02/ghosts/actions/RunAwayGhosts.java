@@ -9,27 +9,26 @@ import pacman.game.Constants.MOVE;
 import pacman.game.Game;
 
 public class RunAwayGhosts implements Action {
-    
-    GHOST ghost;
-    GhostsFuzzyMemory mem;
+
+	GHOST ghost;
+	GhostsFuzzyMemory mem;
+
 	public RunAwayGhosts(GHOST g, GhostsFuzzyMemory mem_) {
 		this.ghost = g;
 		this.mem = mem_;
 	}
-	
+
 	@Override
 	public MOVE execute(Game game) {
 		int pcNode = game.getPacmanCurrentNodeIndex();
-		
-		return game.getApproximateNextMoveAwayFromTarget(game.getGhostCurrentNodeIndex(ghost), 
-															 pcNode, 
-															 game.getGhostLastMoveMade(ghost), 
-															 DM.PATH);
-    }
-	
+
+		return game.getApproximateNextMoveAwayFromTarget(game.getGhostCurrentNodeIndex(ghost), pcNode,
+				game.getGhostLastMoveMade(ghost), DM.PATH);
+	}
+
 	@Override
 	public String getActionId() {
 		return "Runaway " + ghost;
 	}
-            
+
 }
