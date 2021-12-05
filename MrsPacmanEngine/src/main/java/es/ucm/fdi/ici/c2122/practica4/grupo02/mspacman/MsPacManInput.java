@@ -14,6 +14,12 @@ public class MsPacManInput extends FuzzyInput {
 
 	private double[] distance;
 	
+	/* TODO: Cazar a los fantasmas con su tiempo edible
+	 * TODO: Que no vaya a por las powerPills a no ser que sea necesario
+	 * TODO: guardar las powerPills
+	 * TODO: Jugar con el tiempo de juego
+	 * TODO: huir de los fantasmas en funcion de su ultimo movimiento visto
+	 */
 	
 	public MsPacManInput(Game game) {
 		super(game);
@@ -83,8 +89,6 @@ public class MsPacManInput extends FuzzyInput {
 	public boolean isVisible(GHOST ghost) {
 		return distance[ghost.ordinal()] != -1;
 	}
-	
-	
 
 	@Override
 	public HashMap<String, Double> getFuzzyValues() {
