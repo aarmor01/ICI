@@ -2,14 +2,14 @@ package es.ucm.fdi.ici.c2122.practica4.grupo02.mspacman;
 
 import java.util.HashMap;
 
+import es.ucm.fdi.ici.c2122.practica4.grupo02.GameConstants;
+import es.ucm.fdi.ici.c2122.practica4.grupo02.mspacman.MsPacManFuzzyMemory.PillState;
+import es.ucm.fdi.ici.fuzzy.FuzzyInput;
+import pacman.game.Constants;
 import pacman.game.Constants.DM;
 import pacman.game.Constants.GHOST;
 import pacman.game.Constants.MOVE;
-import pacman.game.Constants;
 import pacman.game.Game;
-import es.ucm.fdi.ici.fuzzy.FuzzyInput;
-import es.ucm.fdi.ici.c2122.practica4.grupo02.GameConstants;
-import es.ucm.fdi.ici.c2122.practica4.grupo02.mspacman.MsPacManFuzzyMemory.PillState;
 public class MsPacManInput extends FuzzyInput {
 
 	private double[] distance;
@@ -55,8 +55,12 @@ public class MsPacManInput extends FuzzyInput {
 		int pcNode = game.getPacmanCurrentNodeIndex();
 		
 		int indexPill = game.getPillIndex(pcNode);
-		if(indexPill != -1)
-			pills.get(Integer.valueOf(indexPill)).eaten = true;
+		if(indexPill != -1) {
+			// Si existe una pill en el nodo actual del pacman, es que se ha comido
+			PillState p = pills.get(Integer.valueOf(pcNode));
+			if(p != null) //No contiene aun esa pill en el inventario
+				p.eaten = true;
+		}
 	}
 	
 	@Override

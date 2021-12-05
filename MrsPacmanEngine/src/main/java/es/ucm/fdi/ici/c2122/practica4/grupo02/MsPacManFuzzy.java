@@ -27,7 +27,7 @@ public class MsPacManFuzzy extends PacmanController {
 		
 		fuzzyMemory = new MsPacManFuzzyMemory();
 
-		Action[] actions = { new GoToPillAction(fuzzyMemory), new RunAwayAction() };
+		Action[] actions = { new GoToPillAction(fuzzyMemory) , new RunAwayAction() };
 
 		ActionSelector actionSelector = new MaxActionSelector(actions);
 

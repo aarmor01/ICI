@@ -59,13 +59,6 @@ FUZZIFY SUEconfidence			// Fuzzify input variable 'service': {'poor', 'good' , '
 	TERM high := (50,0)(75,1)(100,1);
 END_FUZZIFY
 
-DEFUZZIFY Runaway			// Defzzzify output variable 'tip' : {'cheap', 'average', 'generous' }
-	TERM calm := (0,1) (5,1) (15,0);
-	TERM nervious := gauss 15 5;
-	TERM emergency := (15,0) (25,1) (30,1);
-	METHOD : COG;		// Use 'Center Of Gravity' defuzzification method
-	DEFAULT := 0;		// Default value is 0 (if no rule activates defuzzifier)
-END_DEFUZZIFY
 
 DEFUZZIFY GoToPill			// Defzzzify output variable 'tip' : {'cheap', 'average', 'generous' }
 	TERM calm := (0,1) (5,1) (15,0);
@@ -75,6 +68,13 @@ DEFUZZIFY GoToPill			// Defzzzify output variable 'tip' : {'cheap', 'average', '
 	DEFAULT := 0;		// Default value is 0 (if no rule activates defuzzifier)
 END_DEFUZZIFY
 
+DEFUZZIFY Runaway			// Defzzzify output variable 'tip' : {'cheap', 'average', 'generous' }
+	TERM calm := (0,1) (5,1) (15,0);
+	TERM nervious := gauss 15 5;
+	TERM emergency := (15,0) (25,1) (30,1);
+	METHOD : COG;		// Use 'Center Of Gravity' defuzzification method
+	DEFAULT := 0;		// Default value is 0 (if no rule activates defuzzifier)
+END_DEFUZZIFY
 
 RULEBLOCK MsPacManRules
 	AND : MIN;			// Use 'min' for 'and' (also implicit use 'max' for 'or' to fulfill DeMorgan's Law)
@@ -83,24 +83,40 @@ RULEBLOCK MsPacManRules
 
 	//accu es el acumulador de dos graficas, el maximo de ellas
 	//act se queda con el minimo de ellas
-//	RULE 1 : IF BLINKYdistance IS near AND BLINKYconfidence IS high THEN Runaway IS emergency;
-//	RULE 2 : IF PINKYdistance IS near AND PINKYconfidence IS high THEN Runaway IS emergency;
-//	RULE 3 : IF INKYdistance IS near AND INKYconfidence IS high THEN Runaway IS emergency;
-//	RULE 4 : IF SUEdistance IS near AND SUEconfidence IS high THEN Runaway IS emergency;
-//	RULE 5 : IF BLINKYconfidence IS medium THEN GoToPill IS nervious;
-//	RULE 6 : IF PINKYconfidence IS medium THEN GoToPill IS nervious;
-//	RULE 7 : IF INKYconfidence IS medium THEN GoToPill IS nervious;
-//	RULE 8 : IF SUEconfidence IS medium THEN GoToPill IS nervious;
-	//Esto es terrible
-	RULE 9 : IF BLINKYdistance IS far THEN GoToPill IS emergency;
-	RULE 11 : IF PINKYdistance IS far THEN GoToPill IS emergency;
-	RULE 13 : IF INKYdistance IS far THEN GoToPill IS emergency;
-	RULE 15 : IF SUEdistance IS far THEN GoToPill IS emergency;
+
+	//RunAway-----------------------------	
+	RULE 1 : IF BLINKYdistance IS far THEN Runaway IS calm;
+	RULE 1 : IF PINKYdistance IS far THEN Runaway IS calm;
+	RULE 1 : IF INKYdistance IS far THEN Runaway IS calm;
+	RULE 1 : IF SUEdistance IS far THEN Runaway IS calm;
 	
-//	RULE 9 : IF BLINKYdistance IS near THEN Runaway IS emergency;
-//	RULE 10 : IF PINKYdistance IS near THEN Runaway IS emergency;
-//	RULE 12 : IF INKYdistance IS near THEN Runaway IS emergency;
-//	RULE 14 : IF SUEdistance IS near THEN Runaway IS emergency;
+	RULE 1 : IF BLINKYdistance IS medium THEN Runaway IS nervious;
+	RULE 1 : IF PINKYdistance IS medium THEN Runaway IS nervious;
+	RULE 1 : IF INKYdistance IS medium THEN Runaway IS nervious;
+	RULE 1 : IF SUEdistance IS medium THEN Runaway IS nervious;
+	//----------------------------------------
+	
+	//GoToPill --------------------------
+	RULE 2 : IF BLINKYdistance IS far THEN GoToPill IS emergency;
+	RULE 2 : IF PINKYdistance IS far THEN GoToPill IS emergency;
+	RULE 2 : IF INKYdistance IS far THEN GoToPill IS emergency;
+	RULE 2 : IF SUEdistance IS far THEN GoToPill IS emergency;
+	
+	RULE 2 : IF BLINKYdistance IS medium THEN GoToPill IS emergency;
+	RULE 2 : IF PINKYdistance IS medium THEN GoToPill IS emergency;
+	RULE 2 : IF INKYdistance IS medium THEN GoToPill IS emergency;
+	RULE 2 : IF SUEdistance IS medium THEN GoToPill IS emergency;
+	
+	RULE 2 : IF BLINKYdistance IS near THEN GoToPill IS calm;
+	RULE 2 : IF PINKYdistance IS near THEN GoToPill IS calm;
+	RULE 2 : IF INKYdistance IS near THEN GoToPill IS calm;
+	RULE 2 : IF SUEdistance IS near THEN GoToPill IS calm;
+	
+//	RULE 2 : IF BLINKYdistance IS near AND BLINKYconfidence IS high THEN GoToPill IS calm;
+//	RULE 2 : IF PINKYdistance IS near AND PINKYconfidence IS high THEN GoToPill IS calm;
+//	RULE 2 : IF INKYdistance IS near AND INKYconfidence IS high THEN GoToPill IS calm;
+//	RULE 2 : IF SUEdistance IS near AND SUEconfidence IS high THEN GoToPill IS calm;
+	//----------------------------------------
 END_RULEBLOCK
 
 END_FUNCTION_BLOCK

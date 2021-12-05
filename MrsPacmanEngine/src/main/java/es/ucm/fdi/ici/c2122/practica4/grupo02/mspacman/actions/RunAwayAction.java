@@ -8,6 +8,7 @@ import pacman.game.Constants.DM;
 import pacman.game.Constants.GHOST;
 import pacman.game.Constants.MOVE;
 import pacman.game.Game;
+import pacman.game.GameView;
 
 public class RunAwayAction implements Action {
     
@@ -40,6 +41,7 @@ public class RunAwayAction implements Action {
 		 //If this actions has been triggered, then there must be a ghost in the actual sight
 		if(g != null) {
 			int nodeGhost = game.getGhostCurrentNodeIndex(g);
+			GameView.addPoints(game, java.awt.Color.BLUE, nodeGhost);	
 			return game.getApproximateNextMoveAwayFromTarget(game.getPacmanCurrentNodeIndex(), 
 															 nodeGhost, 
 															 game.getPacmanLastMoveMade(), 

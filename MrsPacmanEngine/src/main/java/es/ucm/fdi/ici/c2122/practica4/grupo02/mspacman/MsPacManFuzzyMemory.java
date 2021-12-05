@@ -35,7 +35,7 @@ public class MsPacManFuzzyMemory {
 	public void getInput(MsPacManInput input){
 		
 		input.savePills(pillsSeen);
-//		input.updatePillsState(pillsSeen);	//actualizamos el estado de las pills vistas
+		input.updatePillsState(pillsSeen);	//actualizamos el estado de las pills vistas
 		
 		for(GHOST g: GHOST.values()) {
 			double conf = confidence[g.ordinal()];

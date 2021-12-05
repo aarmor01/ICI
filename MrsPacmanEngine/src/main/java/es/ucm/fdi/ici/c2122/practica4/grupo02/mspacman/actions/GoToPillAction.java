@@ -47,9 +47,9 @@ public class GoToPillAction implements Action {
 				int node = game.getNeighbour(assumedPos, move);
 				if(node != -1) {
 					int indexPill = game.getPillIndex(node); //indice en el array de pills
-					if(indexPill != -1) { //Existe pill en ese nodo
+					if(indexPill != -1 && (game.isPillStillAvailable(indexPill) != null && game.isPillStillAvailable(indexPill) != false)) { //Existe pill en ese nodo y es comestible
 						int aux = game.getShortestPathDistance(pcNode, node, pcLastMoveMade);
-						if(aux < minDistance && game.isPillStillAvailable(node)) {
+						if(aux < minDistance) {
 							nodeTarget = node;
 							minDistance = aux;
 						}
@@ -71,11 +71,13 @@ public class GoToPillAction implements Action {
 		
 		int size = mem.pillsSeen.size();
 		for (HashMap.Entry<Integer, PillState> entry : mem.pillsSeen.entrySet()) {
-			int auxDis = game.getShortestPathDistance(pcNode, entry.getKey().intValue(), game.getPacmanLastMoveMade());
-			//Si es mas pequeña su distancia y si la pill está activa
-			if(auxDis < distance && game.isPillStillAvailable(entry.getKey().intValue())) {
-				distance = auxDis;
-				target = entry.getKey().intValue();
+			if(!entry.getValue().eaten) {
+				int auxDis = game.getShortestPathDistance(pcNode, entry.getKey().intValue(), game.getPacmanLastMoveMade());
+				//Si es mas pequeña su distancia y si la pill está activa
+				if(auxDis < distance) {
+					distance = auxDis;
+					target = entry.getKey().intValue();
+				}
 			}
 		}
 		
@@ -84,17 +86,15 @@ public class GoToPillAction implements Action {
 	
 	@Override
 	public MOVE execute(Game game) {
+		MOVE move = MOVE.NEUTRAL;
 		int target = getNextPillInRange(game);
 		
-//		if(target == -1) {
-//			target = searchNearestPillSaved(game);
-//		}
-		
-		MOVE move = MOVE.NEUTRAL;
-		
+		if(target == -1) {
+			target = searchNearestPillSaved(game);
+		}
 		
 		if(target != -1) {
-			GameView.addLines(game, java.awt.Color.RED, game.getPacmanCurrentNodeIndex(), target);	
+			GameView.addPoints(game, java.awt.Color.RED, target);	
 			move = game.getApproximateNextMoveTowardsTarget(game.getPacmanCurrentNodeIndex(), 
 					target,
 					game.getPacmanLastMoveMade(), 
