@@ -1,18 +1,23 @@
 package es.ucm.fdi.ici.c2122.practica4.grupo02.ghosts.actions;
 
+import java.util.Random;
+
 import es.ucm.fdi.ici.Action;
 import es.ucm.fdi.ici.c2122.practica4.grupo02.ghosts.GhostsFuzzyMemory;
-import es.ucm.fdi.ici.c2122.practica4.grupo02.GameConstants;
-import pacman.game.Constants.DM;
-import pacman.game.Constants.GHOST;
-import pacman.game.Constants.MOVE;
+
 import pacman.game.Game;
+import pacman.game.Constants.DM;
+import pacman.game.Constants.MOVE;
+import pacman.game.Constants.GHOST;
 
 public class RunAwayGhosts implements Action {
 
 	GHOST ghost;
 	GhostsFuzzyMemory mem;
 
+	private Random rnd = new Random();
+    private MOVE[] allMoves = MOVE.values();
+    
 	public RunAwayGhosts(GHOST g, GhostsFuzzyMemory mem_) {
 		this.ghost = g;
 		this.mem = mem_;
@@ -22,8 +27,11 @@ public class RunAwayGhosts implements Action {
 	public MOVE execute(Game game) {
 		int pcNode = game.getPacmanCurrentNodeIndex();
 
-		return game.getApproximateNextMoveAwayFromTarget(game.getGhostCurrentNodeIndex(ghost), pcNode,
-				game.getGhostLastMoveMade(ghost), DM.PATH);
+		if (pcNode != -1)
+			return game.getApproximateNextMoveAwayFromTarget(game.getGhostCurrentNodeIndex(ghost), pcNode,
+					game.getGhostLastMoveMade(ghost), DM.PATH);
+		
+		return allMoves[rnd.nextInt(allMoves.length)];
 	}
 
 	@Override

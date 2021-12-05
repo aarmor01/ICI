@@ -44,7 +44,7 @@ public class GhostsFuzzyMemory {
 		else 
 			distToPacmanConfidence = 100;
 		
-		mem.put("distanceToPacmanConfidence", distToPacmanConfidence);		
+		mem.put("distanceToPacmanConfidence", distToPacmanConfidence);
 	}
 
 	public HashMap<String, Double> getFuzzyValues() {

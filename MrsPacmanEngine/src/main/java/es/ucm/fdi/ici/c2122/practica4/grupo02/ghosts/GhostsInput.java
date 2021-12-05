@@ -15,6 +15,9 @@ public class GhostsInput extends FuzzyInput {
 
 	private double[] distances;
 	private double[] edibles;
+	
+	private double time;
+	private double score;
 
 	public GhostsInput(Game game) {
 		super(game);
@@ -28,6 +31,8 @@ public class GhostsInput extends FuzzyInput {
 		for (GHOST ghost : GHOST.values()) {
 			getEdible(ghost);
 			getPacmanDistance(ghost);
+			time = game.getCurrentLevelTime();
+			score = game.getScore();
 		}
 	}
 	
@@ -42,6 +47,10 @@ public class GhostsInput extends FuzzyInput {
 
 		if (pacManPos != -1)
 			distances[index] = game.getDistance(pos, pacManPos, DM.PATH);
+	}
+	
+	public void ghostPosition() {
+		game.getGhostCurrentNodeIndex(GHOST.BLINKY);
 	}
 
 	public void savePills(HashMap<Integer, PowerPillState> pills, GHOST ghost) {
@@ -92,6 +101,9 @@ public class GhostsInput extends FuzzyInput {
 			vars.put(ghost.name() + "edible", edibles[ghost.ordinal()]);
 		}
 
+		vars.put("score", score);
+		vars.put("currentTime", time);
+		
 		return vars;
 	}
 }

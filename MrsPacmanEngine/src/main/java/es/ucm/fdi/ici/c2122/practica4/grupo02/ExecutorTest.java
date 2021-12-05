@@ -8,7 +8,6 @@ import pacman.controllers.PacmanController;
 //import pacman.controllers.HumanController;
 //import pacman.controllers.KeyBoardInput;
 
-
 public class ExecutorTest {
 
     public static void main(String[] args) {
