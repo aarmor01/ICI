@@ -3,15 +3,23 @@ FUNCTION_BLOCK FuzzyGhosts
 
 // Define input variables
 VAR_INPUT				
-	BLINKYedible : REAL;
-	PINKYedible : REAL;
-	INKYedible : REAL;
-	SUEedible : REAL;
+	BLINKYedibleTime : REAL;
+	PINKYedibleTime : REAL;
+	INKYedibleTime : REAL;
+	SUEedibleTime : REAL;
+	
+	BLINKYlairTime : REAL;
+	PINKYlairTime : REAL;
+	INKYlairTime : REAL;
+	SUElairTime : REAL;
+	
 	BLINKYdistanceToPacMan : REAL;
 	PINKYdistanceToPacMan : REAL;
 	INKYdistanceToPacMan : REAL;
 	SUEdistanceToPacMan : REAL;
+	
 	distanceToPacManConfidence : REAL;
+	
 	PacManDistancePowerPill : REAL;
 	PacManDistancePowerPillConfidence : REAL;
 	numPills : REAL;
@@ -26,22 +34,50 @@ VAR_OUTPUT
 END_VAR
 
 // --- INPUT VALUES GRAPHS ---
-FUZZIFY BLINKYedible			// Fuzzify input variable 'service': {'poor', 'good' , 'excellent'}
-	TERM false := (0, 1) (0.5, 0); 
-	TERM true := (0.5, 0) (1, 1);
+FUZZIFY BLINKYedibleTime	// Fuzzify input variable 'service': {'poor', 'good' , 'excellent'}
+	TERM low := (0, 1) (0.5, 0); 
+	TERM medium := ;
+	TERM high := (0.5, 0) (1, 1);
 END_FUZZIFY
-FUZZIFY PINKYedible			// Fuzzify input variable 'service': {'poor', 'good' , 'excellent'}
-	TERM false := (0, 1) (0.5, 0); 
-	TERM true := (0.5, 0) (1, 1);
+FUZZIFY PINKYedibleTime		// Fuzzify input variable 'service': {'poor', 'good' , 'excellent'}
+	TERM low := (0, 1) (0.5, 0); 
+	TERM medium := ;
+	TERM high := (0.5, 0) (1, 1);
 END_FUZZIFY
-FUZZIFY INKYedible			// Fuzzify input variable 'service': {'poor', 'good' , 'excellent'}
-	TERM false := (0, 1) (0.5, 0); 
-	TERM true := (0.5, 0) (1, 1);
+FUZZIFY INKYedibleTime		// Fuzzify input variable 'service': {'poor', 'good' , 'excellent'}
+	TERM low := (0, 1) (0.5, 0); 
+	TERM medium := ;
+	TERM high := (0.5, 0) (1, 1);
 END_FUZZIFY
-FUZZIFY SUEedible			// Fuzzify input variable 'service': {'poor', 'good' , 'excellent'}
-	TERM false := (0, 1) (0.5, 0); 
-	TERM true := (0.5, 0) (1, 1);
+FUZZIFY SUEedibleTime		// Fuzzify input variable 'service': {'poor', 'good' , 'excellent'}
+	TERM low := (0, 1) (0.5, 0); 
+	TERM medium := ;
+	TERM high := (0.5, 0) (1, 1);
 END_FUZZIFY
+
+FUZZIFY BLINKYlairTime	// Fuzzify input variable 'service': {'poor', 'good' , 'excellent'}
+    TERM none := (0, 0)
+	TERM low := (0, 1) (0.5, 0); 
+	TERM medium := ;
+	TERM high := (0.5, 0) (1, 1);
+END_FUZZIFY
+FUZZIFY PINKYlairTime		// Fuzzify input variable 'service': {'poor', 'good' , 'excellent'}
+	TERM low := (0, 1) (0.5, 0); 
+	TERM medium := ;
+	TERM high := (0.5, 0) (1, 1);
+END_FUZZIFY
+FUZZIFY INKYlairTime		// Fuzzify input variable 'service': {'poor', 'good' , 'excellent'}
+	TERM low := (0, 1) (0.5, 0); 
+	TERM medium := ;
+	TERM high := (0.5, 0) (1, 1);
+END_FUZZIFY
+FUZZIFY SUElairTime		// Fuzzify input variable 'service': {'poor', 'good' , 'excellent'}
+	TERM low := (0, 1) (0.5, 0); 
+	TERM medium := ;
+	TERM high := (0.5, 0) (1, 1);
+END_FUZZIFY
+
+
 FUZZIFY PacManDistancePowerPill			// Fuzzify input variable 'service': {'poor', 'good' , 'excellent'}
 	TERM near := (0, 1) (60, 0) ; 
 	TERM medium := gauss 75 25;

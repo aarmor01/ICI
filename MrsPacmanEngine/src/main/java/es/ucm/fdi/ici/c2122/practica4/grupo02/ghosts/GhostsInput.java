@@ -14,7 +14,8 @@ import java.util.HashMap;
 public class GhostsInput extends FuzzyInput {
 
 	private double[] distances;
-	private double[] edibles;
+	private double[] edibleTimes;
+	private double[] lairTimes;
 	
 	private double time;
 	private double score;
@@ -26,18 +27,24 @@ public class GhostsInput extends FuzzyInput {
 	@Override
 	public void parseInput() {
 		distances = new double[] { -1, -1, -1, -1 };
-		edibles = new double[] { 0, 0, 0, 0 };
+		edibleTimes = new double[] { 0, 0, 0, 0 };
+		lairTimes = new double[] { 0, 0, 0, 0 };
 		
 		for (GHOST ghost : GHOST.values()) {
-			getEdible(ghost);
+			getEdibleTimes(ghost);
+			getLairTimes(ghost);
 			getPacmanDistance(ghost);
 			time = game.getCurrentLevelTime();
 			score = game.getScore();
 		}
 	}
 	
-	private void getEdible(GHOST ghost) {
-		edibles[ghost.ordinal()] = game.isGhostEdible(ghost) ? 1 : 0;
+	private void getEdibleTimes(GHOST ghost) {
+		edibleTimes[ghost.ordinal()] = game.getGhostEdibleTime(ghost);
+	}
+	
+	private void getLairTimes(GHOST ghost) {
+		lairTimes[ghost.ordinal()] = game.getGhostLairTime(ghost);
 	}
 	
 	private void getPacmanDistance(GHOST ghost) {
@@ -98,7 +105,8 @@ public class GhostsInput extends FuzzyInput {
 
 		for (GHOST ghost : GHOST.values()) {
 			vars.put(ghost.name() + "distanceToPacMan", distances[ghost.ordinal()]);
-			vars.put(ghost.name() + "edible", edibles[ghost.ordinal()]);
+			vars.put(ghost.name() + "edibleTime", edibleTimes[ghost.ordinal()]);
+			vars.put(ghost.name() + "lairTime", lairTimes[ghost.ordinal()]);
 		}
 
 		vars.put("score", score);
