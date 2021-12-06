@@ -4,6 +4,7 @@ package es.ucm.fdi.ici.c2122.practica4.grupo02.mspacman.actions;
 import java.util.Random;
 
 import es.ucm.fdi.ici.Action;
+import es.ucm.fdi.ici.c2122.practica4.grupo02.mspacman.MsPacManFuzzyMemory;
 import pacman.game.Constants.DM;
 import pacman.game.Constants.GHOST;
 import pacman.game.Constants.MOVE;
@@ -14,7 +15,9 @@ public class RunAwayAction implements Action {
     
 	private Random rnd = new Random();
     private MOVE[] allMoves = MOVE.values();
-	public RunAwayAction() {
+    MsPacManFuzzyMemory mem;
+	public RunAwayAction(MsPacManFuzzyMemory mem_) {
+		mem = mem_;
 	}
 	
 	GHOST nearestGhost(Game game) {

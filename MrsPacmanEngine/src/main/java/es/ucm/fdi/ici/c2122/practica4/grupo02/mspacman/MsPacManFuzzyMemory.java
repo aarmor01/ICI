@@ -1,9 +1,9 @@
 package es.ucm.fdi.ici.c2122.practica4.grupo02.mspacman;
 
 import java.util.HashMap;
-import java.util.Vector;
 
 import pacman.game.Constants.GHOST;
+import pacman.game.Constants.MOVE;
 
 public class MsPacManFuzzyMemory {
 	
@@ -20,6 +20,14 @@ public class MsPacManFuzzyMemory {
 	    public int y;  
 	    public boolean eaten; 
 	 };
+	 
+	 static public class GhostState {
+			public int ghostNode;
+		    public int x; 
+		    public int y;  
+		    public MOVE move;
+		    public boolean edible;
+		 }; 
 	
 	HashMap<String,Double> mem;
 	
@@ -27,6 +35,9 @@ public class MsPacManFuzzyMemory {
 	
 	//NodeIndex, PillState
 	public HashMap<Integer,PillState> pillsSeen = new HashMap<Integer,PillState>(); 
+	public HashMap<Integer,PowerPillState> pPillsSeen = new HashMap<Integer,PowerPillState>(); 
+	
+	public HashMap<GHOST,GhostState> ghostsSeen = new HashMap<GHOST,GhostState>(); 
 	
 	public MsPacManFuzzyMemory() {
 		mem = new HashMap<String,Double>();
@@ -34,8 +45,8 @@ public class MsPacManFuzzyMemory {
 		
 	public void getInput(MsPacManInput input){
 		
-		input.savePills(pillsSeen);
-		input.updatePillsState(pillsSeen);	//actualizamos el estado de las pills vistas
+		input.savePills_N_Ghosts(pillsSeen, pPillsSeen, ghostsSeen);
+		input.updatePillsState_N_Ghosts(pillsSeen, pPillsSeen);	//actualizamos el estado de las pills vistas
 		
 		for(GHOST g: GHOST.values()) {
 			double conf = confidence[g.ordinal()];

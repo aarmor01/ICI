@@ -3,7 +3,9 @@ package es.ucm.fdi.ici.c2122.practica4.grupo02.mspacman;
 import java.util.HashMap;
 
 import es.ucm.fdi.ici.c2122.practica4.grupo02.GameConstants;
+import es.ucm.fdi.ici.c2122.practica4.grupo02.mspacman.MsPacManFuzzyMemory.GhostState;
 import es.ucm.fdi.ici.c2122.practica4.grupo02.mspacman.MsPacManFuzzyMemory.PillState;
+import es.ucm.fdi.ici.c2122.practica4.grupo02.mspacman.MsPacManFuzzyMemory.PowerPillState;
 import es.ucm.fdi.ici.fuzzy.FuzzyInput;
 import pacman.game.Constants;
 import pacman.game.Constants.DM;
@@ -16,7 +18,7 @@ public class MsPacManInput extends FuzzyInput {
 	
 	/* TODO: Cazar a los fantasmas con su tiempo edible
 	 * TODO: Que no vaya a por las powerPills a no ser que sea necesario
-	 * TODO: guardar las powerPills
+	 * DONE: guardar las powerPills
 	 * TODO: Jugar con el tiempo de juego
 	 * TODO: huir de los fantasmas en funcion de su ultimo movimiento visto
 	 */
@@ -25,7 +27,7 @@ public class MsPacManInput extends FuzzyInput {
 		super(game);
 	}
 	
-	public void savePills(HashMap<Integer,PillState> pills) {
+	public void savePills_N_Ghosts(HashMap<Integer,PillState> pills, HashMap<Integer,PowerPillState> pPills, HashMap<GHOST,GhostState> ghostsSeen) {
 		int pcNode = game.getPacmanCurrentNodeIndex();
 		int[] adjacentPathsNode = game.getNeighbouringNodes(pcNode);
 		MOVE move;
@@ -49,6 +51,18 @@ public class MsPacManInput extends FuzzyInput {
 							pills.put(node, p);
 						}
 					}
+					//Lo mismo pero con las powerPills
+					indexPill = game.getPowerPillIndex(node);
+					if(indexPill != -1) {
+						if(!pPills.containsKey(node)) { //Si no está la pill en el vector, la metemos
+							PowerPillState p = new PowerPillState();
+							p.indexPPill = indexPill;
+							p.x = game.getNodeXCood(node);
+							p.y = game.getNodeXCood(node);
+							p.eaten = false; // Como es la primera vez que se mete, está activa
+							pPills.put(node, p);
+						}
+					}
 					assumedPos = node;
 					++k;
 				}else noEnd = true; //No hay mas visibilidad
@@ -57,7 +71,7 @@ public class MsPacManInput extends FuzzyInput {
 		}
 	}
 	
-	void updatePillsState(HashMap<Integer,PillState> pills) {
+	void updatePillsState_N_Ghosts(HashMap<Integer,PillState> pills, HashMap<Integer,PowerPillState> pPills) {
 		int pcNode = game.getPacmanCurrentNodeIndex();
 		
 		int indexPill = game.getPillIndex(pcNode);
@@ -67,6 +81,15 @@ public class MsPacManInput extends FuzzyInput {
 			if(p != null) //No contiene aun esa pill en el inventario
 				p.eaten = true;
 		}
+		
+		indexPill = game.getPowerPillIndex(pcNode);
+		if(indexPill != -1) {
+			// Si existe una pill en el nodo actual del pacman, es que se ha comido
+			PowerPillState p = pPills.get(Integer.valueOf(pcNode));
+			if(p != null) //No contiene aun esa pill en el inventario
+				p.eaten = true;
+		}
+		
 	}
 	
 	@Override
