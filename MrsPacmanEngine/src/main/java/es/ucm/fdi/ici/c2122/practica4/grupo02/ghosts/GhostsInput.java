@@ -16,7 +16,7 @@ public class GhostsInput extends FuzzyInput {
 	private double[] distances;
 	private double[] edibleTimes;
 	private double[] lairTimes;
-	
+
 	private double time;
 	private double score;
 
@@ -29,7 +29,7 @@ public class GhostsInput extends FuzzyInput {
 		distances = new double[] { -1, -1, -1, -1 };
 		edibleTimes = new double[] { 0, 0, 0, 0 };
 		lairTimes = new double[] { 0, 0, 0, 0 };
-		
+
 		for (GHOST ghost : GHOST.values()) {
 			getEdibleTimes(ghost);
 			getLairTimes(ghost);
@@ -38,15 +38,15 @@ public class GhostsInput extends FuzzyInput {
 			score = game.getScore();
 		}
 	}
-	
+
 	private void getEdibleTimes(GHOST ghost) {
 		edibleTimes[ghost.ordinal()] = game.getGhostEdibleTime(ghost);
 	}
-	
+
 	private void getLairTimes(GHOST ghost) {
 		lairTimes[ghost.ordinal()] = game.getGhostLairTime(ghost);
 	}
-	
+
 	private void getPacmanDistance(GHOST ghost) {
 		int index = ghost.ordinal();
 		int pos = game.getGhostCurrentNodeIndex(ghost);
@@ -55,7 +55,25 @@ public class GhostsInput extends FuzzyInput {
 		if (pacManPos != -1)
 			distances[index] = game.getDistance(pos, pacManPos, DM.PATH);
 	}
-	
+
+	public double getPacmanDistanceToNearestPowerPill() {
+		int pacManPos = game.getPacmanCurrentNodeIndex();
+
+		if (pacManPos == -1)
+			return -1;
+
+		int[] pills = game.getActivePowerPillsIndices();
+		int distance = Integer.MAX_VALUE;
+
+		for (int pill : pills) {
+			int dst = game.getShortestPathDistance(pacManPos, pill);
+			if (dst > distance)
+				distance = dst;
+		}
+
+		return distance;
+	}
+
 	public void ghostPosition() {
 		game.getGhostCurrentNodeIndex(GHOST.BLINKY);
 	}
@@ -87,13 +105,12 @@ public class GhostsInput extends FuzzyInput {
 					}
 					assumedPos = node;
 					++k;
-				} 
-				else
+				} else
 					noEnd = true; // No hay mas visibilidad
 			}
 		}
 	}
-	
+
 	public boolean isVisible(GHOST ghost) {
 		return distances[ghost.ordinal()] != -1;
 	}
@@ -111,7 +128,7 @@ public class GhostsInput extends FuzzyInput {
 
 		vars.put("score", score);
 		vars.put("currentTime", time);
-		
+
 		return vars;
 	}
 }

@@ -24,6 +24,8 @@ public class GhostsFuzzyMemory {
 	double distToPacmanConfidence = 100;
 	double pacmanDistToPowerPillConfidence = 100;
 
+	double pacmanDistancePowerPill;
+
 	public HashMap<Integer, PowerPillState> powerPillsSeen = new HashMap<Integer, PowerPillState>();
 
 	public GhostsFuzzyMemory() {
@@ -39,12 +41,21 @@ public class GhostsFuzzyMemory {
 			pacmanVisible = (pacmanVisible || input.isVisible(ghost));
 		}
 		
-		if (pacmanVisible)
+		if (!pacmanVisible) {
+			pacmanDistToPowerPillConfidence = Double.max(0, distToPacmanConfidence - 0.5);
 			distToPacmanConfidence = Double.max(0, distToPacmanConfidence - 0.5);
-		else 
+		}
+		else {
+			pacmanDistToPowerPillConfidence = 100;
 			distToPacmanConfidence = 100;
+		}
+		
+		double dstAux = input.getPacmanDistanceToNearestPowerPill();
+		if (dstAux != -1) pacmanDistancePowerPill = dstAux;
 		
 		mem.put("distanceToPacmanConfidence", distToPacmanConfidence);
+		mem.put("pacManDistancePowerPillConfidence", pacmanDistToPowerPillConfidence);
+		mem.put("pacManDistancePowerPill", pacmanDistancePowerPill);
 	}
 
 	public HashMap<String, Double> getFuzzyValues() {
