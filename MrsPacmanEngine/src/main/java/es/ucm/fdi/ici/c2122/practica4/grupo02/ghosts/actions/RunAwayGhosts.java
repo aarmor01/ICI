@@ -36,7 +36,7 @@ public class RunAwayGhosts implements Action {
 
 	@Override
 	public String getActionId() {
-		return "Runaway " + ghost;
+		return "Runaway";
 	}
 
 }

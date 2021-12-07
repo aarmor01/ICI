@@ -71,6 +71,6 @@ public class ChasePacMan implements Action {
 
 	@Override
 	public String getActionId() {
-		return "Chase " + ghost;
+		return "Chase";
 	}
 }

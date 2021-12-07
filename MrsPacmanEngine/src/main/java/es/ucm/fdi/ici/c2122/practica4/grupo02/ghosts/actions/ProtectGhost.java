@@ -60,6 +60,6 @@ public class ProtectGhost implements Action {
 
 	@Override
 	public String getActionId() {
-		return "Protect " + ghost;
+		return "ProtectGhosts";
 	}
 }

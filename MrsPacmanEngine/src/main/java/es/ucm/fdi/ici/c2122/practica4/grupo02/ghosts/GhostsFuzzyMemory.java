@@ -53,7 +53,7 @@ public class GhostsFuzzyMemory {
 		double dstAux = input.getPacmanDistanceToNearestPowerPill();
 		if (dstAux != -1) pacmanDistancePowerPill = dstAux;
 		
-		mem.put("distanceToPacmanConfidence", distToPacmanConfidence);
+		mem.put("distanceToPacManConfidence", distToPacmanConfidence);
 		mem.put("pacManDistancePowerPillConfidence", pacmanDistToPowerPillConfidence);
 		mem.put("pacManDistancePowerPill", pacmanDistancePowerPill);
 	}

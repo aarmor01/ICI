@@ -18,7 +18,7 @@ public class GhostsInput extends FuzzyInput {
 	private double[] lairTimes;
 
 	private double time;
-	private double score;
+	private double pills;
 
 	public GhostsInput(Game game) {
 		super(game);
@@ -30,12 +30,14 @@ public class GhostsInput extends FuzzyInput {
 		edibleTimes = new double[] { 0, 0, 0, 0 };
 		lairTimes = new double[] { 0, 0, 0, 0 };
 
+		
+		
 		for (GHOST ghost : GHOST.values()) {
 			getEdibleTimes(ghost);
 			getLairTimes(ghost);
 			getPacmanDistance(ghost);
 			time = game.getCurrentLevelTime();
-			score = game.getScore();
+			pills = game.getNumberOfActivePills();
 		}
 	}
 
@@ -126,7 +128,7 @@ public class GhostsInput extends FuzzyInput {
 			vars.put(ghost.name() + "lairTime", lairTimes[ghost.ordinal()]);
 		}
 
-		vars.put("score", score);
+		vars.put("numPills", pills);
 		vars.put("currentTime", time);
 
 		return vars;
