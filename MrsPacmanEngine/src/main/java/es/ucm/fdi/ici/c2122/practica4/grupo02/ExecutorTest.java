@@ -14,7 +14,7 @@ public class ExecutorTest {
         Executor executor = new Executor.Builder()
                 .setTickLimit(4000)
                 .setPacmanPO(true)
-                .setGhostPO(false)
+                .setGhostPO(true)
                 .setPacmanPOvisual(true)
                 .setGhostsPOvisual(true)
                 .setSightLimit(30)

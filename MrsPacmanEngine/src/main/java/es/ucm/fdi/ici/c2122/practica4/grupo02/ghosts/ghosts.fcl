@@ -1,5 +1,5 @@
 // Block definition (there may be more than one block per file)
-FUNCTION_BLOCK FuzzyGhosts
+FUNCTION_BLOCK FuzzyBLINKY
 
 // Define input variables
 VAR_INPUT				
@@ -163,7 +163,7 @@ END_DEFUZZIFY
 // ------
 
 // --- RULES ---
-RULEBLOCK BlinkyRules
+RULEBLOCK BLINKYRules
 	AND : MIN;			// Use 'min' for 'and' (also implicit use 'max' for 'or' to fulfill DeMorgan's Law)
 	ACT : MIN;			// Use 'min' activation method
 	ACCU : MAX;			// Use 'MAX' accumulation method (Other options PROBOR and SUM)
@@ -181,10 +181,10 @@ RULEBLOCK BlinkyRules
 	RULE 9 : IF BLINKYedibleTime IS none AND BLINKYdistanceToPacMan IS near AND distanceToPacManConfidence IS high THEN Chase IS emergency;
 	RULE 10 : IF BLINKYedibleTime IS none AND numPills IS few THEN Chase IS emergency;
 	RULE 11 : IF BLINKYedibleTime IS none AND pacManDistancePowerPill IS near AND pacManDistancePowerPillConfidence IS high THEN Runaway IS nervious;
-	RULE 12 : IF BLINKYedibleTime IS none AND currentTime IS few THEN Chase IS nervious;
-	RULE 13 : IF BLINKYedibleTime IS none AND currentTime IS few AND pacManDistancePowerPill IS near AND pacManDistancePowerPillConfidence IS high THEN Runaway IS nervious;
-	RULE 14 : IF currentTime IS few AND BLINKYedibleTime IS medium OR currentTime IS few AND BLINKYedibleTime IS high THEN Chase IS calm;
-	RULE 15 : IF currentTime IS few AND BLINKYedibleTime IS medium AND BLINKYdistanceToPacMan IS far OR currentTime IS few AND BLINKYedibleTime IS high AND BLINKYdistanceToPacMan IS far
+	RULE 12 : IF BLINKYedibleTime IS none AND currentTime IS beginning THEN Chase IS nervious;
+	RULE 13 : IF BLINKYedibleTime IS none AND currentTime IS beginning AND pacManDistancePowerPill IS near AND pacManDistancePowerPillConfidence IS high THEN Runaway IS nervious;
+	RULE 14 : IF currentTime IS beginning AND BLINKYedibleTime IS medium OR currentTime IS beginning AND BLINKYedibleTime IS high THEN Chase IS calm;
+	RULE 15 : IF currentTime IS beginning AND BLINKYedibleTime IS medium AND BLINKYdistanceToPacMan IS far OR currentTime IS beginning AND BLINKYedibleTime IS high AND BLINKYdistanceToPacMan IS far
 			THEN Chase IS nervious;
 	RULE 16 : IF BLINKYedibleTime IS none AND ((INKYedibleTime IS low OR INKYedibleTime IS medium OR INKYedibleTime IS high) OR
 		(PINKYedibleTime IS low OR PINKYedibleTime IS medium OR PINKYedibleTime IS high) OR (SUEedibleTime IS low OR SUEedibleTime IS medium OR SUEedibleTime IS high)) THEN ProtectGhosts IS emergency;
@@ -200,8 +200,175 @@ RULEBLOCK BlinkyRules
 	RULE 22 : IF BLINKYedibleTime IS low AND ((INKYedibleTime IS low OR INKYedibleTime IS medium OR INKYedibleTime IS high) OR
 		(PINKYedibleTime IS low OR PINKYedibleTime IS medium OR PINKYedibleTime IS high) OR (SUEedibleTime IS low OR SUEedibleTime IS medium OR SUEedibleTime IS high)) THEN Runaway IS nervious;
 END_RULEBLOCK
+// ------
 
-RULEBLOCK InkyRules
+END_FUNCTION_BLOCK
+
+FUNCTION_BLOCK FuzzyINKY
+
+// Define input variables
+VAR_INPUT				
+	BLINKYedibleTime : REAL;
+	PINKYedibleTime : REAL;
+	INKYedibleTime : REAL;
+	SUEedibleTime : REAL;
+	
+	BLINKYlairTime : REAL;
+	PINKYlairTime : REAL;
+	INKYlairTime : REAL;
+	SUElairTime : REAL;
+	
+	BLINKYdistanceToPacMan : REAL;
+	PINKYdistanceToPacMan : REAL;
+	INKYdistanceToPacMan : REAL;
+	SUEdistanceToPacMan : REAL;
+	
+	distanceToPacManConfidence : REAL;
+	
+	pacManDistancePowerPill : REAL;
+	pacManDistancePowerPillConfidence : REAL;
+	
+	numPills : REAL;
+	currentTime : REAL;
+END_VAR
+
+// Define output variables
+VAR_OUTPUT				
+	Runaway : REAL;
+	Chase: REAL;
+	ProtectGhosts: REAL;
+END_VAR
+
+// --- INPUT VALUES GRAPHS ---
+FUZZIFY BLINKYedibleTime	// Fuzzify input variable 'service': {'poor', 'good' , 'excellent'}
+	TERM none := (-50, 0) (0, 1) (0, 0);
+	TERM low := (0, 0) (1, 1) (30, 1) (50, 0); 
+	TERM medium := gauss 70 30;
+	TERM high := (70, 0) (110, 1) (200, 1);
+END_FUZZIFY
+FUZZIFY PINKYedibleTime		// Fuzzify input variable 'service': {'poor', 'good' , 'excellent'}
+	TERM none := (-50, 0) (0, 1) (0, 0);
+	TERM low := (0, 0) (1, 1) (30, 1) (50, 0); 
+	TERM medium := gauss 70 30;
+	TERM high := (70, 0) (110, 1) (200, 1);
+END_FUZZIFY
+FUZZIFY INKYedibleTime   	// Fuzzify input variable 'service': {'poor', 'good' , 'excellent'}
+	TERM none := (-50, 0) (0, 1) (0, 0);
+	TERM low := (0, 0) (1, 1) (30, 1) (50, 0); 
+	TERM medium := gauss 70 30;
+	TERM high := (70, 0) (110, 1) (200, 1);
+END_FUZZIFY
+FUZZIFY SUEedibleTime		// Fuzzify input variable 'service': {'poor', 'good' , 'excellent'}
+	TERM none := (-50, 0) (0, 1) (0, 0);
+	TERM low := (0, 0) (1, 1) (30, 1) (50, 0); 
+	TERM medium := gauss 70 30;
+	TERM high := (70, 0) (110, 1) (200, 1);
+END_FUZZIFY
+
+FUZZIFY BLINKYlairTime	// Fuzzify input variable 'service': {'poor', 'good' , 'excellent'}
+    TERM none := (-10, 0) (0, 1) (0, 0);
+	TERM low := (0, 0) (1, 1) (10, 1) (20, 0); 
+	TERM medium := gauss 20 5;
+	TERM high := (20, 0) (35, 1) (40, 1);
+END_FUZZIFY
+FUZZIFY PINKYlairTime		// Fuzzify input variable 'service': {'poor', 'good' , 'excellent'}
+	TERM none := (-10, 0) (0, 1) (0, 0);
+	TERM low := (0, 0) (1, 1) (10, 1) (20, 0); 
+	TERM medium := gauss 20 5;
+	TERM high := (20, 0) (35, 1) (40, 1);
+END_FUZZIFY
+FUZZIFY INKYlairTime		// Fuzzify input variable 'service': {'poor', 'good' , 'excellent'}
+	TERM none := (-10, 0) (0, 1) (0, 0);
+	TERM low := (0, 0) (1, 1) (10, 1) (20, 0); 
+	TERM medium := gauss 20 5;
+	TERM high := (20, 0) (35, 1) (40, 1);
+END_FUZZIFY
+FUZZIFY SUElairTime		// Fuzzify input variable 'service': {'poor', 'good' , 'excellent'}
+	TERM none := (-10, 0) (0, 1) (0, 0);
+	TERM low := (0, 0) (1, 1) (10, 1) (20, 0); 
+	TERM medium := gauss 20 5;
+	TERM high := (20, 0) (35, 1) (40, 1);
+END_FUZZIFY
+
+FUZZIFY BLINKYdistanceToPacMan			// Fuzzify input variable 'service': {'poor', 'good' , 'excellent'}
+	TERM near := (0, 1) (60, 0) ; 
+	TERM medium := gauss 75 25;
+	TERM far := (90, 0) (150, 1) (200, 1);
+END_FUZZIFY
+FUZZIFY PINKYdistanceToPacMan			// Fuzzify input variable 'service': {'poor', 'good' , 'excellent'}
+	TERM near := (0, 1) (60, 0); 
+	TERM medium := gauss 75 25;
+	TERM far := (90, 0) (150, 1) (200, 1);
+END_FUZZIFY
+FUZZIFY INKYdistanceToPacMan			// Fuzzify input variable 'service': {'poor', 'good' , 'excellent'}
+	TERM near := (0, 1) (60, 0) ; 
+	TERM medium := gauss 75 25;
+	TERM far := (90, 0) (150, 1) (200, 1);
+END_FUZZIFY
+FUZZIFY SUEdistanceToPacMan			// Fuzzify input variable 'service': {'poor', 'good' , 'excellent'}
+	TERM near := (0, 1) (60, 0) ; 
+	TERM medium := gauss 75 25;
+	TERM far := (90, 0) (150, 1) (200, 1);
+END_FUZZIFY
+
+FUZZIFY distanceToPacManConfidence			// Fuzzify input variable 'service': {'poor', 'good' , 'excellent'}
+	TERM low := (0,1)(25,1)(50,0) ; 
+	TERM medium := gauss 50 25;
+	TERM high := (50,0)(75,1)(100,1);
+END_FUZZIFY
+
+FUZZIFY pacManDistancePowerPill			// Fuzzify input variable 'service': {'poor', 'good' , 'excellent'}
+	TERM near := (0, 1) (60, 0) ; 
+	TERM medium := gauss 75 25;
+	TERM far := (90, 0) (150, 1) (200, 1);
+END_FUZZIFY
+FUZZIFY pacManDistancePowerPillConfidence			// Fuzzify input variable 'service': {'poor', 'good' , 'excellent'}
+	TERM low := (0,1)(25,1)(50,0) ; 
+	TERM medium := gauss 50 25;
+	TERM high := (50,0)(75,1)(100,1);
+END_FUZZIFY
+
+
+FUZZIFY numPills			// Fuzzify input variable 'service': {'poor', 'good' , 'excellent'}
+	TERM few := (0, 1) (25, 0) ; 
+	TERM standard := gauss 50 25;
+	TERM aLot := (70, 0) (100, 1) (200, 1);
+END_FUZZIFY
+FUZZIFY currentTime			// Fuzzify input variable 'service': {'poor', 'good' , 'excellent'}
+	TERM beginning := (0, 1) (500, 0) ; 
+	TERM mid := gauss 1000 750;
+	TERM end := (1500, 0) (2000, 1) (10000, 1);
+END_FUZZIFY
+// ------
+
+// --- OUTPUT VALUES GRAPHS ---
+DEFUZZIFY Runaway			// Defzzzify output variable 'tip' : {'cheap', 'average', 'generous' }
+	TERM calm := (0,1) (5,1) (15,0);
+	TERM nervious := gauss 15 5;
+	TERM emergency := (15,0) (25,1) (30,1);
+	METHOD : COG;		// Use 'Center Of Gravity' defuzzification method
+	DEFAULT := 0;		// Default value is 0 (if no rule activates defuzzifier)
+END_DEFUZZIFY
+
+DEFUZZIFY Chase			// Defzzzify output variable 'tip' : {'cheap', 'average', 'generous' }
+	TERM calm := (0,1) (5,1) (15,0);
+	TERM nervious := gauss 15 5;
+	TERM emergency := (15,0) (25,1) (30,1);
+	METHOD : COG;		// Use 'Center Of Gravity' defuzzification method
+	DEFAULT := 0;		// Default value is 0 (if no rule activates defuzzifier)
+END_DEFUZZIFY
+
+DEFUZZIFY ProtectGhosts			// Defzzzify output variable 'tip' : {'cheap', 'average', 'generous' }
+	TERM calm := (0,1) (5,1) (15,0);
+	TERM nervious := gauss 15 5;
+	TERM emergency := (15,0) (25,1) (30,1);
+	METHOD : COG;		// Use 'Center Of Gravity' defuzzification method
+	DEFAULT := 0;		// Default value is 0 (if no rule activates defuzzifier)
+END_DEFUZZIFY
+// ------
+
+// --- RULES ---
+RULEBLOCK INKYRules
 	AND : MIN;			// Use 'min' for 'and' (also implicit use 'max' for 'or' to fulfill DeMorgan's Law)
 	ACT : MIN;			// Use 'min' activation method
 	ACCU : MAX;			// Use 'MAX' accumulation method (Other options PROBOR and SUM)
@@ -219,10 +386,10 @@ RULEBLOCK InkyRules
 	RULE 9 : IF INKYedibleTime IS none AND INKYdistanceToPacMan IS near AND distanceToPacManConfidence IS high THEN Chase IS emergency;
 	RULE 10 : IF INKYedibleTime IS none AND numPills IS few THEN Chase IS emergency;
 	RULE 11 : IF INKYedibleTime IS none AND pacManDistancePowerPill IS near AND pacManDistancePowerPillConfidence IS high THEN Runaway IS nervious;
-	RULE 12 : IF INKYedibleTime IS none AND currentTime IS few THEN Chase IS nervious;
-	RULE 13 : IF INKYedibleTime IS none AND currentTime IS few AND pacManDistancePowerPill IS near AND pacManDistancePowerPillConfidence IS high THEN Runaway IS nervious;
-	RULE 14 : IF currentTime IS few AND INKYedibleTime IS medium OR currentTime IS few AND INKYedibleTime IS high THEN Chase IS calm;
-	RULE 15 : IF currentTime IS few AND INKYedibleTime IS medium AND INKYdistanceToPacMan IS far OR currentTime IS few AND INKYedibleTime IS high AND INKYdistanceToPacMan IS far
+	RULE 12 : IF INKYedibleTime IS none AND currentTime IS beginning THEN Chase IS nervious;
+	RULE 13 : IF INKYedibleTime IS none AND currentTime IS beginning AND pacManDistancePowerPill IS near AND pacManDistancePowerPillConfidence IS high THEN Runaway IS nervious;
+	RULE 14 : IF currentTime IS beginning AND INKYedibleTime IS medium OR currentTime IS beginning AND INKYedibleTime IS high THEN Chase IS calm;
+	RULE 15 : IF currentTime IS beginning AND INKYedibleTime IS medium AND INKYdistanceToPacMan IS far OR currentTime IS beginning AND INKYedibleTime IS high AND INKYdistanceToPacMan IS far
 			THEN Chase IS nervious;
 	RULE 16 : IF INKYedibleTime IS none AND ((BLINKYedibleTime IS low OR BLINKYedibleTime IS medium OR BLINKYedibleTime IS high) OR
 		(PINKYedibleTime IS low OR PINKYedibleTime IS medium OR PINKYedibleTime IS high) OR (SUEedibleTime IS low OR SUEedibleTime IS medium OR SUEedibleTime IS high)) THEN ProtectGhosts IS emergency;
@@ -238,8 +405,175 @@ RULEBLOCK InkyRules
 	RULE 22 : IF INKYedibleTime IS low AND ((BLINKYedibleTime IS low OR BLINKYedibleTime IS medium OR BLINKYedibleTime IS high) OR
 		(PINKYedibleTime IS low OR PINKYedibleTime IS medium OR PINKYedibleTime IS high) OR (SUEedibleTime IS low OR SUEedibleTime IS medium OR SUEedibleTime IS high)) THEN Runaway IS nervious;
 END_RULEBLOCK
+// ------
 
-RULEBLOCK PinkyRules
+END_FUNCTION_BLOCK
+
+FUNCTION_BLOCK FuzzyPINKY
+
+// Define input variables
+VAR_INPUT				
+	BLINKYedibleTime : REAL;
+	PINKYedibleTime : REAL;
+	INKYedibleTime : REAL;
+	SUEedibleTime : REAL;
+	
+	BLINKYlairTime : REAL;
+	PINKYlairTime : REAL;
+	INKYlairTime : REAL;
+	SUElairTime : REAL;
+	
+	BLINKYdistanceToPacMan : REAL;
+	PINKYdistanceToPacMan : REAL;
+	INKYdistanceToPacMan : REAL;
+	SUEdistanceToPacMan : REAL;
+	
+	distanceToPacManConfidence : REAL;
+	
+	pacManDistancePowerPill : REAL;
+	pacManDistancePowerPillConfidence : REAL;
+	
+	numPills : REAL;
+	currentTime : REAL;
+END_VAR
+
+// Define output variables
+VAR_OUTPUT				
+	Runaway : REAL;
+	Chase: REAL;
+	ProtectGhosts: REAL;
+END_VAR
+
+// --- INPUT VALUES GRAPHS ---
+FUZZIFY BLINKYedibleTime	// Fuzzify input variable 'service': {'poor', 'good' , 'excellent'}
+	TERM none := (-50, 0) (0, 1) (0, 0);
+	TERM low := (0, 0) (1, 1) (30, 1) (50, 0); 
+	TERM medium := gauss 70 30;
+	TERM high := (70, 0) (110, 1) (200, 1);
+END_FUZZIFY
+FUZZIFY PINKYedibleTime		// Fuzzify input variable 'service': {'poor', 'good' , 'excellent'}
+	TERM none := (-50, 0) (0, 1) (0, 0);
+	TERM low := (0, 0) (1, 1) (30, 1) (50, 0); 
+	TERM medium := gauss 70 30;
+	TERM high := (70, 0) (110, 1) (200, 1);
+END_FUZZIFY
+FUZZIFY INKYedibleTime   	// Fuzzify input variable 'service': {'poor', 'good' , 'excellent'}
+	TERM none := (-50, 0) (0, 1) (0, 0);
+	TERM low := (0, 0) (1, 1) (30, 1) (50, 0); 
+	TERM medium := gauss 70 30;
+	TERM high := (70, 0) (110, 1) (200, 1);
+END_FUZZIFY
+FUZZIFY SUEedibleTime		// Fuzzify input variable 'service': {'poor', 'good' , 'excellent'}
+	TERM none := (-50, 0) (0, 1) (0, 0);
+	TERM low := (0, 0) (1, 1) (30, 1) (50, 0); 
+	TERM medium := gauss 70 30;
+	TERM high := (70, 0) (110, 1) (200, 1);
+END_FUZZIFY
+
+FUZZIFY BLINKYlairTime	// Fuzzify input variable 'service': {'poor', 'good' , 'excellent'}
+    TERM none := (-10, 0) (0, 1) (0, 0);
+	TERM low := (0, 0) (1, 1) (10, 1) (20, 0); 
+	TERM medium := gauss 20 5;
+	TERM high := (20, 0) (35, 1) (40, 1);
+END_FUZZIFY
+FUZZIFY PINKYlairTime		// Fuzzify input variable 'service': {'poor', 'good' , 'excellent'}
+	TERM none := (-10, 0) (0, 1) (0, 0);
+	TERM low := (0, 0) (1, 1) (10, 1) (20, 0); 
+	TERM medium := gauss 20 5;
+	TERM high := (20, 0) (35, 1) (40, 1);
+END_FUZZIFY
+FUZZIFY INKYlairTime		// Fuzzify input variable 'service': {'poor', 'good' , 'excellent'}
+	TERM none := (-10, 0) (0, 1) (0, 0);
+	TERM low := (0, 0) (1, 1) (10, 1) (20, 0); 
+	TERM medium := gauss 20 5;
+	TERM high := (20, 0) (35, 1) (40, 1);
+END_FUZZIFY
+FUZZIFY SUElairTime		// Fuzzify input variable 'service': {'poor', 'good' , 'excellent'}
+	TERM none := (-10, 0) (0, 1) (0, 0);
+	TERM low := (0, 0) (1, 1) (10, 1) (20, 0); 
+	TERM medium := gauss 20 5;
+	TERM high := (20, 0) (35, 1) (40, 1);
+END_FUZZIFY
+
+FUZZIFY BLINKYdistanceToPacMan			// Fuzzify input variable 'service': {'poor', 'good' , 'excellent'}
+	TERM near := (0, 1) (60, 0) ; 
+	TERM medium := gauss 75 25;
+	TERM far := (90, 0) (150, 1) (200, 1);
+END_FUZZIFY
+FUZZIFY PINKYdistanceToPacMan			// Fuzzify input variable 'service': {'poor', 'good' , 'excellent'}
+	TERM near := (0, 1) (60, 0); 
+	TERM medium := gauss 75 25;
+	TERM far := (90, 0) (150, 1) (200, 1);
+END_FUZZIFY
+FUZZIFY INKYdistanceToPacMan			// Fuzzify input variable 'service': {'poor', 'good' , 'excellent'}
+	TERM near := (0, 1) (60, 0) ; 
+	TERM medium := gauss 75 25;
+	TERM far := (90, 0) (150, 1) (200, 1);
+END_FUZZIFY
+FUZZIFY SUEdistanceToPacMan			// Fuzzify input variable 'service': {'poor', 'good' , 'excellent'}
+	TERM near := (0, 1) (60, 0) ; 
+	TERM medium := gauss 75 25;
+	TERM far := (90, 0) (150, 1) (200, 1);
+END_FUZZIFY
+
+FUZZIFY distanceToPacManConfidence			// Fuzzify input variable 'service': {'poor', 'good' , 'excellent'}
+	TERM low := (0,1)(25,1)(50,0) ; 
+	TERM medium := gauss 50 25;
+	TERM high := (50,0)(75,1)(100,1);
+END_FUZZIFY
+
+FUZZIFY pacManDistancePowerPill			// Fuzzify input variable 'service': {'poor', 'good' , 'excellent'}
+	TERM near := (0, 1) (60, 0) ; 
+	TERM medium := gauss 75 25;
+	TERM far := (90, 0) (150, 1) (200, 1);
+END_FUZZIFY
+FUZZIFY pacManDistancePowerPillConfidence			// Fuzzify input variable 'service': {'poor', 'good' , 'excellent'}
+	TERM low := (0,1)(25,1)(50,0) ; 
+	TERM medium := gauss 50 25;
+	TERM high := (50,0)(75,1)(100,1);
+END_FUZZIFY
+
+
+FUZZIFY numPills			// Fuzzify input variable 'service': {'poor', 'good' , 'excellent'}
+	TERM few := (0, 1) (25, 0) ; 
+	TERM standard := gauss 50 25;
+	TERM aLot := (70, 0) (100, 1) (200, 1);
+END_FUZZIFY
+FUZZIFY currentTime			// Fuzzify input variable 'service': {'poor', 'good' , 'excellent'}
+	TERM beginning := (0, 1) (500, 0) ; 
+	TERM mid := gauss 1000 750;
+	TERM end := (1500, 0) (2000, 1) (10000, 1);
+END_FUZZIFY
+// ------
+
+// --- OUTPUT VALUES GRAPHS ---
+DEFUZZIFY Runaway			// Defzzzify output variable 'tip' : {'cheap', 'average', 'generous' }
+	TERM calm := (0,1) (5,1) (15,0);
+	TERM nervious := gauss 15 5;
+	TERM emergency := (15,0) (25,1) (30,1);
+	METHOD : COG;		// Use 'Center Of Gravity' defuzzification method
+	DEFAULT := 0;		// Default value is 0 (if no rule activates defuzzifier)
+END_DEFUZZIFY
+
+DEFUZZIFY Chase			// Defzzzify output variable 'tip' : {'cheap', 'average', 'generous' }
+	TERM calm := (0,1) (5,1) (15,0);
+	TERM nervious := gauss 15 5;
+	TERM emergency := (15,0) (25,1) (30,1);
+	METHOD : COG;		// Use 'Center Of Gravity' defuzzification method
+	DEFAULT := 0;		// Default value is 0 (if no rule activates defuzzifier)
+END_DEFUZZIFY
+
+DEFUZZIFY ProtectGhosts			// Defzzzify output variable 'tip' : {'cheap', 'average', 'generous' }
+	TERM calm := (0,1) (5,1) (15,0);
+	TERM nervious := gauss 15 5;
+	TERM emergency := (15,0) (25,1) (30,1);
+	METHOD : COG;		// Use 'Center Of Gravity' defuzzification method
+	DEFAULT := 0;		// Default value is 0 (if no rule activates defuzzifier)
+END_DEFUZZIFY
+// ------
+
+// --- RULES ---
+RULEBLOCK PINKYRules
 	AND : MIN;			// Use 'min' for 'and' (also implicit use 'max' for 'or' to fulfill DeMorgan's Law)
 	ACT : MIN;			// Use 'min' activation method
 	ACCU : MAX;			// Use 'MAX' accumulation method (Other options PROBOR and SUM)
@@ -257,10 +591,10 @@ RULEBLOCK PinkyRules
 	RULE 9 : IF PINKYedibleTime IS none AND PINKYdistanceToPacMan IS near AND distanceToPacManConfidence IS high THEN Chase IS emergency;
 	RULE 10 : IF PINKYedibleTime IS none AND numPills IS few THEN Chase IS emergency;
 	RULE 11 : IF PINKYedibleTime IS none AND pacManDistancePowerPill IS near AND pacManDistancePowerPillConfidence IS high THEN Runaway IS nervious;
-	RULE 12 : IF PINKYedibleTime IS none AND currentTime IS few THEN Chase IS nervious;
-	RULE 13 : IF PINKYedibleTime IS none AND currentTime IS few AND pacManDistancePowerPill IS near AND pacManDistancePowerPillConfidence IS high THEN Runaway IS nervious;
-	RULE 14 : IF currentTime IS few AND PINKYedibleTime IS medium OR currentTime IS few AND PINKYedibleTime IS high THEN Chase IS calm;
-	RULE 15 : IF currentTime IS few AND PINKYedibleTime IS medium AND PINKYdistanceToPacMan IS far OR currentTime IS few AND PINKYedibleTime IS high AND PINKYdistanceToPacMan IS far
+	RULE 12 : IF PINKYedibleTime IS none AND currentTime IS beginning THEN Chase IS nervious;
+	RULE 13 : IF PINKYedibleTime IS none AND currentTime IS beginning AND pacManDistancePowerPill IS near AND pacManDistancePowerPillConfidence IS high THEN Runaway IS nervious;
+	RULE 14 : IF currentTime IS beginning AND PINKYedibleTime IS medium OR currentTime IS beginning AND PINKYedibleTime IS high THEN Chase IS calm;
+	RULE 15 : IF currentTime IS beginning AND PINKYedibleTime IS medium AND PINKYdistanceToPacMan IS far OR currentTime IS beginning AND PINKYedibleTime IS high AND PINKYdistanceToPacMan IS far
 			THEN Chase IS nervious;
 	RULE 16 : IF PINKYedibleTime IS none AND ((BLINKYedibleTime IS low OR BLINKYedibleTime IS medium OR BLINKYedibleTime IS high) OR
 		(INKYedibleTime IS low OR INKYedibleTime IS medium OR INKYedibleTime IS high) OR (SUEedibleTime IS low OR SUEedibleTime IS medium OR SUEedibleTime IS high)) THEN ProtectGhosts IS emergency;
@@ -276,8 +610,175 @@ RULEBLOCK PinkyRules
 	RULE 22 : IF PINKYedibleTime IS low AND ((BLINKYedibleTime IS low OR BLINKYedibleTime IS medium OR BLINKYedibleTime IS high) OR
 		(INKYedibleTime IS low OR INKYedibleTime IS medium OR INKYedibleTime IS high) OR (SUEedibleTime IS low OR SUEedibleTime IS medium OR SUEedibleTime IS high)) THEN Runaway IS nervious;
 END_RULEBLOCK
+// ------
 
-RULEBLOCK SueRules
+END_FUNCTION_BLOCK
+
+FUNCTION_BLOCK FuzzySUE
+
+// Define input variables
+VAR_INPUT				
+	BLINKYedibleTime : REAL;
+	PINKYedibleTime : REAL;
+	INKYedibleTime : REAL;
+	SUEedibleTime : REAL;
+	
+	BLINKYlairTime : REAL;
+	PINKYlairTime : REAL;
+	INKYlairTime : REAL;
+	SUElairTime : REAL;
+	
+	BLINKYdistanceToPacMan : REAL;
+	PINKYdistanceToPacMan : REAL;
+	INKYdistanceToPacMan : REAL;
+	SUEdistanceToPacMan : REAL;
+	
+	distanceToPacManConfidence : REAL;
+	
+	pacManDistancePowerPill : REAL;
+	pacManDistancePowerPillConfidence : REAL;
+	
+	numPills : REAL;
+	currentTime : REAL;
+END_VAR
+
+// Define output variables
+VAR_OUTPUT				
+	Runaway : REAL;
+	Chase: REAL;
+	ProtectGhosts: REAL;
+END_VAR
+
+// --- INPUT VALUES GRAPHS ---
+FUZZIFY BLINKYedibleTime	// Fuzzify input variable 'service': {'poor', 'good' , 'excellent'}
+	TERM none := (-50, 0) (0, 1) (0, 0);
+	TERM low := (0, 0) (1, 1) (30, 1) (50, 0); 
+	TERM medium := gauss 70 30;
+	TERM high := (70, 0) (110, 1) (200, 1);
+END_FUZZIFY
+FUZZIFY PINKYedibleTime		// Fuzzify input variable 'service': {'poor', 'good' , 'excellent'}
+	TERM none := (-50, 0) (0, 1) (0, 0);
+	TERM low := (0, 0) (1, 1) (30, 1) (50, 0); 
+	TERM medium := gauss 70 30;
+	TERM high := (70, 0) (110, 1) (200, 1);
+END_FUZZIFY
+FUZZIFY INKYedibleTime   	// Fuzzify input variable 'service': {'poor', 'good' , 'excellent'}
+	TERM none := (-50, 0) (0, 1) (0, 0);
+	TERM low := (0, 0) (1, 1) (30, 1) (50, 0); 
+	TERM medium := gauss 70 30;
+	TERM high := (70, 0) (110, 1) (200, 1);
+END_FUZZIFY
+FUZZIFY SUEedibleTime		// Fuzzify input variable 'service': {'poor', 'good' , 'excellent'}
+	TERM none := (-50, 0) (0, 1) (0, 0);
+	TERM low := (0, 0) (1, 1) (30, 1) (50, 0); 
+	TERM medium := gauss 70 30;
+	TERM high := (70, 0) (110, 1) (200, 1);
+END_FUZZIFY
+
+FUZZIFY BLINKYlairTime	// Fuzzify input variable 'service': {'poor', 'good' , 'excellent'}
+    TERM none := (-10, 0) (0, 1) (0, 0);
+	TERM low := (0, 0) (1, 1) (10, 1) (20, 0); 
+	TERM medium := gauss 20 5;
+	TERM high := (20, 0) (35, 1) (40, 1);
+END_FUZZIFY
+FUZZIFY PINKYlairTime		// Fuzzify input variable 'service': {'poor', 'good' , 'excellent'}
+	TERM none := (-10, 0) (0, 1) (0, 0);
+	TERM low := (0, 0) (1, 1) (10, 1) (20, 0); 
+	TERM medium := gauss 20 5;
+	TERM high := (20, 0) (35, 1) (40, 1);
+END_FUZZIFY
+FUZZIFY INKYlairTime		// Fuzzify input variable 'service': {'poor', 'good' , 'excellent'}
+	TERM none := (-10, 0) (0, 1) (0, 0);
+	TERM low := (0, 0) (1, 1) (10, 1) (20, 0); 
+	TERM medium := gauss 20 5;
+	TERM high := (20, 0) (35, 1) (40, 1);
+END_FUZZIFY
+FUZZIFY SUElairTime		// Fuzzify input variable 'service': {'poor', 'good' , 'excellent'}
+	TERM none := (-10, 0) (0, 1) (0, 0);
+	TERM low := (0, 0) (1, 1) (10, 1) (20, 0); 
+	TERM medium := gauss 20 5;
+	TERM high := (20, 0) (35, 1) (40, 1);
+END_FUZZIFY
+
+FUZZIFY BLINKYdistanceToPacMan			// Fuzzify input variable 'service': {'poor', 'good' , 'excellent'}
+	TERM near := (0, 1) (60, 0) ; 
+	TERM medium := gauss 75 25;
+	TERM far := (90, 0) (150, 1) (200, 1);
+END_FUZZIFY
+FUZZIFY PINKYdistanceToPacMan			// Fuzzify input variable 'service': {'poor', 'good' , 'excellent'}
+	TERM near := (0, 1) (60, 0); 
+	TERM medium := gauss 75 25;
+	TERM far := (90, 0) (150, 1) (200, 1);
+END_FUZZIFY
+FUZZIFY INKYdistanceToPacMan			// Fuzzify input variable 'service': {'poor', 'good' , 'excellent'}
+	TERM near := (0, 1) (60, 0) ; 
+	TERM medium := gauss 75 25;
+	TERM far := (90, 0) (150, 1) (200, 1);
+END_FUZZIFY
+FUZZIFY SUEdistanceToPacMan			// Fuzzify input variable 'service': {'poor', 'good' , 'excellent'}
+	TERM near := (0, 1) (60, 0) ; 
+	TERM medium := gauss 75 25;
+	TERM far := (90, 0) (150, 1) (200, 1);
+END_FUZZIFY
+
+FUZZIFY distanceToPacManConfidence			// Fuzzify input variable 'service': {'poor', 'good' , 'excellent'}
+	TERM low := (0,1)(25,1)(50,0) ; 
+	TERM medium := gauss 50 25;
+	TERM high := (50,0)(75,1)(100,1);
+END_FUZZIFY
+
+FUZZIFY pacManDistancePowerPill			// Fuzzify input variable 'service': {'poor', 'good' , 'excellent'}
+	TERM near := (0, 1) (60, 0) ; 
+	TERM medium := gauss 75 25;
+	TERM far := (90, 0) (150, 1) (200, 1);
+END_FUZZIFY
+FUZZIFY pacManDistancePowerPillConfidence			// Fuzzify input variable 'service': {'poor', 'good' , 'excellent'}
+	TERM low := (0,1)(25,1)(50,0) ; 
+	TERM medium := gauss 50 25;
+	TERM high := (50,0)(75,1)(100,1);
+END_FUZZIFY
+
+
+FUZZIFY numPills			// Fuzzify input variable 'service': {'poor', 'good' , 'excellent'}
+	TERM few := (0, 1) (25, 0) ; 
+	TERM standard := gauss 50 25;
+	TERM aLot := (70, 0) (100, 1) (200, 1);
+END_FUZZIFY
+FUZZIFY currentTime			// Fuzzify input variable 'service': {'poor', 'good' , 'excellent'}
+	TERM beginning := (0, 1) (500, 0) ; 
+	TERM mid := gauss 1000 750;
+	TERM end := (1500, 0) (2000, 1) (10000, 1);
+END_FUZZIFY
+// ------
+
+// --- OUTPUT VALUES GRAPHS ---
+DEFUZZIFY Runaway			// Defzzzify output variable 'tip' : {'cheap', 'average', 'generous' }
+	TERM calm := (0,1) (5,1) (15,0);
+	TERM nervious := gauss 15 5;
+	TERM emergency := (15,0) (25,1) (30,1);
+	METHOD : COG;		// Use 'Center Of Gravity' defuzzification method
+	DEFAULT := 0;		// Default value is 0 (if no rule activates defuzzifier)
+END_DEFUZZIFY
+
+DEFUZZIFY Chase			// Defzzzify output variable 'tip' : {'cheap', 'average', 'generous' }
+	TERM calm := (0,1) (5,1) (15,0);
+	TERM nervious := gauss 15 5;
+	TERM emergency := (15,0) (25,1) (30,1);
+	METHOD : COG;		// Use 'Center Of Gravity' defuzzification method
+	DEFAULT := 0;		// Default value is 0 (if no rule activates defuzzifier)
+END_DEFUZZIFY
+
+DEFUZZIFY ProtectGhosts			// Defzzzify output variable 'tip' : {'cheap', 'average', 'generous' }
+	TERM calm := (0,1) (5,1) (15,0);
+	TERM nervious := gauss 15 5;
+	TERM emergency := (15,0) (25,1) (30,1);
+	METHOD : COG;		// Use 'Center Of Gravity' defuzzification method
+	DEFAULT := 0;		// Default value is 0 (if no rule activates defuzzifier)
+END_DEFUZZIFY
+// ------
+
+// --- RULES ---
+RULEBLOCK SUERules
 	AND : MIN;			// Use 'min' for 'and' (also implicit use 'max' for 'or' to fulfill DeMorgan's Law)
 	ACT : MIN;			// Use 'min' activation method
 	ACCU : MAX;			// Use 'MAX' accumulation method (Other options PROBOR and SUM)
@@ -295,10 +796,10 @@ RULEBLOCK SueRules
 	RULE 9 : IF SUEedibleTime IS none AND SUEdistanceToPacMan IS near AND distanceToPacManConfidence IS high THEN Chase IS emergency;
 	RULE 10 : IF SUEedibleTime IS none AND numPills IS few THEN Chase IS emergency;
 	RULE 11 : IF SUEedibleTime IS none AND pacManDistancePowerPill IS near AND pacManDistancePowerPillConfidence IS high THEN Runaway IS nervious;
-	RULE 12 : IF SUEedibleTime IS none AND currentTime IS few THEN Chase IS nervious;
-	RULE 13 : IF SUEedibleTime IS none AND currentTime IS few AND pacManDistancePowerPill IS near AND pacManDistancePowerPillConfidence IS high THEN Runaway IS nervious;
-	RULE 14 : IF currentTime IS few AND SUEedibleTime IS medium OR currentTime IS few AND SUEedibleTime IS high THEN Chase IS calm;
-	RULE 15 : IF currentTime IS few AND SUEedibleTime IS medium AND SUEdistanceToPacMan IS far OR currentTime IS few AND SUEedibleTime IS high AND SUEdistanceToPacMan IS far
+	RULE 12 : IF SUEedibleTime IS none AND currentTime IS beginning THEN Chase IS nervious;
+	RULE 13 : IF SUEedibleTime IS none AND currentTime IS beginning AND pacManDistancePowerPill IS near AND pacManDistancePowerPillConfidence IS high THEN Runaway IS nervious;
+	RULE 14 : IF currentTime IS beginning AND SUEedibleTime IS medium OR currentTime IS beginning AND SUEedibleTime IS high THEN Chase IS calm;
+	RULE 15 : IF currentTime IS beginning AND SUEedibleTime IS medium AND SUEdistanceToPacMan IS far OR currentTime IS beginning AND SUEedibleTime IS high AND SUEdistanceToPacMan IS far
 			THEN Chase IS nervious;
 	RULE 16 : IF SUEedibleTime IS none AND ((INKYedibleTime IS low OR INKYedibleTime IS medium OR INKYedibleTime IS high) OR
 		(PINKYedibleTime IS low OR PINKYedibleTime IS medium OR PINKYedibleTime IS high) OR (BLINKYedibleTime IS low OR BLINKYedibleTime IS medium OR BLINKYedibleTime IS high)) THEN ProtectGhosts IS emergency;
@@ -317,4 +818,3 @@ END_RULEBLOCK
 // ------
 
 END_FUNCTION_BLOCK
-

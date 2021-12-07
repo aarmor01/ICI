@@ -34,17 +34,17 @@ public class Ghosts extends GhostController {
 			ghostsFuzzyMemory.put(ghost, new GhostsFuzzyMemory());
 
 			Action[] actions = { new ChasePacMan(ghost, ghostsFuzzyMemory.get(ghost)),
-					new RunAwayGhosts(ghost, ghostsFuzzyMemory.get(ghost)), new ProtectGhost(ghost, ghostsFuzzyMemory.get(ghost)) };
+					new Runaway(ghost, ghostsFuzzyMemory.get(ghost)), new ProtectGhost(ghost, ghostsFuzzyMemory.get(ghost)) };
 
 			ActionSelector actionSelector = new MaxActionSelector(actions);
 
 			ghostsFuzzyEngine.put(ghost,
 					new FuzzyEngine("Ghosts" + ghost.name(),
-							GameConstants.FUZZY_PATH + "ghosts" + File.separator + "ghosts.fcl", "FuzzyGhosts",
+							GameConstants.FUZZY_PATH + "ghosts" + File.separator + "ghosts.fcl", "Fuzzy" + ghost.name(),
 							actionSelector));
 
 			if (GameConstants.DEBUG) {
-				ConsoleFuzzyEngineObserver observer = new ConsoleFuzzyEngineObserver(ghost.name(), "FuzzyGhosts");
+				ConsoleFuzzyEngineObserver observer = new ConsoleFuzzyEngineObserver(ghost.name(), ghost.name() + "Rules");
 				ghostsFuzzyEngine.get(ghost).addObserver(observer);
 			}
 		}

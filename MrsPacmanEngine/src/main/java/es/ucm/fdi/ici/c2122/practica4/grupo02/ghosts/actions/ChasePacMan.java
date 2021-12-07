@@ -29,13 +29,13 @@ public class ChasePacMan implements Action {
 		int numChoices = possibleMoves.length;
 
 		if (numChoices == 2) // if two possible moves, we go the opposite way (away instead of towards)
-			return game.getApproximateNextMoveAwayFromTarget(ghostNode, pacmanNode,
+			return game.getNextMoveAwayFromTarget(ghostNode, pacmanNode,
 					game.getGhostLastMoveMade(ghostType), DM.PATH);
 		else { // if three possible moves, we go to the one that isn't the furthest nor the closest to the Pacman
-			MOVE optimalMove = game.getApproximateNextMoveTowardsTarget(ghostNode, pacmanNode,
+			MOVE optimalMove = game.getNextMoveTowardsTarget(ghostNode, pacmanNode,
 					game.getGhostLastMoveMade(ghostType), DM.PATH);
 
-			MOVE awayMove = game.getApproximateNextMoveAwayFromTarget(ghostNode, pacmanNode,
+			MOVE awayMove = game.getNextMoveAwayFromTarget(ghostNode, pacmanNode,
 					game.getGhostLastMoveMade(ghostType), DM.PATH);
 
 			// we select the one that isn't the furthest nor the closest
@@ -61,7 +61,7 @@ public class ChasePacMan implements Action {
 			}else {
 				if (game.getDistance(game.getGhostCurrentNodeIndex(ghost), pcNode, game.getGhostLastMoveMade(ghost), DM.PATH) < 20)
 					contador++;
-				return game.getApproximateNextMoveTowardsTarget(game.getGhostCurrentNodeIndex(ghost), pcNode,
+				return game.getNextMoveTowardsTarget(game.getGhostCurrentNodeIndex(ghost), pcNode,
 						game.getGhostLastMoveMade(ghost), DM.PATH);
 			}
 		}

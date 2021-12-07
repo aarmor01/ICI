@@ -10,7 +10,7 @@ import pacman.game.Constants.DM;
 import pacman.game.Constants.MOVE;
 import pacman.game.Constants.GHOST;
 
-public class RunAwayGhosts implements Action {
+public class Runaway implements Action {
 
 	GHOST ghost;
 	GhostsFuzzyMemory mem;
@@ -18,7 +18,7 @@ public class RunAwayGhosts implements Action {
 	private Random rnd = new Random();
     private MOVE[] allMoves = MOVE.values();
     
-	public RunAwayGhosts(GHOST g, GhostsFuzzyMemory mem_) {
+	public Runaway(GHOST g, GhostsFuzzyMemory mem_) {
 		this.ghost = g;
 		this.mem = mem_;
 	}
