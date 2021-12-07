@@ -24,7 +24,6 @@ VAR_INPUT
 	pacManDistancePowerPillConfidence : REAL;
 	
 	numPills : REAL;
-	score : REAL;
 	currentTime : REAL;
 END_VAR
 
@@ -32,6 +31,7 @@ END_VAR
 VAR_OUTPUT				
 	Runaway : REAL;
 	Chase: REAL;
+	ProtectGhosts: REAL;
 END_VAR
 
 // --- INPUT VALUES GRAPHS ---
@@ -129,11 +129,6 @@ FUZZIFY numPills			// Fuzzify input variable 'service': {'poor', 'good' , 'excel
 	TERM standard := gauss 50 25;
 	TERM aLot := (70, 0) (100, 1) (200, 1);
 END_FUZZIFY
-FUZZIFY score			// Fuzzify input variable 'service': {'poor', 'good' , 'excellent'}
-	TERM few := (0, 1) (1000, 0) ; 
-	TERM standard := gauss 1750 1000;
-	TERM aLot := (2700, 0) (3200, 1) (10000, 1);
-END_FUZZIFY
 FUZZIFY currentTime			// Fuzzify input variable 'service': {'poor', 'good' , 'excellent'}
 	TERM beginning := (0, 1) (500, 0) ; 
 	TERM mid := gauss 1000 750;
@@ -157,6 +152,14 @@ DEFUZZIFY Chase			// Defzzzify output variable 'tip' : {'cheap', 'average', 'gen
 	METHOD : COG;		// Use 'Center Of Gravity' defuzzification method
 	DEFAULT := 0;		// Default value is 0 (if no rule activates defuzzifier)
 END_DEFUZZIFY
+
+DEFUZZIFY ProtectGhosts			// Defzzzify output variable 'tip' : {'cheap', 'average', 'generous' }
+	TERM calm := (0,1) (5,1) (15,0);
+	TERM nervious := gauss 15 5;
+	TERM emergency := (15,0) (25,1) (30,1);
+	METHOD : COG;		// Use 'Center Of Gravity' defuzzification method
+	DEFAULT := 0;		// Default value is 0 (if no rule activates defuzzifier)
+END_DEFUZZIFY
 // ------
 
 // --- RULES ---
@@ -165,22 +168,37 @@ RULEBLOCK BLINKYRules
 	ACT : MIN;			// Use 'min' activation method
 	ACCU : MAX;			// Use 'MAX' accumulation method (Other options PROBOR and SUM)
 
-	RULE 1 : IF BLINKYedibleTime IS true AND BLINKYdistanceToPacMan IS near AND distanceToPacManConfidence IS high THEN Runaway IS emergency;
-	RULE 2 : IF BLINKYedibleTime IS true AND BLINKYdistanceToPacMan IS near AND distanceToPacManConfidence IS high THEN Chase IS calm;
-	RULE 3 : IF BLINKYedibleTime IS false AND pacManDistancePowerPill IS near AND pacManDistancePowerPillConfidence IS high THEN Runaway IS nervious;
-	RULE 4 : IF BLINKYedibleTime IS false AND pacManDistancePowerPill IS near AND pacManDistancePowerPillConfidence IS high THEN Chase IS calm;
-	RULE 5 : IF BLINKYedibleTime IS false AND pacManDistancePowerPill IS far AND pacManDistancePowerPillConfidence IS medium AND distanceToPacManConfidence IS medium THEN Chase IS emergency;
-	RULE 6 : IF BLINKYedibleTime IS false AND pacManDistancePowerPill IS far AND pacManDistancePowerPillConfidence IS medium AND distanceToPacManConfidence IS medium THEN Runaway IS calm;
-	RULE 7 : IF BLINKYedibleTime IS false AND BLINKYdistanceToPacMan IS far THEN Chase IS nervious;
-	RULE 8 : IF BLINKYedibleTime IS false AND BLINKYdistanceToPacMan IS far THEN Runaway IS calm;
-	RULE 9 : IF BLINKYedibleTime IS false AND BLINKYdistanceToPacMan IS near AND distanceToPacManConfidence IS high THEN Chase IS emergency;
-	RULE 10 : IF BLINKYedibleTime IS false AND numPills IS few THEN Chase IS emergency;
-	RULE 11 : IF BLINKYedibleTime IS false AND score IS few THEN Chase IS nervious;
-	RULE 12 : IF BLINKYedibleTime IS false AND pacManDistancePowerPill IS near AND pacManDistancePowerPillConfidence IS high THEN Runaway IS nervious;
-	RULE 13 : IF BLINKYedibleTime IS false AND currentTime IS few THEN Chase IS nervious;
-	RULE 14 : IF BLINKYedibleTime IS false AND currentTime IS few AND pacManDistancePowerPill IS near AND pacManDistancePowerPillConfidence IS high THEN Runaway IS nervious;
-	RULE 15 : IF currentTime IS few AND BLINKYedibleTime IS true THEN Chase IS calm;
-	RULE 16 : IF currentTime IS few AND BLINKYedibleTime IS true AND BLINKYdistanceToPacMan IS far  THEN Chase IS nervious;
+	RULE 1 : IF BLINKYedibleTime IS medium AND BLINKYdistanceToPacMan IS near AND distanceToPacManConfidence IS high OR
+			BLINKYedibleTime IS high AND BLINKYdistanceToPacMan IS near AND distanceToPacManConfidence IS high THEN Runaway IS emergency;
+	RULE 2 : IF BLINKYedibleTime IS medium AND BLINKYdistanceToPacMan IS near AND distanceToPacManConfidence IS high OR
+			BLINKYedibleTime IS high AND BLINKYdistanceToPacMan IS near AND distanceToPacManConfidence IS high THEN Chase IS calm;
+	RULE 3 : IF BLINKYedibleTime IS none AND pacManDistancePowerPill IS near AND pacManDistancePowerPillConfidence IS high THEN Runaway IS nervious;
+	RULE 4 : IF BLINKYedibleTime IS none AND pacManDistancePowerPill IS near AND pacManDistancePowerPillConfidence IS high THEN Chase IS calm;
+	RULE 5 : IF BLINKYedibleTime IS none AND pacManDistancePowerPill IS far AND pacManDistancePowerPillConfidence IS medium AND distanceToPacManConfidence IS medium THEN Chase IS emergency;
+	RULE 6 : IF BLINKYedibleTime IS none AND pacManDistancePowerPill IS far AND pacManDistancePowerPillConfidence IS medium AND distanceToPacManConfidence IS medium THEN Runaway IS calm;
+	RULE 7 : IF BLINKYedibleTime IS none AND BLINKYdistanceToPacMan IS far THEN Chase IS nervious;
+	RULE 8 : IF BLINKYedibleTime IS none AND BLINKYdistanceToPacMan IS far THEN Runaway IS calm;
+	RULE 9 : IF BLINKYedibleTime IS none AND BLINKYdistanceToPacMan IS near AND distanceToPacManConfidence IS high THEN Chase IS emergency;
+	RULE 10 : IF BLINKYedibleTime IS none AND numPills IS few THEN Chase IS emergency;
+	RULE 11 : IF BLINKYedibleTime IS none AND pacManDistancePowerPill IS near AND pacManDistancePowerPillConfidence IS high THEN Runaway IS nervious;
+	RULE 12 : IF BLINKYedibleTime IS none AND currentTime IS few THEN Chase IS nervious;
+	RULE 13 : IF BLINKYedibleTime IS none AND currentTime IS few AND pacManDistancePowerPill IS near AND pacManDistancePowerPillConfidence IS high THEN Runaway IS nervious;
+	RULE 14 : IF currentTime IS few AND BLINKYedibleTime IS medium OR currentTime IS few AND BLINKYedibleTime IS high THEN Chase IS calm;
+	RULE 15 : IF currentTime IS few AND BLINKYedibleTime IS medium AND BLINKYdistanceToPacMan IS far OR currentTime IS few AND BLINKYedibleTime IS high AND BLINKYdistanceToPacMan IS far
+			THEN Chase IS nervious;
+	RULE 16 : IF BLINKYedibleTime IS none AND ((INKYedibleTime IS low OR INKYedibleTime IS medium OR INKYedibleTime IS high) OR
+		(PINKYedibleTime IS low OR PINKYedibleTime IS medium OR PINKYedibleTime IS high) OR (SUEedibleTime IS low OR SUEedibleTime IS medium OR SUEedibleTime IS high)) THEN ProtectGhosts IS emergency;
+	RULE 17 : IF BLINKYedibleTime IS medium OR BLINKYedibleTime IS high THEN ProtectGhosts IS calm;
+	RULE 18 : IF BLINKYedibleTime IS low AND ((INKYedibleTime IS low OR INKYedibleTime IS medium OR INKYedibleTime IS high) OR
+		(PINKYedibleTime IS low OR PINKYedibleTime IS medium OR PINKYedibleTime IS high) OR (SUEedibleTime IS low OR SUEedibleTime IS medium OR SUEedibleTime IS high)) THEN ProtectGhosts IS nervious;
+	RULE 19 : IF BLINKYedibleTime IS none AND ((INKYedibleTime IS low OR INKYedibleTime IS medium OR INKYedibleTime IS high) OR
+		(PINKYedibleTime IS low OR PINKYedibleTime IS medium OR PINKYedibleTime IS high) OR (SUEedibleTime IS low OR SUEedibleTime IS medium OR SUEedibleTime IS high)) THEN Runaway IS calm;
+	RULE 20 : IF BLINKYedibleTime IS none AND ((INKYedibleTime IS low OR INKYedibleTime IS medium OR INKYedibleTime IS high) OR
+		(PINKYedibleTime IS low OR PINKYedibleTime IS medium OR PINKYedibleTime IS high) OR (SUEedibleTime IS low OR SUEedibleTime IS medium OR SUEedibleTime IS high)) THEN Chase IS nervious;
+	RULE 21 : IF BLINKYedibleTime IS low AND ((INKYedibleTime IS low OR INKYedibleTime IS medium OR INKYedibleTime IS high) OR
+		(PINKYedibleTime IS low OR PINKYedibleTime IS medium OR PINKYedibleTime IS high) OR (SUEedibleTime IS low OR SUEedibleTime IS medium OR SUEedibleTime IS high)) THEN Chase IS nervious;
+	RULE 22 : IF BLINKYedibleTime IS low AND ((INKYedibleTime IS low OR INKYedibleTime IS medium OR INKYedibleTime IS high) OR
+		(PINKYedibleTime IS low OR PINKYedibleTime IS medium OR PINKYedibleTime IS high) OR (SUEedibleTime IS low OR SUEedibleTime IS medium OR SUEedibleTime IS high)) THEN Runaway IS nervious;
 END_RULEBLOCK
 
 RULEBLOCK INKYRules
@@ -188,22 +206,37 @@ RULEBLOCK INKYRules
 	ACT : MIN;			// Use 'min' activation method
 	ACCU : MAX;			// Use 'MAX' accumulation method (Other options PROBOR and SUM)
 
-	RULE 1 : IF INKYedibleTime IS true AND INKYdistanceToPacMan IS near AND distanceToPacManConfidence IS high THEN Runaway IS emergency;
-	RULE 2 : IF INKYedibleTime IS true AND INKYdistanceToPacMan IS near AND distanceToPacManConfidence IS high THEN Chase IS calm;
-	RULE 3 : IF INKYedibleTime IS false AND pacManDistancePowerPill IS near AND pacManDistancePowerPillConfidence IS high THEN Runaway IS nervious;
-	RULE 4 : IF INKYedibleTime IS false AND pacManDistancePowerPill IS near AND pacManDistancePowerPillConfidence IS high THEN Chase IS calm;
-	RULE 5 : IF INKYedibleTime IS false AND pacManDistancePowerPill IS far AND pacManDistancePowerPillConfidence IS medium AND distanceToPacManConfidence IS medium THEN Chase IS emergency;
-	RULE 6 : IF INKYedibleTime IS false AND pacManDistancePowerPill IS far AND pacManDistancePowerPillConfidence IS medium AND distanceToPacManConfidence IS medium THEN Runaway IS calm;
-	RULE 7 : IF INKYedibleTime IS false AND INKYdistanceToPacMan IS far THEN Chase IS nervious;
-	RULE 8 : IF INKYedibleTime IS false AND INKYdistanceToPacMan IS far THEN Runaway IS calm;
-	RULE 9 : IF INKYedibleTime IS false AND INKYdistanceToPacMan IS near AND distanceToPacManConfidence IS high THEN Chase IS emergency;
-	RULE 10 : IF INKYedibleTime IS false AND numPills IS few THEN Chase IS emergency;
-	RULE 11 : IF INKYedibleTime IS false AND score IS few THEN Chase IS nervious;
-	RULE 12 : IF INKYedibleTime IS false AND pacManDistancePowerPill IS near AND pacManDistancePowerPillConfidence IS high THEN Runaway IS nervious;
-	RULE 13 : IF INKYedibleTime IS false AND currentTime IS few THEN Chase IS nervious;
-	RULE 14 : IF INKYedibleTime IS false AND currentTime IS few AND pacManDistancePowerPill IS near AND pacManDistancePowerPillConfidence IS high THEN Runaway IS nervious;
-	RULE 15 : IF currentTime IS few AND INKYedibleTime IS true THEN Chase IS calm;
-	RULE 16 : IF currentTime IS few AND INKYedibleTime IS true AND INKYdistanceToPacMan IS far  THEN Chase IS nervious;
+	RULE 1 : IF INKYedibleTime IS medium AND INKYdistanceToPacMan IS near AND distanceToPacManConfidence IS high OR
+			INKYedibleTime IS high AND INKYdistanceToPacMan IS near AND distanceToPacManConfidence IS high THEN Runaway IS emergency;
+	RULE 2 : IF INKYedibleTime IS medium AND INKYdistanceToPacMan IS near AND distanceToPacManConfidence IS high OR
+			INKYedibleTime IS high AND INKYdistanceToPacMan IS near AND distanceToPacManConfidence IS high THEN Chase IS calm;
+	RULE 3 : IF INKYedibleTime IS none AND pacManDistancePowerPill IS near AND pacManDistancePowerPillConfidence IS high THEN Runaway IS nervious;
+	RULE 4 : IF INKYedibleTime IS none AND pacManDistancePowerPill IS near AND pacManDistancePowerPillConfidence IS high THEN Chase IS calm;
+	RULE 5 : IF INKYedibleTime IS none AND pacManDistancePowerPill IS far AND pacManDistancePowerPillConfidence IS medium AND distanceToPacManConfidence IS medium THEN Chase IS emergency;
+	RULE 6 : IF INKYedibleTime IS none AND pacManDistancePowerPill IS far AND pacManDistancePowerPillConfidence IS medium AND distanceToPacManConfidence IS medium THEN Runaway IS calm;
+	RULE 7 : IF INKYedibleTime IS none AND INKYdistanceToPacMan IS far THEN Chase IS nervious;
+	RULE 8 : IF INKYedibleTime IS none AND INKYdistanceToPacMan IS far THEN Runaway IS calm;
+	RULE 9 : IF INKYedibleTime IS none AND INKYdistanceToPacMan IS near AND distanceToPacManConfidence IS high THEN Chase IS emergency;
+	RULE 10 : IF INKYedibleTime IS none AND numPills IS few THEN Chase IS emergency;
+	RULE 11 : IF INKYedibleTime IS none AND pacManDistancePowerPill IS near AND pacManDistancePowerPillConfidence IS high THEN Runaway IS nervious;
+	RULE 12 : IF INKYedibleTime IS none AND currentTime IS few THEN Chase IS nervious;
+	RULE 13 : IF INKYedibleTime IS none AND currentTime IS few AND pacManDistancePowerPill IS near AND pacManDistancePowerPillConfidence IS high THEN Runaway IS nervious;
+	RULE 14 : IF currentTime IS few AND INKYedibleTime IS medium OR currentTime IS few AND INKYedibleTime IS high THEN Chase IS calm;
+	RULE 15 : IF currentTime IS few AND INKYedibleTime IS medium AND INKYdistanceToPacMan IS far OR currentTime IS few AND INKYedibleTime IS high AND INKYdistanceToPacMan IS far
+			THEN Chase IS nervious;
+	RULE 16 : IF INKYedibleTime IS none AND ((BLINKYedibleTime IS low OR BLINKYedibleTime IS medium OR BLINKYedibleTime IS high) OR
+		(PINKYedibleTime IS low OR PINKYedibleTime IS medium OR PINKYedibleTime IS high) OR (SUEedibleTime IS low OR SUEedibleTime IS medium OR SUEedibleTime IS high)) THEN ProtectGhosts IS emergency;
+	RULE 17 : IF INKYedibleTime IS medium OR INKYedibleTime IS high THEN ProtectGhosts IS calm;
+	RULE 18 : IF INKYedibleTime IS low AND ((BLINKYedibleTime IS low OR BLINKYedibleTime IS medium OR BLINKYedibleTime IS high) OR
+		(PINKYedibleTime IS low OR PINKYedibleTime IS medium OR PINKYedibleTime IS high) OR (SUEedibleTime IS low OR SUEedibleTime IS medium OR SUEedibleTime IS high)) THEN ProtectGhosts IS nervious;
+	RULE 19 : IF INKYedibleTime IS none AND ((BLINKYedibleTime IS low OR BLINKYedibleTime IS medium OR BLINKYedibleTime IS high) OR
+		(PINKYedibleTime IS low OR PINKYedibleTime IS medium OR PINKYedibleTime IS high) OR (SUEedibleTime IS low OR SUEedibleTime IS medium OR SUEedibleTime IS high)) THEN Runaway IS calm;
+	RULE 20 : IF INKYedibleTime IS none AND ((BLINKYedibleTime IS low OR BLINKYedibleTime IS medium OR BLINKYedibleTime IS high) OR
+		(PINKYedibleTime IS low OR PINKYedibleTime IS medium OR PINKYedibleTime IS high) OR (SUEedibleTime IS low OR SUEedibleTime IS medium OR SUEedibleTime IS high)) THEN Chase IS nervious;
+	RULE 21 : IF INKYedibleTime IS low AND ((BLINKYedibleTime IS low OR BLINKYedibleTime IS medium OR BLINKYedibleTime IS high) OR
+		(PINKYedibleTime IS low OR PINKYedibleTime IS medium OR PINKYedibleTime IS high) OR (SUEedibleTime IS low OR SUEedibleTime IS medium OR SUEedibleTime IS high)) THEN Chase IS nervious;
+	RULE 22 : IF INKYedibleTime IS low AND ((BLINKYedibleTime IS low OR BLINKYedibleTime IS medium OR BLINKYedibleTime IS high) OR
+		(PINKYedibleTime IS low OR PINKYedibleTime IS medium OR PINKYedibleTime IS high) OR (SUEedibleTime IS low OR SUEedibleTime IS medium OR SUEedibleTime IS high)) THEN Runaway IS nervious;
 END_RULEBLOCK
 
 RULEBLOCK PINKYRules
@@ -211,22 +244,37 @@ RULEBLOCK PINKYRules
 	ACT : MIN;			// Use 'min' activation method
 	ACCU : MAX;			// Use 'MAX' accumulation method (Other options PROBOR and SUM)
 
-	RULE 1 : IF PINKYedibleTime IS true AND PINKYdistanceToPacMan IS near AND distanceToPacManConfidence IS high THEN Runaway IS emergency;
-	RULE 2 : IF PINKYedibleTime IS true AND PINKYdistanceToPacMan IS near AND distanceToPacManConfidence IS high THEN Chase IS calm;
-	RULE 3 : IF PINKYedibleTime IS false AND pacManDistancePowerPill IS near AND pacManDistancePowerPillConfidence IS high THEN Runaway IS nervious;
-	RULE 4 : IF PINKYedibleTime IS false AND pacManDistancePowerPill IS near AND pacManDistancePowerPillConfidence IS high THEN Chase IS calm;
-	RULE 5 : IF PINKYedibleTime IS false AND pacManDistancePowerPill IS far AND pacManDistancePowerPillConfidence IS medium AND distanceToPacManConfidence IS medium THEN Chase IS emergency;
-	RULE 6 : IF PINKYedibleTime IS false AND pacManDistancePowerPill IS far AND pacManDistancePowerPillConfidence IS medium AND distanceToPacManConfidence IS medium THEN Runaway IS calm;
-	RULE 7 : IF PINKYedibleTime IS false AND PINKYdistanceToPacMan IS far THEN Chase IS nervious;
-	RULE 8 : IF PINKYedibleTime IS false AND PINKYdistanceToPacMan IS far THEN Runaway IS calm;
-	RULE 9 : IF PINKYedibleTime IS false AND PINKYdistanceToPacMan IS near AND distanceToPacManConfidence IS high THEN Chase IS emergency;
-	RULE 10 : IF PINKYedibleTime IS false AND numPills IS few THEN Chase IS emergency;
-	RULE 11 : IF PINKYedibleTime IS false AND score IS few THEN Chase IS nervious;
-	RULE 12 : IF PINKYedibleTime IS false AND pacManDistancePowerPill IS near AND pacManDistancePowerPillConfidence IS high THEN Runaway IS nervious;
-	RULE 13 : IF PINKYedibleTime IS false AND currentTime IS few THEN Chase IS nervious;
-	RULE 14 : IF PINKYedibleTime IS false AND currentTime IS few AND pacManDistancePowerPill IS near AND pacManDistancePowerPillConfidence IS high THEN Runaway IS nervious;
-	RULE 15 : IF currentTime IS few AND PINKYedibleTime IS true THEN Chase IS calm;
-	RULE 16 : IF currentTime IS few AND PINKYedibleTime IS true AND PINKYdistanceToPacMan IS far  THEN Chase IS nervious;
+	RULE 1 : IF PINKYedibleTime IS medium AND PINKYdistanceToPacMan IS near AND distanceToPacManConfidence IS high OR
+			PINKYedibleTime IS high AND PINKYdistanceToPacMan IS near AND distanceToPacManConfidence IS high THEN Runaway IS emergency;
+	RULE 2 : IF PINKYedibleTime IS medium AND PINKYdistanceToPacMan IS near AND distanceToPacManConfidence IS high OR
+			PINKYedibleTime IS high AND PINKYdistanceToPacMan IS near AND distanceToPacManConfidence IS high THEN Chase IS calm;
+	RULE 3 : IF PINKYedibleTime IS none AND pacManDistancePowerPill IS near AND pacManDistancePowerPillConfidence IS high THEN Runaway IS nervious;
+	RULE 4 : IF PINKYedibleTime IS none AND pacManDistancePowerPill IS near AND pacManDistancePowerPillConfidence IS high THEN Chase IS calm;
+	RULE 5 : IF PINKYedibleTime IS none AND pacManDistancePowerPill IS far AND pacManDistancePowerPillConfidence IS medium AND distanceToPacManConfidence IS medium THEN Chase IS emergency;
+	RULE 6 : IF PINKYedibleTime IS none AND pacManDistancePowerPill IS far AND pacManDistancePowerPillConfidence IS medium AND distanceToPacManConfidence IS medium THEN Runaway IS calm;
+	RULE 7 : IF PINKYedibleTime IS none AND PINKYdistanceToPacMan IS far THEN Chase IS nervious;
+	RULE 8 : IF PINKYedibleTime IS none AND PINKYdistanceToPacMan IS far THEN Runaway IS calm;
+	RULE 9 : IF PINKYedibleTime IS none AND PINKYdistanceToPacMan IS near AND distanceToPacManConfidence IS high THEN Chase IS emergency;
+	RULE 10 : IF PINKYedibleTime IS none AND numPills IS few THEN Chase IS emergency;
+	RULE 11 : IF PINKYedibleTime IS none AND pacManDistancePowerPill IS near AND pacManDistancePowerPillConfidence IS high THEN Runaway IS nervious;
+	RULE 12 : IF PINKYedibleTime IS none AND currentTime IS few THEN Chase IS nervious;
+	RULE 13 : IF PINKYedibleTime IS none AND currentTime IS few AND pacManDistancePowerPill IS near AND pacManDistancePowerPillConfidence IS high THEN Runaway IS nervious;
+	RULE 14 : IF currentTime IS few AND PINKYedibleTime IS medium OR currentTime IS few AND PINKYedibleTime IS high THEN Chase IS calm;
+	RULE 15 : IF currentTime IS few AND PINKYedibleTime IS medium AND PINKYdistanceToPacMan IS far OR currentTime IS few AND PINKYedibleTime IS high AND PINKYdistanceToPacMan IS far
+			THEN Chase IS nervious;
+	RULE 16 : IF PINKYedibleTime IS none AND ((BLINKYedibleTime IS low OR BLINKYedibleTime IS medium OR BLINKYedibleTime IS high) OR
+		(INKYedibleTime IS low OR INKYedibleTime IS medium OR INKYedibleTime IS high) OR (SUEedibleTime IS low OR SUEedibleTime IS medium OR SUEedibleTime IS high)) THEN ProtectGhosts IS emergency;
+	RULE 17 : IF PINKYedibleTime IS medium OR PINKYedibleTime IS high THEN ProtectGhosts IS calm;
+	RULE 18 : IF PINKYedibleTime IS low AND ((BLINKYedibleTime IS low OR BLINKYedibleTime IS medium OR BLINKYedibleTime IS high) OR
+		(INKYedibleTime IS low OR INKYedibleTime IS medium OR INKYedibleTime IS high) OR (SUEedibleTime IS low OR SUEedibleTime IS medium OR SUEedibleTime IS high)) THEN ProtectGhosts IS nervious;
+	RULE 19 : IF PINKYedibleTime IS none AND ((BLINKYedibleTime IS low OR BLINKYedibleTime IS medium OR BLINKYedibleTime IS high) OR
+		(INKYedibleTime IS low OR INKYedibleTime IS medium OR INKYedibleTime IS high) OR (SUEedibleTime IS low OR SUEedibleTime IS medium OR SUEedibleTime IS high)) THEN Runaway IS calm;
+	RULE 20 : IF PINKYedibleTime IS none AND ((BLINKYedibleTime IS low OR BLINKYedibleTime IS medium OR BLINKYedibleTime IS high) OR
+		(INKYedibleTime IS low OR INKYedibleTime IS medium OR INKYedibleTime IS high) OR (SUEedibleTime IS low OR SUEedibleTime IS medium OR SUEedibleTime IS high)) THEN Chase IS nervious;
+	RULE 21 : IF PINKYedibleTime IS low AND ((BLINKYedibleTime IS low OR BLINKYedibleTime IS medium OR BLINKYedibleTime IS high) OR
+		(INKYedibleTime IS low OR INKYedibleTime IS medium OR INKYedibleTime IS high) OR (SUEedibleTime IS low OR SUEedibleTime IS medium OR SUEedibleTime IS high)) THEN Chase IS nervious;
+	RULE 22 : IF PINKYedibleTime IS low AND ((BLINKYedibleTime IS low OR BLINKYedibleTime IS medium OR BLINKYedibleTime IS high) OR
+		(INKYedibleTime IS low OR INKYedibleTime IS medium OR INKYedibleTime IS high) OR (SUEedibleTime IS low OR SUEedibleTime IS medium OR SUEedibleTime IS high)) THEN Runaway IS nervious;
 END_RULEBLOCK
 
 RULEBLOCK SUERules
@@ -234,22 +282,37 @@ RULEBLOCK SUERules
 	ACT : MIN;			// Use 'min' activation method
 	ACCU : MAX;			// Use 'MAX' accumulation method (Other options PROBOR and SUM)
 
-	RULE 1 : IF SUEedibleTime IS true AND SUEdistanceToPacMan IS near AND distanceToPacManConfidence IS high THEN Runaway IS emergency;
-	RULE 2 : IF SUEedibleTime IS true AND SUEdistanceToPacMan IS near AND distanceToPacManConfidence IS high THEN Chase IS calm;
-	RULE 3 : IF SUEedibleTime IS false AND pacManDistancePowerPill IS near AND pacManDistancePowerPillConfidence IS high THEN Runaway IS nervious;
-	RULE 4 : IF SUEedibleTime IS false AND pacManDistancePowerPill IS near AND pacManDistancePowerPillConfidence IS high THEN Chase IS calm;
-	RULE 5 : IF SUEedibleTime IS false AND pacManDistancePowerPill IS far AND pacManDistancePowerPillConfidence IS medium AND distanceToPacManConfidence IS medium THEN Chase IS emergency;
-	RULE 6 : IF SUEedibleTime IS false AND pacManDistancePowerPill IS far AND pacManDistancePowerPillConfidence IS medium AND distanceToPacManConfidence IS medium THEN Runaway IS calm;
-	RULE 7 : IF SUEedibleTime IS false AND SUEdistanceToPacMan IS far THEN Chase IS nervious;
-	RULE 8 : IF SUEedibleTime IS false AND SUEdistanceToPacMan IS far THEN Runaway IS calm;
-	RULE 9 : IF SUEedibleTime IS false AND SUEdistanceToPacMan IS near AND distanceToPacManConfidence IS high THEN Chase IS emergency;
-	RULE 10 : IF SUEedibleTime IS false AND numPills IS few THEN Chase IS emergency;
-	RULE 11 : IF SUEedibleTime IS false AND score IS few THEN Chase IS nervious;
-	RULE 12 : IF SUEedibleTime IS false AND pacManDistancePowerPill IS near AND pacManDistancePowerPillConfidence IS high THEN Runaway IS nervious;
-	RULE 13 : IF SUEedibleTime IS false AND currentTime IS few THEN Chase IS nervious;
-	RULE 14 : IF SUEedibleTime IS false AND currentTime IS few AND pacManDistancePowerPill IS near AND pacManDistancePowerPillConfidence IS high THEN Runaway IS nervious;
-	RULE 15 : IF currentTime IS few AND SUEedibleTime IS true THEN Chase IS calm;
-	RULE 16 : IF currentTime IS few AND SUEedibleTime IS true AND SUEdistanceToPacMan IS far  THEN Chase IS nervious;
+	RULE 1 : IF SUEedibleTime IS medium AND SUEdistanceToPacMan IS near AND distanceToPacManConfidence IS high OR
+			SUEedibleTime IS high AND SUEdistanceToPacMan IS near AND distanceToPacManConfidence IS high THEN Runaway IS emergency;
+	RULE 2 : IF SUEedibleTime IS medium AND SUEdistanceToPacMan IS near AND distanceToPacManConfidence IS high OR
+			SUEedibleTime IS high AND SUEdistanceToPacMan IS near AND distanceToPacManConfidence IS high THEN Chase IS calm;
+	RULE 3 : IF SUEedibleTime IS none AND pacManDistancePowerPill IS near AND pacManDistancePowerPillConfidence IS high THEN Runaway IS nervious;
+	RULE 4 : IF SUEedibleTime IS none AND pacManDistancePowerPill IS near AND pacManDistancePowerPillConfidence IS high THEN Chase IS calm;
+	RULE 5 : IF SUEedibleTime IS none AND pacManDistancePowerPill IS far AND pacManDistancePowerPillConfidence IS medium AND distanceToPacManConfidence IS medium THEN Chase IS emergency;
+	RULE 6 : IF SUEedibleTime IS none AND pacManDistancePowerPill IS far AND pacManDistancePowerPillConfidence IS medium AND distanceToPacManConfidence IS medium THEN Runaway IS calm;
+	RULE 7 : IF SUEedibleTime IS none AND SUEdistanceToPacMan IS far THEN Chase IS nervious;
+	RULE 8 : IF SUEedibleTime IS none AND SUEdistanceToPacMan IS far THEN Runaway IS calm;
+	RULE 9 : IF SUEedibleTime IS none AND SUEdistanceToPacMan IS near AND distanceToPacManConfidence IS high THEN Chase IS emergency;
+	RULE 10 : IF SUEedibleTime IS none AND numPills IS few THEN Chase IS emergency;
+	RULE 11 : IF SUEedibleTime IS none AND pacManDistancePowerPill IS near AND pacManDistancePowerPillConfidence IS high THEN Runaway IS nervious;
+	RULE 12 : IF SUEedibleTime IS none AND currentTime IS few THEN Chase IS nervious;
+	RULE 13 : IF SUEedibleTime IS none AND currentTime IS few AND pacManDistancePowerPill IS near AND pacManDistancePowerPillConfidence IS high THEN Runaway IS nervious;
+	RULE 14 : IF currentTime IS few AND SUEedibleTime IS medium OR currentTime IS few AND SUEedibleTime IS high THEN Chase IS calm;
+	RULE 15 : IF currentTime IS few AND SUEedibleTime IS medium AND SUEdistanceToPacMan IS far OR currentTime IS few AND SUEedibleTime IS high AND SUEdistanceToPacMan IS far
+			THEN Chase IS nervious;
+	RULE 16 : IF SUEedibleTime IS none AND ((INKYedibleTime IS low OR INKYedibleTime IS medium OR INKYedibleTime IS high) OR
+		(PINKYedibleTime IS low OR PINKYedibleTime IS medium OR PINKYedibleTime IS high) OR (BLINKYedibleTime IS low OR BLINKYedibleTime IS medium OR BLINKYedibleTime IS high)) THEN ProtectGhosts IS emergency;
+	RULE 17 : IF SUEedibleTime IS medium OR SUEedibleTime IS high THEN ProtectGhosts IS calm;
+	RULE 18 : IF SUEedibleTime IS low AND ((INKYedibleTime IS low OR INKYedibleTime IS medium OR INKYedibleTime IS high) OR
+		(PINKYedibleTime IS low OR PINKYedibleTime IS medium OR PINKYedibleTime IS high) OR (BLINKYedibleTime IS low OR BLINKYedibleTime IS medium OR BLINKYedibleTime IS high)) THEN ProtectGhosts IS nervious;
+	RULE 19 : IF SUEedibleTime IS none AND ((INKYedibleTime IS low OR INKYedibleTime IS medium OR INKYedibleTime IS high) OR
+		(PINKYedibleTime IS low OR PINKYedibleTime IS medium OR PINKYedibleTime IS high) OR (BLINKYedibleTime IS low OR BLINKYedibleTime IS medium OR BLINKYedibleTime IS high)) THEN Runaway IS calm;
+	RULE 20 : IF SUEedibleTime IS none AND ((INKYedibleTime IS low OR INKYedibleTime IS medium OR INKYedibleTime IS high) OR
+		(PINKYedibleTime IS low OR PINKYedibleTime IS medium OR PINKYedibleTime IS high) OR (BLINKYedibleTime IS low OR BLINKYedibleTime IS medium OR BLINKYedibleTime IS high)) THEN Chase IS nervious;
+	RULE 21 : IF SUEedibleTime IS low AND ((INKYedibleTime IS low OR INKYedibleTime IS medium OR INKYedibleTime IS high) OR
+		(PINKYedibleTime IS low OR PINKYedibleTime IS medium OR PINKYedibleTime IS high) OR (BLINKYedibleTime IS low OR BLINKYedibleTime IS medium OR BLINKYedibleTime IS high)) THEN Chase IS nervious;
+	RULE 22 : IF SUEedibleTime IS low AND ((INKYedibleTime IS low OR INKYedibleTime IS medium OR INKYedibleTime IS high) OR
+		(PINKYedibleTime IS low OR PINKYedibleTime IS medium OR PINKYedibleTime IS high) OR (BLINKYedibleTime IS low OR BLINKYedibleTime IS medium OR BLINKYedibleTime IS high)) THEN Runaway IS nervious;
 END_RULEBLOCK
 // ------
 
