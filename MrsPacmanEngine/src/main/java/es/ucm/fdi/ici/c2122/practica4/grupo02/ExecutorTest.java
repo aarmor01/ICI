@@ -16,15 +16,14 @@ public class ExecutorTest {
                 .setPacmanPO(true)
                 .setGhostPO(true)
                 .setPacmanPOvisual(true)
-                .setGhostsPOvisual(true)
-                .setSightLimit(30)
+                .setGhostsPOvisual(false)
                 .setVisual(true)
                 .setScaleFactor(2.5)
                 .build();
         
 //      PacmanController pacMan = new HumanController(new KeyBoardInput());
         PacmanController pacMan = new MsPacManFuzzy();
-        GhostController ghosts = new es.ucm.fdi.ici.c2122.practica4.grupo02.Ghosts();
+        GhostController ghosts = new Ghosts();
         
         System.out.println(executor.runGame(pacMan, ghosts, 40));
     }

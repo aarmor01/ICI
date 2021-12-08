@@ -16,18 +16,18 @@ public class MsPacManInput extends FuzzyInput {
 
 	private double[] distance;
 	
-	/* TODO: Cazar a los fantasmas con su tiempo edible
-	 * TODO: Que no vaya a por las powerPills a no ser que sea necesario
+	/* DONE: Cazar a los fantasmas con su tiempo edible
 	 * DONE: guardar las powerPills
+	 * TODO: Que no vaya a por las powerPills a no ser que sea necesario
 	 * TODO: Jugar con el tiempo de juego
 	 * TODO: huir de los fantasmas en funcion de su ultimo movimiento visto
 	 */
 	
-	public MsPacManInput(Game game) {
+	public MsPacManInput(Game game) {		
 		super(game);
 	}
 	
-	public void savePills_N_Ghosts(HashMap<Integer,PillState> pills, HashMap<Integer,PowerPillState> pPills, HashMap<GHOST,GhostState> ghostsSeen) {
+	public void savePills(HashMap<Integer,PillState> pills, HashMap<Integer,PowerPillState> pPills) {
 		int pcNode = game.getPacmanCurrentNodeIndex();
 		int[] adjacentPathsNode = game.getNeighbouringNodes(pcNode);
 		MOVE move;
@@ -63,6 +63,7 @@ public class MsPacManInput extends FuzzyInput {
 							pPills.put(node, p);
 						}
 					}
+										
 					assumedPos = node;
 					++k;
 				}else noEnd = true; //No hay mas visibilidad
@@ -71,7 +72,7 @@ public class MsPacManInput extends FuzzyInput {
 		}
 	}
 	
-	void updatePillsState_N_Ghosts(HashMap<Integer,PillState> pills, HashMap<Integer,PowerPillState> pPills) {
+	void updatePillsState(HashMap<Integer,PillState> pills, HashMap<Integer,PowerPillState> pPills) {
 		int pcNode = game.getPacmanCurrentNodeIndex();
 		
 		int indexPill = game.getPillIndex(pcNode);
@@ -84,7 +85,7 @@ public class MsPacManInput extends FuzzyInput {
 		
 		indexPill = game.getPowerPillIndex(pcNode);
 		if(indexPill != -1) {
-			// Si existe una pill en el nodo actual del pacman, es que se ha comido
+			// Si existe una pPill en el nodo actual del pacman, es que se ha comido
 			PowerPillState p = pPills.get(Integer.valueOf(pcNode));
 			if(p != null) //No contiene aun esa pill en el inventario
 				p.eaten = true;
@@ -92,21 +93,43 @@ public class MsPacManInput extends FuzzyInput {
 		
 	}
 	
-	@Override
-	public void parseInput() {
+	public void updateGhosts(HashMap<GHOST,GhostState> ghostsSeen){
 		distance = new double[] {-1,-1,-1,-1};
 		
 		int time = game.getCurrentLevelTime();
-		int timeLimit = Constants.LEVEL_LIMIT;	
+		int timeLimit = Constants.LEVEL_LIMIT;
+		
 		for(GHOST g: GHOST.values()) {
 			int index = g.ordinal();
 			int pos = game.getGhostCurrentNodeIndex(g); //returns its positions if it's visible
 			if(pos != -1) {
 				distance[index] = game.getDistance(game.getPacmanCurrentNodeIndex(), pos, DM.PATH);
+				if(!ghostsSeen.containsKey(g)) {
+					GhostState ghost = new GhostState();
+					ghost.ghostNode = pos;
+					ghost.x = game.getNodeXCood(pos);
+					ghost.y = game.getNodeXCood(pos);
+					ghost.edible = game.isGhostEdible(g);
+					ghost.move = game.getGhostLastMoveMade(g);
+					ghostsSeen.put(g, ghost);
+				}else {
+					GhostState ghost = ghostsSeen.get(g);
+					ghost.ghostNode = pos;
+					ghost.x = game.getNodeXCood(pos);
+					ghost.y = game.getNodeXCood(pos);
+					ghost.edible = game.isGhostEdible(g);
+					ghost.move = game.getGhostLastMoveMade(g);
+				}
 			}
 			else
 				distance[index] = -1;
 		}
+	}
+	
+	@Override
+	public void parseInput() {
+		
+		
 	}
 	
 	public boolean isVisible(GHOST ghost) {

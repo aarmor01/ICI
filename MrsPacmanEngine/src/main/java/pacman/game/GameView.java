@@ -404,7 +404,9 @@ public final class GameView extends JComponent {
 
         Graphics2D overlay = (Graphics2D) image.getGraphics();
 
-        overlay.setColor(Color.GRAY);
+//        overlay.setColor(Color.GRAY);
+        overlay.setColor(new Color(128, 128, 128, 50));
+        
         for (int i = 0; i < game.getNumberOfNodes(); i++) {
             if (!ghostGames.isNodeObservable(i)) {
                 overlay.fillRect(
@@ -445,7 +447,8 @@ public final class GameView extends JComponent {
 
         Graphics2D overlay = (Graphics2D) image.getGraphics();
 
-        overlay.setColor(Color.GRAY);
+//        overlay.setColor(Color.GRAY);
+        overlay.setColor(new Color(128, 128, 128, 50));
         for (int i = 0; i < game.getNumberOfNodes(); i++) {
             if (!pacmanGame.isNodeObservable(i)&& !ghostGames.isNodeObservable(i)) {
                 overlay.fillRect(
@@ -488,6 +491,8 @@ public final class GameView extends JComponent {
 
         Graphics2D overlay = (Graphics2D) image.getGraphics();
 
+        overlay.setColor(new Color(128, 128, 128, 10));
+//        overlay.setColor(Color.GRAY);  
         overlay.setColor(new Color(128, 128, 128, 50));
         for (int i = 0; i < game.getNumberOfNodes(); i++) {
             if (!pacmanGame.isNodeObservable(i)) {
@@ -498,7 +503,7 @@ public final class GameView extends JComponent {
             }
         }
 
-        overlay.setColor(Color.WHITE);
+//        overlay.setColor(Color.WHITE);
 
         overlay.setComposite(AlphaComposite.Clear);
         int totalVisisble = 0;

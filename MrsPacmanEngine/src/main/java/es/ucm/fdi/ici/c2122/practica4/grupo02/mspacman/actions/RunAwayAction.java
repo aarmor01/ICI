@@ -44,7 +44,7 @@ public class RunAwayAction implements Action {
 		 //If this actions has been triggered, then there must be a ghost in the actual sight
 		if(g != null) {
 			int nodeGhost = game.getGhostCurrentNodeIndex(g);
-			GameView.addPoints(game, java.awt.Color.BLUE, nodeGhost);	
+			GameView.addPoints(game, java.awt.Color.BLUE, game.getShortestPath(game.getPacmanCurrentNodeIndex(), nodeGhost));	
 			return game.getApproximateNextMoveAwayFromTarget(game.getPacmanCurrentNodeIndex(), 
 															 nodeGhost, 
 															 game.getPacmanLastMoveMade(), 
