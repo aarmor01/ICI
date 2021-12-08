@@ -52,7 +52,7 @@ public class ChasePacMan implements Action {
 	public MOVE execute(Game game) {
 		int pcNode = game.getPacmanCurrentNodeIndex();
 
-		if (pcNode != -1) {
+		if (pcNode != -1 && game.getGhostLairTime(ghost) <= 0) {
 			if (contador > 2) {
 				contador = 0;
 				return getSecondaryPath(game, game.getPossibleMoves(game.getGhostCurrentNodeIndex(ghost), game.getGhostLastMoveMade(ghost)),
