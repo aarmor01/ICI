@@ -15,11 +15,11 @@ import pacman.game.Game;
 public class MsPacManInput extends FuzzyInput {
 
 	private double[] distance;
-	
+	double gameTime;
 	/* DONE: Cazar a los fantasmas con su tiempo edible
 	 * DONE: guardar las powerPills
-	 * TODO: Que no vaya a por las powerPills a no ser que sea necesario
-	 * TODO: Jugar con el tiempo de juego
+	 * DONE: Que no vaya a por las powerPills a no ser que sea necesario
+	 * DONE: Jugar con el tiempo de juego
 	 * TODO: huir de los fantasmas en funcion de su ultimo movimiento visto
 	 */
 	
@@ -128,8 +128,7 @@ public class MsPacManInput extends FuzzyInput {
 	
 	@Override
 	public void parseInput() {
-		
-		
+		gameTime = game.getCurrentLevelTime();
 	}
 	
 	public boolean isVisible(GHOST ghost) {
@@ -142,6 +141,8 @@ public class MsPacManInput extends FuzzyInput {
 		for(GHOST g: GHOST.values()) {
 			vars.put(g.name()+"distance",   distance[g.ordinal()]);
 		}
+		
+		vars.put("GameTime", gameTime);
 		return vars;
 	}
 

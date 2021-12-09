@@ -59,11 +59,8 @@ public class MsPacManFuzzyMemory {
 				edibleT = edibleTime[g.ordinal()] = input.getGame().getGhostEdibleTime(g); 
 			}
 			else {
-				edibleTime[g.ordinal()] = Double.max(0, edibleT - 1); //Se va restando el tiempo si no es visible, cada tick se resta en 1 
-				edibleT = edibleTime[g.ordinal()];
-				
-				confidence[g.ordinal()] = Double.max(0, conf - 1);
-				conf = confidence[g.ordinal()];
+				edibleT = edibleTime[g.ordinal()] = Double.max(0, edibleT - 1); //Se va restando el tiempo si no es visible, cada tick se resta en 1 
+				conf = confidence[g.ordinal()] = Double.max(0, conf - 1);
 			}
 			mem.put(g.name()+"confidence", conf);			
 			mem.put(g.name()+"timeEdible", edibleT);			

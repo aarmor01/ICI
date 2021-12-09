@@ -22,7 +22,7 @@ public class ExecutorTest {
                 .build();
         
 //      PacmanController pacMan = new HumanController(new KeyBoardInput());
-        PacmanController pacMan = new MsPacManFuzzy();
+        PacmanController pacMan = new MsPacMan();
         GhostController ghosts = new Ghosts();
         
         System.out.println(executor.runGame(pacMan, ghosts, 40));

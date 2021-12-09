@@ -1,70 +1,55 @@
 package es.ucm.fdi.ici.c2122.practica4.grupo02;
 
+import java.io.File;
 import java.util.HashMap;
 
-import es.ucm.fdi.ici.c2122.practica3.grupo02.rules.pacman.MsPacManInput;
-import es.ucm.fdi.ici.c2122.practica3.grupo02.rules.pacman.actions.*;
-import es.ucm.fdi.ici.rules.RuleEngine;
-import es.ucm.fdi.ici.rules.RulesAction;
-import es.ucm.fdi.ici.rules.RulesInput;
-import es.ucm.fdi.ici.rules.observers.ConsoleRuleEngineObserver;
-
-import pacman.game.Game;
-import pacman.game.Constants.MOVE;
+import es.ucm.fdi.ici.Action;
+import es.ucm.fdi.ici.c2122.practica4.grupo02.mspacman.MsPacManFuzzyMemory;
+import es.ucm.fdi.ici.c2122.practica4.grupo02.mspacman.MsPacManInput;
+import es.ucm.fdi.ici.c2122.practica4.grupo02.mspacman.actions.ChaseGhostAction;
+import es.ucm.fdi.ici.c2122.practica4.grupo02.mspacman.actions.ChasePoints;
+import es.ucm.fdi.ici.c2122.practica4.grupo02.mspacman.actions.GoToPillAction;
+import es.ucm.fdi.ici.c2122.practica4.grupo02.mspacman.actions.RunAwayAction;
+import es.ucm.fdi.ici.fuzzy.ActionSelector;
+import es.ucm.fdi.ici.fuzzy.FuzzyEngine;
+import es.ucm.fdi.ici.fuzzy.observers.ConsoleFuzzyEngineObserver;
 import pacman.controllers.PacmanController;
+import pacman.game.Constants.MOVE;
+import pacman.game.Game;
 
 public class MsPacMan extends PacmanController {
-	
-	private static final String PACMAN_RULES_PATH = GameConstants.RULES_PATH + "mspacmanrules.clp";
-	private static final String PACMAN_NAME = "MsPacMan";
-	
-	HashMap<String,RulesAction> actionsMap;
-	RuleEngine mspacmanRuleEngine;
-	
+
+	FuzzyEngine fuzzyEngine;
+	MsPacManFuzzyMemory fuzzyMemory;
+
 	public MsPacMan() {
-		setName("Definitely Not MsPacman");
+		setName("If you don't see it");
 		setTeam("G2_ICIsports");
 		
-		actionsMap = new HashMap<String, RulesAction>();
-    	
-		//ACTIONS------------------------		
-		RulesAction Runaway = new RunawayFromClosestGhost();  
-		actionsMap.put(Runaway.getActionId(), Runaway);
-		
-		RulesAction catchC_PP = new ReachClosestPowerPill();  
-		actionsMap.put(catchC_PP.getActionId(), catchC_PP);
-		
-		RulesAction catchC_P = new ReachClosestPill();  
-		actionsMap.put(catchC_P.getActionId(), catchC_P);
-		
-		RulesAction chase = new ChaseGhost();  
-		actionsMap.put(chase.getActionId(), chase);
-		
-		//-------------------------------
-		String fileRule = PACMAN_RULES_PATH;
-		mspacmanRuleEngine = new RuleEngine(PACMAN_NAME, fileRule, actionsMap);
-		if(GameConstants.DEBUG) {
-			ConsoleRuleEngineObserver observer = new ConsoleRuleEngineObserver(PACMAN_NAME, true);
-			mspacmanRuleEngine.addObserver(observer);
+		fuzzyMemory = new MsPacManFuzzyMemory();
+
+		Action[] actions = { new GoToPillAction(fuzzyMemory) , new RunAwayAction(fuzzyMemory), new ChasePoints(fuzzyMemory), new ChaseGhostAction(fuzzyMemory) };
+
+		ActionSelector actionSelector = new MaxActionSelector(actions);
+
+		fuzzyEngine = new FuzzyEngine("MsPacMan", GameConstants.FUZZY_PATH + "mspacman" + File.separator + "mspacman.fcl", "FuzzyMsPacMan",
+				actionSelector);
+
+		if (GameConstants.DEBUG) {
+			ConsoleFuzzyEngineObserver observer = new ConsoleFuzzyEngineObserver("MsPacMan", "MsPacManRules");
+			fuzzyEngine.addObserver(observer);
 		}
 	}
 
-	public void preCompute(String opponent) {
-//    		fsm.reset();
-    }
-	
-    /* (non-Javadoc)
-     * @see pacman.controllers.Controller#getMove(pacman.game.Game, long)
-     */
-    @Override
-    public MOVE getMove(Game game, long timeDue) {
-    	//Creamos el input
-       	RulesInput in = new MsPacManInput(game); 
-       	//Reseteamos sus valores a saber por qué
-       	mspacmanRuleEngine.reset();
-       	//Obtenemos los resultados de cada iteracion
-       	mspacmanRuleEngine.assertFacts(in.getFacts());
-       	//En funcion de los resultados, habra devuelto un MOVE
-       	return mspacmanRuleEngine.run(game);
-    }
+	@Override
+	public MOVE getMove(Game game, long timeDue) {
+		MsPacManInput input = new MsPacManInput(game);
+		input.parseInput();
+		fuzzyMemory.getInput(input);
+
+		HashMap<String, Double> fvars = input.getFuzzyValues();
+		fvars.putAll(fuzzyMemory.getFuzzyValues());
+
+		return fuzzyEngine.run(fvars, game);
+	}
 }

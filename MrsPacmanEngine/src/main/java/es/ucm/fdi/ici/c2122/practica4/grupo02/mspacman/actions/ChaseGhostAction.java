@@ -1,6 +1,7 @@
 package es.ucm.fdi.ici.c2122.practica4.grupo02.mspacman.actions;
 
 import es.ucm.fdi.ici.Action;
+import es.ucm.fdi.ici.c2122.practica2.grupo02.GameConstants;
 import es.ucm.fdi.ici.c2122.practica4.grupo02.mspacman.MsPacManFuzzyMemory;
 import pacman.game.Constants.DM;
 import pacman.game.Constants.GHOST;
@@ -40,6 +41,7 @@ public class ChaseGhostAction implements Action {
 		 //If this actions has been triggered, then there must be a ghost in the actual sight
 		if(g != null) {
 			int nodeGhost = game.getGhostCurrentNodeIndex(g);
+			if(GameConstants.DEBUG)
 			GameView.addLines(game, java.awt.Color.ORANGE, game.getPacmanCurrentNodeIndex() ,nodeGhost);	
 			return game.getApproximateNextMoveTowardsTarget(game.getPacmanCurrentNodeIndex(), 
 															 nodeGhost, 

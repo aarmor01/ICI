@@ -69,7 +69,6 @@ public class GoToPillAction implements Action {
 		int pcNode = game.getPacmanCurrentNodeIndex();
 		int distance = Integer.MAX_VALUE;
 		
-		int size = mem.pillsSeen.size();
 		for (HashMap.Entry<Integer, PillState> entry : mem.pillsSeen.entrySet()) {
 			if(!entry.getValue().eaten) {
 				int auxDis = game.getShortestPathDistance(pcNode, entry.getKey().intValue(), game.getPacmanLastMoveMade());
@@ -94,6 +93,7 @@ public class GoToPillAction implements Action {
 		}
 		
 		if(target != -1) {
+			if(GameConstants.DEBUG)
 			GameView.addPoints(game, java.awt.Color.RED, target);	
 			move = game.getApproximateNextMoveTowardsTarget(game.getPacmanCurrentNodeIndex(), 
 					target,

@@ -43,7 +43,7 @@ public class Ghosts extends GhostController {
 							GameConstants.FUZZY_PATH + "ghosts" + File.separator + "ghosts.fcl", "Fuzzy" + ghost.name(),
 							actionSelector));
 
-			if (/*GameConstants.DEBUG*/ false) {
+			if (GameConstants.DEBUG) {
 				ConsoleFuzzyEngineObserver observer = new ConsoleFuzzyEngineObserver(ghost.name(), ghost.name() + "Rules");
 				ghostsFuzzyEngine.get(ghost).addObserver(observer);
 			}
