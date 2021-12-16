@@ -31,7 +31,7 @@ public class ChasePacMan implements Action {
 		if (numChoices == 2) // if two possible moves, we go the opposite way (away instead of towards)
 			return game.getNextMoveAwayFromTarget(ghostNode, pacmanNode,
 					game.getGhostLastMoveMade(ghostType), DM.PATH);
-		else { // if three possible moves, we go to the one that isn't the furthest nor the closest to the Pacman
+		else if (numChoices == 3){ // if three possible moves, we go to the one that isn't the furthest nor the closest to the Pacman
 			MOVE optimalMove = game.getNextMoveTowardsTarget(ghostNode, pacmanNode,
 					game.getGhostLastMoveMade(ghostType), DM.PATH);
 
@@ -46,6 +46,8 @@ public class ChasePacMan implements Action {
 			else
 				return possibleMoves[2];
 		}
+		else
+			return MOVE.NEUTRAL; 
 	}
 	
 	@Override
