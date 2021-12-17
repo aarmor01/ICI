@@ -1,4 +1,4 @@
-package es.ucm.fdi.ici.practica5.grupoXX.mspacman;
+package es.ucm.fdi.ici.c2122.practica5.grupo02.mspacman;
 
 import java.io.File;
 import java.util.Collection;
@@ -16,9 +16,9 @@ import es.ucm.fdi.gaia.jcolibri.method.retrieve.NNretrieval.similarity.local.Equ
 import es.ucm.fdi.gaia.jcolibri.method.retrieve.NNretrieval.similarity.local.Interval;
 import es.ucm.fdi.gaia.jcolibri.method.retrieve.selection.SelectCases;
 import es.ucm.fdi.gaia.jcolibri.util.FileIO;
-import es.ucm.fdi.ici.practica5.grupoXX.CBRengine.Average;
-import es.ucm.fdi.ici.practica5.grupoXX.CBRengine.CachedLinearCaseBase;
-import es.ucm.fdi.ici.practica5.grupoXX.CBRengine.CustomPlainTextConnector;
+import es.ucm.fdi.ici.c2122.practica5.grupo02.CBRengine.Average;
+import es.ucm.fdi.ici.c2122.practica5.grupo02.CBRengine.CachedLinearCaseBase;
+import es.ucm.fdi.ici.c2122.practica5.grupo02.CBRengine.CustomPlainTextConnector;
 import pacman.game.Constants.MOVE;
 
 public class MsPacManCBRengine implements StandardCBRApplication {
@@ -31,8 +31,8 @@ public class MsPacManCBRengine implements StandardCBRApplication {
 	CBRCaseBase caseBase;
 	NNConfig simConfig;
 	
-	
-	final static String TEAM = "CNR";
+												//It doesn't exits for me
+	final static String TEAM = "Even if I see it";
 	
 	
 	final static String CONNECTOR_FILE_PATH = "es/ucm/fdi/ici/practica5/"+TEAM+"/mspacman/plaintextconfig.xml";
