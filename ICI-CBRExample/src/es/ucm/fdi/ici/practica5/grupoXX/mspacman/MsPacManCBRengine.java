@@ -32,7 +32,7 @@ public class MsPacManCBRengine implements StandardCBRApplication {
 	NNConfig simConfig;
 	
 	
-	final static String TEAM = "CNR";
+	final static String TEAM = "grupoXX";
 	
 	
 	final static String CONNECTOR_FILE_PATH = "es/ucm/fdi/ici/practica5/"+TEAM+"/mspacman/plaintextconfig.xml";

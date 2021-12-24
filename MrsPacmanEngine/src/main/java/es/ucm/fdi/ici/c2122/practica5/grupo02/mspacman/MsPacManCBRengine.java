@@ -32,10 +32,10 @@ public class MsPacManCBRengine implements StandardCBRApplication {
 	NNConfig simConfig;
 	
 												//It doesn't exits for me
-	final static String TEAM = "Even if I see it";
+	final static String TEAM = "grupo02";
 	
 	
-	final static String CONNECTOR_FILE_PATH = "es/ucm/fdi/ici/practica5/"+TEAM+"/mspacman/plaintextconfig.xml";
+	final static String CONNECTOR_FILE_PATH = "es/ucm/fdi/ici/c2122/practica5/"+TEAM+"/mspacman/plaintextconfig.xml";
 	final static String CASE_BASE_PATH = "cbrdata"+File.separator+TEAM+File.separator+"mspacman"+File.separator;
 
 	
