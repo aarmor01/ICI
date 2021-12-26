@@ -193,18 +193,19 @@ public class CustomPlainTextConnector implements Connector {
 				br.newLine();
 				StringBuffer line = new StringBuffer();
 				
+				line.append("d:[");
 				CaseComponent description = _case.getDescription();
 				writeComponent(description, this.descriptionMaps, line, separator, true);
 				
 				CaseComponent solution = _case.getSolution();
 				if(solution!=null)
 				{
-					line.append(separator);
+					line.append("] S:[");
 					writeComponent(solution, this.solutionMaps,  line, separator, false);
 				}
 				
 				CaseComponent justOfSolution = _case.getJustificationOfSolution();
-				if(justOfSolution!=null)
+				if(justOfSolution!=null) //Por aqui no pasa
 				{
 					line.append(separator);
 					writeComponent(justOfSolution, this.justOfSolutionMaps,  line, separator, false);
@@ -213,10 +214,10 @@ public class CustomPlainTextConnector implements Connector {
 				CaseComponent result = _case.getResult();
 				if(result!=null)
 				{
-					line.append(separator);
+					line.append("] ->:[");
 					writeComponent(result, this.resultMaps, line, separator, false);
 				}
-
+				line.append("]");
 				br.write(line.toString());
 			}
 			br.close();

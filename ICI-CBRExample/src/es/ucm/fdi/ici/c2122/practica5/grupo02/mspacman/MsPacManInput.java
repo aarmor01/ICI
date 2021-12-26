@@ -14,11 +14,11 @@ public class MsPacManInput extends CBRInput {
 		
 	}
 
-	Integer nearestGhost;
-	Boolean edible;
-	Integer nearestPPill;
 	Integer score;
 	Integer time;
+	Integer nearestPPill;
+	Integer nearestGhost;
+	Boolean edible;
 	
 	@Override
 	public void parseInput() {

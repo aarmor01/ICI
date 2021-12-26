@@ -374,7 +374,7 @@ public class Executor {
 	}
 
 	private void precompute(Controller<MOVE> pacManController, GhostController ghostController) {
-		String ghostName = ghostController.getClass().getCanonicalName();
+		String ghostName = ghostController.getClass().getCanonicalName(); //se le pasa el nombre del archivo
 		String pacManName = pacManController.getClass().getCanonicalName();
 		
 		pacManController.preCompute(ghostName);

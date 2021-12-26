@@ -20,7 +20,7 @@ public class MsPacMan extends PacmanController {
 	}
 	
 	@Override
-	public void preCompute(String opponent) {
+	public void preCompute(String opponent) { //se le pasa el nombre del archivo del enemigo, en este caso es AggressiveGhost
 		cbrEngine.setOpponent(opponent);
 		try {
 			cbrEngine.configure();

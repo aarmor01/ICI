@@ -25,7 +25,7 @@ public class ExecutorTest {
       
         
 
-        executor.runGameTimedSpeedOptimised(pacMan, ghosts,true,"CBR test");
+        executor.runGameTimedSpeedOptimised(pacMan, ghosts,false,"CBR test");
         
         //Time benchmark
 		//long time = System.currentTimeMillis();
