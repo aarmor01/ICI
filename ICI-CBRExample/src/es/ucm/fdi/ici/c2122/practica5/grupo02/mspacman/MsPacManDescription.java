@@ -10,11 +10,12 @@ public class MsPacManDescription implements CaseComponent {
 	
 	Integer score;
 	Integer time;
-	Integer nearestPPill;
-	Integer nearestGhost;
+	Integer distanceNearestPPill; 
+	Integer distanceNearestGhost;//
+	Integer nearestNodeGhost;
 	Boolean edibleGhost;
-
-
+	Integer livesLeft; //
+	
 	public Integer getId() {
 		return id;
 	}
@@ -39,20 +40,28 @@ public class MsPacManDescription implements CaseComponent {
 		this.time = time;
 	}
 
-	public Integer getNearestPPill() {
-		return nearestPPill;
+	public Integer getDistanceNearestPPill() {
+		return distanceNearestPPill;
 	}
 
-	public void setNearestPPill(Integer nearestPPill) {
-		this.nearestPPill = nearestPPill;
+	public void setDistanceNearestPPill(Integer nearestPPill) {
+		this.distanceNearestPPill = nearestPPill;
 	}
 
-	public Integer getNearestGhost() {
-		return nearestGhost;
+	public void setDistanceNearestGhost(Integer d) {
+		this.distanceNearestGhost = d;
 	}
 
-	public void setNearestGhost(Integer nearestGhost) {
-		this.nearestGhost = nearestGhost;
+	public Integer getDistanceNearestGhost() {
+		return distanceNearestGhost;
+	}
+
+	public Integer getNearestNodeGhost() {
+		return nearestNodeGhost;
+	}
+	
+	public void setNearestNodeGhost(Integer nearestGhost) {
+		this.nearestNodeGhost = nearestGhost;
 	}
 
 	public Boolean getEdibleGhost() {
@@ -62,7 +71,15 @@ public class MsPacManDescription implements CaseComponent {
 	public void setEdibleGhost(Boolean edibleGhost) {
 		this.edibleGhost = edibleGhost;
 	}
-
+	
+	public Integer getLivesLeft() {
+		return livesLeft;
+	}
+	
+	public void setLivesLeft(Integer l) {
+		livesLeft = l;
+	}
+	
 	@Override
 	public Attribute getIdAttribute() {
 		return new Attribute("id", MsPacManDescription.class);
@@ -70,8 +87,9 @@ public class MsPacManDescription implements CaseComponent {
 
 	@Override
 	public String toString() {
-		return "MsPacManDescription [id=" + id + ", score=" + score + ", time=" + time + ", nearestPPill="
-				+ nearestPPill + ", nearestGhost=" + nearestGhost + ", edibleGhost=" + edibleGhost + "]";
+		return "MsPacManDescription [id=" + id + ", score=" + score + ", time=" + time + ", distanceNearestPPill="
+				+ distanceNearestPPill + ", distanceNearestGhost=" + distanceNearestGhost + ", nearestNodeGhost=" 
+				+ nearestNodeGhost + ", edibleGhost=" + edibleGhost + ", livesLeft =" + livesLeft + "]";
 	}
 
 

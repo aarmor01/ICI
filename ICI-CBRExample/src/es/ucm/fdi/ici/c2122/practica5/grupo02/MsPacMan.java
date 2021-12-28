@@ -43,13 +43,10 @@ public class MsPacMan extends PacmanController {
 	
 	@Override
 	public MOVE getMove(Game game, long timeDue) {
-		
-		
 		//This implementation only computes a new action when MsPacMan is in a junction. 
 		//This is relevant for the case storage policy
 		if(!game.isJunction(game.getPacmanCurrentNodeIndex()))
 			return MOVE.NEUTRAL;
-		
 		
 		try {
 			MsPacManInput input = new MsPacManInput(game);

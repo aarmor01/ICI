@@ -69,10 +69,11 @@ public class MsPacManCBRengine implements StandardCBRApplication {
 		simConfig.setDescriptionSimFunction(new Average());
 		simConfig.addMapping(new Attribute("score",MsPacManDescription.class), new Interval(15000));
 		simConfig.addMapping(new Attribute("time",MsPacManDescription.class), new Interval(4000));
-		simConfig.addMapping(new Attribute("nearestPPill",MsPacManDescription.class), new Interval(650));
-		simConfig.addMapping(new Attribute("nearestGhost",MsPacManDescription.class), new Interval(650));
+		simConfig.addMapping(new Attribute("distanceNearestPPill",MsPacManDescription.class), new Interval(650));
+		simConfig.addMapping(new Attribute("distanceNearestGhost",MsPacManDescription.class), new Interval(650));
+		simConfig.addMapping(new Attribute("nearestNodeGhost",MsPacManDescription.class), new Interval(650));
 		simConfig.addMapping(new Attribute("edibleGhost",MsPacManDescription.class), new Equal());
-		
+		simConfig.addMapping(new Attribute("livesLeft",MsPacManDescription.class), new Interval(650));
 	}
 
 	@Override
@@ -87,6 +88,7 @@ public class MsPacManCBRengine implements StandardCBRApplication {
 			this.action = MOVE.NEUTRAL;
 		}
 		else {
+			//AQUI SE OPTIENEN LOS CASOS DE LA BASE
 			//Compute retrieve
 			Collection<RetrievalResult> eval = NNScoringMethod.evaluateSimilarity(caseBase.getCases(), query, simConfig);
 			//Compute reuse
@@ -103,8 +105,10 @@ public class MsPacManCBRengine implements StandardCBRApplication {
 	{
 		// This simple implementation only uses 1NN
 		// Consider using kNNs with majority voting
+		
+		//Selecciona el/los mas prioritarios/CAMBIAR
 		RetrievalResult first = SelectCases.selectTopKRR(eval, 1).iterator().next();
-		CBRCase mostSimilarCase = first.get_case();
+		CBRCase mostSimilarCase = first.get_case(); 
 		double similarity = first.getEval();
 
 		MsPacManResult result = (MsPacManResult) mostSimilarCase.getResult();
@@ -115,7 +119,7 @@ public class MsPacManCBRengine implements StandardCBRApplication {
 		//Here, it simply takes the action of the 1NN
 		MOVE action = solution.getAction();
 		
-		//But if not enough similarity or bad case, choose another move randomly
+		//But if not enough similarity or bad case, choose another move randomly //CAMBIAR
 		if((similarity<0.7)||(result.getScore()<100)) {
 			int index = (int)Math.floor(Math.random()*4);
 			if(MOVE.values()[index]==action) 

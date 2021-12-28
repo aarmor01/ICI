@@ -16,9 +16,11 @@ public class MsPacManInput extends CBRInput {
 
 	Integer score;
 	Integer time;
-	Integer nearestPPill;
-	Integer nearestGhost;
+	Integer distanceNearestPPill;
+	Integer distanceNearestGhost;
+	Integer nearestNodeGhost;
 	Boolean edible;
+	Integer livesLeft;
 	
 	@Override
 	public void parseInput() {
@@ -26,16 +28,19 @@ public class MsPacManInput extends CBRInput {
 		computeNearestPPill(game);
 		time = game.getTotalTime();
 		score = game.getScore();
+		livesLeft = game.getPacmanNumberOfLivesRemaining();
 	}
 
 	@Override
 	public CBRQuery getQuery() {
 		MsPacManDescription description = new MsPacManDescription();
 		description.setEdibleGhost(edible);
-		description.setNearestGhost(nearestGhost);
-		description.setNearestPPill(nearestPPill);
+		description.setNearestNodeGhost(nearestNodeGhost);
+		description.setDistanceNearestGhost(distanceNearestGhost);
+		description.setDistanceNearestPPill(distanceNearestPPill);
 		description.setScore(score);
 		description.setTime(time);
+		description.setLivesLeft(livesLeft);
 		
 		CBRQuery query = new CBRQuery();
 		query.setDescription(description);
@@ -43,7 +48,7 @@ public class MsPacManInput extends CBRInput {
 	}
 	
 	private void computeNearestGhost(Game game) {
-		nearestGhost = Integer.MAX_VALUE;
+		nearestNodeGhost = Integer.MAX_VALUE;
 		edible = false;
 		GHOST nearest = null;
 		for(GHOST g: GHOST.values()) {
@@ -53,9 +58,10 @@ public class MsPacManInput extends CBRInput {
 				distance = (int)game.getDistance(game.getPacmanCurrentNodeIndex(), pos, DM.PATH);
 			else
 				distance = Integer.MAX_VALUE;
-			if(distance < nearestGhost)
-			{
-				nearestGhost = distance;
+			if(distance < nearestNodeGhost){
+				
+				nearestNodeGhost = game.getGhostCurrentNodeIndex(g);
+				distanceNearestGhost = distance;
 				nearest = g;
 			}
 		}
@@ -64,11 +70,11 @@ public class MsPacManInput extends CBRInput {
 	}
 	
 	private void computeNearestPPill(Game game) {
-		nearestPPill = Integer.MAX_VALUE;
+		distanceNearestPPill = Integer.MAX_VALUE;
 		for(int pos: game.getPowerPillIndices()) {
 			int distance = (int)game.getDistance(game.getPacmanCurrentNodeIndex(), pos, DM.PATH);
-			if(distance < nearestGhost)
-				nearestPPill = distance;
+			if(distance < nearestNodeGhost)
+				distanceNearestPPill = distance;
 		}
 	}
 }
