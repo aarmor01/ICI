@@ -2,6 +2,7 @@ package es.ucm.fdi.ici.c2122.practica5.grupo02.mspacman;
 
 import java.io.File;
 import java.util.Collection;
+import java.util.Iterator;
 
 import es.ucm.fdi.gaia.jcolibri.cbraplications.StandardCBRApplication;
 import es.ucm.fdi.gaia.jcolibri.cbrcore.Attribute;
@@ -19,10 +20,6 @@ import es.ucm.fdi.gaia.jcolibri.util.FileIO;
 import es.ucm.fdi.ici.c2122.practica5.grupo02.CBRengine.Average;
 import es.ucm.fdi.ici.c2122.practica5.grupo02.CBRengine.CachedLinearCaseBase;
 import es.ucm.fdi.ici.c2122.practica5.grupo02.CBRengine.CustomPlainTextConnector;
-import es.ucm.fdi.ici.c2122.practica5.grupo02.mspacman.MsPacManDescription;
-import es.ucm.fdi.ici.c2122.practica5.grupo02.mspacman.MsPacManResult;
-import es.ucm.fdi.ici.c2122.practica5.grupo02.mspacman.MsPacManSolution;
-import es.ucm.fdi.ici.c2122.practica5.grupo02.mspacman.MsPacManStorageManager;
 import pacman.game.Constants.MOVE;
 
 public class MsPacManCBRengine implements StandardCBRApplication {
@@ -88,7 +85,7 @@ public class MsPacManCBRengine implements StandardCBRApplication {
 			this.action = MOVE.NEUTRAL;
 		}
 		else {
-			//AQUI SE OPTIENEN LOS CASOS DE LA BASE
+			//AQUI SE OPTIENEN LOS CASOS DE LA BASE DE DATOS MAS SIMILARES A LA QUERY
 			//Compute retrieve
 			Collection<RetrievalResult> eval = NNScoringMethod.evaluateSimilarity(caseBase.getCases(), query, simConfig);
 			//Compute reuse
@@ -105,14 +102,22 @@ public class MsPacManCBRengine implements StandardCBRApplication {
 	{
 		// This simple implementation only uses 1NN
 		// Consider using kNNs with majority voting
-		
+		int nCases = 5;
 		//Selecciona el/los mas prioritarios/CAMBIAR
-		RetrievalResult first = SelectCases.selectTopKRR(eval, 1).iterator().next();
-		CBRCase mostSimilarCase = first.get_case(); 
-		double similarity = first.getEval();
-
-		MsPacManResult result = (MsPacManResult) mostSimilarCase.getResult();
-		MsPacManSolution solution = (MsPacManSolution) mostSimilarCase.getSolution();
+		Collection<RetrievalResult> collec = SelectCases.selectTopKRR(eval, nCases);
+		
+		Iterator<RetrievalResult> it = collec.iterator();
+		
+		for(int i = 0; i < nCases; i++) {
+			RetrievalResult cases = it.next();
+			CBRCase mostSimilarCase = cases.get_case();
+			double similarity = cases.getEval();
+			
+			MsPacManResult result = (MsPacManResult) mostSimilarCase.getResult();
+			MsPacManSolution solution = (MsPacManSolution) mostSimilarCase.getSolution();
+			
+		}
+		
 		
 		//Now compute a solution for the query
 		

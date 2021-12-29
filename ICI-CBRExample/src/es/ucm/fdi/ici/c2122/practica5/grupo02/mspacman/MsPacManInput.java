@@ -48,7 +48,8 @@ public class MsPacManInput extends CBRInput {
 	}
 	
 	private void computeNearestGhost(Game game) {
-		nearestNodeGhost = Integer.MAX_VALUE;
+		nearestNodeGhost = -1;
+		distanceNearestGhost = Integer.MAX_VALUE;
 		edible = false;
 		GHOST nearest = null;
 		for(GHOST g: GHOST.values()) {
@@ -73,7 +74,7 @@ public class MsPacManInput extends CBRInput {
 		distanceNearestPPill = Integer.MAX_VALUE;
 		for(int pos: game.getPowerPillIndices()) {
 			int distance = (int)game.getDistance(game.getPacmanCurrentNodeIndex(), pos, DM.PATH);
-			if(distance < nearestNodeGhost)
+			if(distance < nearestNodeGhost && game.isPowerPillStillAvailable(pos))
 				distanceNearestPPill = distance;
 		}
 	}
