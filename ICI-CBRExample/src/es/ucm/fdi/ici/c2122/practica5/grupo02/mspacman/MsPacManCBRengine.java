@@ -108,13 +108,16 @@ public class MsPacManCBRengine implements StandardCBRApplication {
 		
 		Iterator<RetrievalResult> it = collec.iterator();
 		
+		double similarity = 0.0;
+		MsPacManSolution solution = null;
+		MsPacManResult result = null;
 		for(int i = 0; i < nCases; i++) {
 			RetrievalResult cases = it.next();
 			CBRCase mostSimilarCase = cases.get_case();
-			double similarity = cases.getEval();
+			similarity = cases.getEval();
 			
-			MsPacManResult result = (MsPacManResult) mostSimilarCase.getResult();
-			MsPacManSolution solution = (MsPacManSolution) mostSimilarCase.getSolution();
+			result = (MsPacManResult) mostSimilarCase.getResult();
+			solution = (MsPacManSolution) mostSimilarCase.getSolution();
 			
 		}
 		
