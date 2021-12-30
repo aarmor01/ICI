@@ -24,53 +24,49 @@ import pacman.game.Constants.MOVE;
 
 public class MsPacManCBRengine implements StandardCBRApplication {
 
-	private String opponent;
+	private String opponent, cbrFileName;
 	private MOVE action;
 	private MsPacManStorageManager storageManager;
 
 	CustomPlainTextConnector connector;
 	CBRCaseBase caseBase;
 	NNConfig simConfig;
-	
-	
-	final static String TEAM = "grupo02";
-	
-	
-	final static String CONNECTOR_FILE_PATH = "es/ucm/fdi/ici/c2122/practica5/"+TEAM+"/mspacman/plaintextconfig.xml";
-	final static String CASE_BASE_PATH = "cbrdata"+File.separator+TEAM+File.separator+"mspacman"+File.separator;
 
-	
-	public MsPacManCBRengine(MsPacManStorageManager storageManager)
-	{
+	final static String TEAM = "grupo02";
+
+	final static String CONNECTOR_FILE_PATH = "es/ucm/fdi/ici/c2122/practica5/" + TEAM
+			+ "/mspacman/plaintextconfig.xml";
+	final static String CASE_BASE_PATH = "src/es/ucm/fdi/ici/c2122/practica5/" + TEAM 
+			+ "/cbrdata/mspacman/";
+
+	public MsPacManCBRengine(MsPacManStorageManager storageManager) {
 		this.storageManager = storageManager;
 	}
-	
+
 	public void setOpponent(String opponent) {
 		this.opponent = opponent;
+		this.cbrFileName = opponent.replace("es.ucm.fdi.ici.c2122.practica5.grupo02.", "") + ".csv";
 	}
-	
+
 	@Override
 	public void configure() throws ExecutionException {
 		connector = new CustomPlainTextConnector();
 		caseBase = new CachedLinearCaseBase();
-		
+
 		connector.initFromXMLfile(FileIO.findFile(CONNECTOR_FILE_PATH));
-		
-		//Do not use default case base path in the xml file. Instead use custom file path for each opponent.
-		//Note that you can create any subfolder of files to store the case base inside your "cbrdata/grupoXX" folder.
-		connector.setCaseBaseFile(CASE_BASE_PATH, opponent+".csv");
-		
+		connector.setCaseBaseFile(CASE_BASE_PATH, cbrFileName);
+
 		this.storageManager.setCaseBase(caseBase);
-		
+
 		simConfig = new NNConfig();
 		simConfig.setDescriptionSimFunction(new Average());
-		simConfig.addMapping(new Attribute("score",MsPacManDescription.class), new Interval(15000));
-		simConfig.addMapping(new Attribute("time",MsPacManDescription.class), new Interval(4000));
-		simConfig.addMapping(new Attribute("distanceNearestPPill",MsPacManDescription.class), new Interval(650));
-		simConfig.addMapping(new Attribute("distanceNearestGhost",MsPacManDescription.class), new Interval(650));
-		simConfig.addMapping(new Attribute("nearestNodeGhost",MsPacManDescription.class), new Interval(650));
-		simConfig.addMapping(new Attribute("edibleGhost",MsPacManDescription.class), new Equal());
-		simConfig.addMapping(new Attribute("livesLeft",MsPacManDescription.class), new Interval(650));
+		simConfig.addMapping(new Attribute("score", MsPacManDescription.class), new Interval(15000));
+		simConfig.addMapping(new Attribute("time", MsPacManDescription.class), new Interval(4000));
+		simConfig.addMapping(new Attribute("distanceNearestPPill", MsPacManDescription.class), new Interval(650));
+		simConfig.addMapping(new Attribute("distanceNearestGhost", MsPacManDescription.class), new Interval(650));
+		simConfig.addMapping(new Attribute("nearestNodeGhost", MsPacManDescription.class), new Interval(650));
+		simConfig.addMapping(new Attribute("edibleGhost", MsPacManDescription.class), new Equal());
+		simConfig.addMapping(new Attribute("livesLeft", MsPacManDescription.class), new Interval(650));
 	}
 
 	@Override
@@ -81,69 +77,65 @@ public class MsPacManCBRengine implements StandardCBRApplication {
 
 	@Override
 	public void cycle(CBRQuery query) throws ExecutionException {
-		if(caseBase.getCases().isEmpty()) {
+		if (caseBase.getCases().isEmpty()) {
 			this.action = MOVE.NEUTRAL;
-		}
-		else {
-			//AQUI SE OPTIENEN LOS CASOS DE LA BASE DE DATOS MAS SIMILARES A LA QUERY
-			//Compute retrieve
-			Collection<RetrievalResult> eval = NNScoringMethod.evaluateSimilarity(caseBase.getCases(), query, simConfig);
-			//Compute reuse
+		} else {
+			// AQUI SE OPTIENEN LOS CASOS DE LA BASE DE DATOS MAS SIMILARES A LA QUERY
+			// Compute retrieve
+			Collection<RetrievalResult> eval = NNScoringMethod.evaluateSimilarity(caseBase.getCases(), query,
+					simConfig);
+			// Compute reuse
 			this.action = reuse(eval);
 		}
-		
-		//Compute revise & retain
+
+		// Compute revise & retain
 		CBRCase newCase = createNewCase(query);
 		this.storageManager.reviseAndRetain(newCase);
-		
+
 	}
 
-	private MOVE reuse(Collection<RetrievalResult> eval)
-	{
+	private MOVE reuse(Collection<RetrievalResult> eval) {
 		// This simple implementation only uses 1NN
 		// Consider using kNNs with majority voting
 		int nCases = 5;
-		//Selecciona el/los mas prioritarios/CAMBIAR
+		// Selecciona el/los mas prioritarios/CAMBIAR
 		Collection<RetrievalResult> collec = SelectCases.selectTopKRR(eval, nCases);
-		
+
 		Iterator<RetrievalResult> it = collec.iterator();
-		
+
 		double similarity = 0.0;
 		MsPacManSolution solution = null;
 		MsPacManResult result = null;
-		for(int i = 0; i < collec.size(); i++) {
+
+		for (int i = 0; i < collec.size(); i++) {
 			RetrievalResult cases = it.next();
 			CBRCase mostSimilarCase = cases.get_case();
 			similarity = cases.getEval();
-			
+
 			result = (MsPacManResult) mostSimilarCase.getResult();
 			solution = (MsPacManSolution) mostSimilarCase.getSolution();
-			
+
 		}
-		
-		
-		//Now compute a solution for the query
-		
-		//Here, it simply takes the action of the 1NN
+
+		// Now compute a solution for the query
+
+		// Here, it simply takes the action of the 1NN
 		MOVE action = solution.getAction();
-		
-		//But if not enough similarity or bad case, choose another move randomly //CAMBIAR
-		if((similarity<0.7)||(result.getScore()<100)) {
-			int index = (int)Math.floor(Math.random()*4);
-			if(MOVE.values()[index]==action) 
-				index= (index+1)%4;
+
+		// But if not enough similarity or bad case, choose another move randomly
+		// //CAMBIAR
+		if ((similarity < 0.7) || (result.getScore() < 100)) {
+			int index = (int) Math.floor(Math.random() * 4);
+			if (MOVE.values()[index] == action)
+				index = (index + 1) % 4;
 			action = MOVE.values()[index];
 		}
 		return action;
 	}
-	
-	
-	
 
 	/**
-	 * Creates a new case using the query as description, 
-	 * storing the action into the solution and 
-	 * setting the proper id number
+	 * Creates a new case using the query as description, storing the action into
+	 * the solution and setting the proper id number
 	 */
 	private CBRCase createNewCase(CBRQuery query) {
 		CBRCase newCase = new CBRCase();
@@ -151,7 +143,7 @@ public class MsPacManCBRengine implements StandardCBRApplication {
 		MsPacManResult newResult = new MsPacManResult();
 		MsPacManSolution newSolution = new MsPacManSolution();
 		int newId = this.caseBase.getCases().size();
-		newId+= storageManager.getPendingCases();
+		newId += storageManager.getPendingCases();
 		newDescription.setId(newId);
 		newResult.setId(newId);
 		newSolution.setId(newId);
@@ -161,7 +153,7 @@ public class MsPacManCBRengine implements StandardCBRApplication {
 		newCase.setSolution(newSolution);
 		return newCase;
 	}
-	
+
 	public MOVE getSolution() {
 		return this.action;
 	}

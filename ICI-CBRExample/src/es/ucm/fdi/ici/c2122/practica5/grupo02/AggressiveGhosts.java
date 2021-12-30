@@ -1,12 +1,13 @@
-
+package es.ucm.fdi.ici.c2122.practica5.grupo02;
 
 import java.util.EnumMap;
 
-import pacman.controllers.GhostController;
-import pacman.game.Constants.DM;
-import pacman.game.Constants.GHOST;
-import pacman.game.Constants.MOVE;
 import pacman.game.Game;
+import pacman.game.Constants.DM;
+import pacman.game.Constants.MOVE;
+import pacman.game.Constants.GHOST;
+
+import pacman.controllers.GhostController;
 
 /*
  * The Class AggressiveGhosts.
