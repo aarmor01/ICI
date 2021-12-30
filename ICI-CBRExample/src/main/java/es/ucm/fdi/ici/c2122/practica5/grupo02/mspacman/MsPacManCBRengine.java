@@ -1,8 +1,8 @@
 package es.ucm.fdi.ici.c2122.practica5.grupo02.mspacman;
 
 import java.io.File;
-import java.util.Collection;
 import java.util.Iterator;
+import java.util.Collection;
 
 import es.ucm.fdi.gaia.jcolibri.cbraplications.StandardCBRApplication;
 import es.ucm.fdi.gaia.jcolibri.cbrcore.Attribute;
@@ -17,14 +17,17 @@ import es.ucm.fdi.gaia.jcolibri.method.retrieve.NNretrieval.similarity.local.Equ
 import es.ucm.fdi.gaia.jcolibri.method.retrieve.NNretrieval.similarity.local.Interval;
 import es.ucm.fdi.gaia.jcolibri.method.retrieve.selection.SelectCases;
 import es.ucm.fdi.gaia.jcolibri.util.FileIO;
+
+import es.ucm.fdi.ici.c2122.practica5.grupo02.GameConstants;
 import es.ucm.fdi.ici.c2122.practica5.grupo02.CBRengine.Average;
 import es.ucm.fdi.ici.c2122.practica5.grupo02.CBRengine.CachedLinearCaseBase;
 import es.ucm.fdi.ici.c2122.practica5.grupo02.CBRengine.CustomPlainTextConnector;
+
 import pacman.game.Constants.MOVE;
 
 public class MsPacManCBRengine implements StandardCBRApplication {
 
-	private String opponent, cbrFileName;
+	private String opponent;
 	private MOVE action;
 	private MsPacManStorageManager storageManager;
 
@@ -34,18 +37,14 @@ public class MsPacManCBRengine implements StandardCBRApplication {
 
 	final static String TEAM = "grupo02";
 
-	final static String CONNECTOR_FILE_PATH = "es/ucm/fdi/ici/c2122/practica5/" + TEAM
-			+ "/mspacman/plaintextconfig.xml";
-	final static String CASE_BASE_PATH = "src/es/ucm/fdi/ici/c2122/practica5/" + TEAM 
-			+ "/cbrdata/mspacman/";
+	
 
 	public MsPacManCBRengine(MsPacManStorageManager storageManager) {
 		this.storageManager = storageManager;
 	}
 
 	public void setOpponent(String opponent) {
-		this.opponent = opponent;
-		this.cbrFileName = opponent.replace("es.ucm.fdi.ici.c2122.practica5.grupo02.", "") + ".csv";
+		this.opponent = opponent.replace("es.ucm.fdi.ici.c2122.practica5.grupo02.", "") ;
 	}
 
 	@Override
@@ -53,8 +52,8 @@ public class MsPacManCBRengine implements StandardCBRApplication {
 		connector = new CustomPlainTextConnector();
 		caseBase = new CachedLinearCaseBase();
 
-		connector.initFromXMLfile(FileIO.findFile(CONNECTOR_FILE_PATH));
-		connector.setCaseBaseFile(CASE_BASE_PATH, cbrFileName);
+		connector.initFromXMLfile(FileIO.findFile(GameConstants.CONNECTOR_FILE_PATH));
+		connector.setCaseBaseFile(GameConstants.CASE_BASE_PATH, opponent + ".csv");
 
 		this.storageManager.setCaseBase(caseBase);
 
