@@ -14,8 +14,7 @@ public class GameConstants {
 			+ File.separator + "practica4" + File.separator + "grupo02" + File.separator;
 
 	public final static String CONNECTOR_FILE_PATH = "es" + File.separator + "ucm" + File.separator + "fdi" + File.separator
-			+ "ici" + File.separator + "c2122" + File.separator + "practica5" + File.separator + "grupo02" + File.separator + "mspacman"
-			 + File.separator + "plaintextconfig.xml";
+			+ "ici" + File.separator + "c2122" + File.separator + "practica5" + File.separator + "grupo02" + File.separator;
 
 	public final static String CASE_BASE_PATH = "src" + File.separator + "main" + File.separator + "java" + File.separator
 			+ "es" + File.separator + "ucm" + File.separator + "fdi" + File.separator + "ici" + File.separator + "c2122"
@@ -25,4 +24,5 @@ public class GameConstants {
 	public static Color[] colours = { Color.RED, Color.PINK, Color.CYAN, Color.YELLOW };
 
 	public static boolean DEBUG = false;
+	
 }

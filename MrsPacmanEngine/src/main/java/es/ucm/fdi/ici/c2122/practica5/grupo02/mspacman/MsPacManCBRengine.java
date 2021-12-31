@@ -52,7 +52,7 @@ public class MsPacManCBRengine implements StandardCBRApplication {
 		connector = new CustomPlainTextConnector();
 		caseBase = new CachedLinearCaseBase();
 
-		connector.initFromXMLfile(FileIO.findFile(GameConstants.CONNECTOR_FILE_PATH));
+		connector.initFromXMLfile(FileIO.findFile(GameConstants.CONNECTOR_FILE_PATH + "mspacman" + File.separator + "plaintextconfig.xml"));
 		connector.setCaseBaseFile(GameConstants.CASE_BASE_PATH, opponent + ".csv");
 
 		this.storageManager.setCaseBase(caseBase);

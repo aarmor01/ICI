@@ -1,4 +1,4 @@
-package es.ucm.fdi.ici.c2122.practica5.grupo02.mspacman;
+package es.ucm.fdi.ici.c2122.practica5.grupo02.ghosts;
 
 import java.io.File;
 import java.util.Iterator;
@@ -25,21 +25,20 @@ import es.ucm.fdi.ici.c2122.practica5.grupo02.CBRengine.CustomPlainTextConnector
 
 import pacman.game.Constants.MOVE;
 
-public class MsPacManCBRengine implements StandardCBRApplication {
+public class GhostsCBRengine implements StandardCBRApplication {
 
 	private String opponent;
 	private MOVE action;
-	private MsPacManStorageManager storageManager;
+	private GhostsStorageManager storageManager;
 
 	CustomPlainTextConnector connector;
 	CBRCaseBase caseBase;
 	NNConfig simConfig;
 
 	final static String TEAM = "grupo02";
-
 	
 
-	public MsPacManCBRengine(MsPacManStorageManager storageManager) {
+	public GhostsCBRengine(GhostsStorageManager storageManager) {
 		this.storageManager = storageManager;
 	}
 
@@ -52,20 +51,20 @@ public class MsPacManCBRengine implements StandardCBRApplication {
 		connector = new CustomPlainTextConnector();
 		caseBase = new CachedLinearCaseBase();
 
-		connector.initFromXMLfile(FileIO.findFile(GameConstants.CONNECTOR_FILE_PATH + "mspacman" + File.separator + "plaintextconfig.xml"));
+		connector.initFromXMLfile(FileIO.findFile(GameConstants.CONNECTOR_FILE_PATH + "ghosts" + File.separator + "plaintextconfig.xml"));
 		connector.setCaseBaseFile(GameConstants.CASE_BASE_PATH, opponent + ".csv");
 
 		this.storageManager.setCaseBase(caseBase);
 
 		simConfig = new NNConfig();
 		simConfig.setDescriptionSimFunction(new Average());
-		simConfig.addMapping(new Attribute("score", MsPacManDescription.class), new Interval(15000));
-		simConfig.addMapping(new Attribute("time", MsPacManDescription.class), new Interval(4000));
-		simConfig.addMapping(new Attribute("distanceNearestPPill", MsPacManDescription.class), new Interval(650));
-		simConfig.addMapping(new Attribute("distanceNearestGhost", MsPacManDescription.class), new Interval(650));
-		simConfig.addMapping(new Attribute("nearestNodeGhost", MsPacManDescription.class), new Interval(650));
-		simConfig.addMapping(new Attribute("edibleGhost", MsPacManDescription.class), new Equal());
-		simConfig.addMapping(new Attribute("livesLeft", MsPacManDescription.class), new Interval(650));
+		simConfig.addMapping(new Attribute("score", GhostsDescription.class), new Interval(15000));
+		simConfig.addMapping(new Attribute("time", GhostsDescription.class), new Interval(4000));
+		simConfig.addMapping(new Attribute("distanceNearestPPill", GhostsDescription.class), new Interval(650));
+		simConfig.addMapping(new Attribute("distanceNearestGhost", GhostsDescription.class), new Interval(650));
+		simConfig.addMapping(new Attribute("nearestNodeGhost", GhostsDescription.class), new Interval(650));
+		simConfig.addMapping(new Attribute("edibleGhost", GhostsDescription.class), new Equal());
+		simConfig.addMapping(new Attribute("livesLeft", GhostsDescription.class), new Interval(650));
 	}
 
 	@Override
@@ -103,16 +102,16 @@ public class MsPacManCBRengine implements StandardCBRApplication {
 		Iterator<RetrievalResult> it = collec.iterator();
 
 		double similarity = 0.0;
-		MsPacManSolution solution = null;
-		MsPacManResult result = null;
+		GhostsSolution solution = null;
+		GhostsResult result = null;
 
 		for (int i = 0; i < collec.size(); i++) {
 			RetrievalResult cases = it.next();
 			CBRCase mostSimilarCase = cases.get_case();
 			similarity = cases.getEval();
 
-			result = (MsPacManResult) mostSimilarCase.getResult();
-			solution = (MsPacManSolution) mostSimilarCase.getSolution();
+			result = (GhostsResult) mostSimilarCase.getResult();
+			solution = (GhostsSolution) mostSimilarCase.getSolution();
 
 		}
 
@@ -138,9 +137,9 @@ public class MsPacManCBRengine implements StandardCBRApplication {
 	 */
 	private CBRCase createNewCase(CBRQuery query) {
 		CBRCase newCase = new CBRCase();
-		MsPacManDescription newDescription = (MsPacManDescription) query.getDescription();
-		MsPacManResult newResult = new MsPacManResult();
-		MsPacManSolution newSolution = new MsPacManSolution();
+		GhostsDescription newDescription = (GhostsDescription) query.getDescription();
+		GhostsResult newResult = new GhostsResult();
+		GhostsSolution newSolution = new GhostsSolution();
 		int newId = this.caseBase.getCases().size();
 		newId += storageManager.getPendingCases();
 		newDescription.setId(newId);
