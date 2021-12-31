@@ -24,4 +24,5 @@ public class GameConstants {
 	public static Color[] colours = { Color.RED, Color.PINK, Color.CYAN, Color.YELLOW };
 
 	public static boolean DEBUG = false;
+	
 }
