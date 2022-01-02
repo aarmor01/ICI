@@ -1,7 +1,7 @@
 <TextFileConfiguration>
 	<FilePath>not used</FilePath>
 	<Delimiters>,dS->:[] </Delimiters>
-	<DescriptionClassName>es.ucm.fdi.ici.c2122.practica5.grupo02.mspacman.MsPacManDescription</DescriptionClassName>
+	<DescriptionClassName>es.ucm.fdi.ici.c2122.practica5.grupo02.ghosts.GhostsDescription</DescriptionClassName>
 	<DescriptionMappings>
 		<Map>id</Map>
 		<Map>score</Map>
@@ -12,12 +12,12 @@
 		<Map>edibleGhost</Map>		
 		<Map>livesLeft</Map>		
 	</DescriptionMappings>
-	<SolutionClassName>es.ucm.fdi.ici.c2122.practica5.grupo02.mspacman.MsPacManSolution</SolutionClassName>
+	<SolutionClassName>es.ucm.fdi.ici.c2122.practica5.grupo02.ghosts.GhostsSolution</SolutionClassName>
 	<SolutionMappings>
 		<Map>id</Map>
 		<Map>action</Map>
 	</SolutionMappings>
-	<ResultClassName>es.ucm.fdi.ici.c2122.practica5.grupo02.mspacman.MsPacManResult</ResultClassName>
+	<ResultClassName>es.ucm.fdi.ici.c2122.practica5.grupo02.ghosts.GhostsResult</ResultClassName>
 	<ResultMappings>
 		<Map>id</Map>
 		<Map>score</Map>

@@ -9,8 +9,8 @@ import es.ucm.fdi.ici.c2122.practica5.grupo02.ghosts.GhostsCBRengine;
 import es.ucm.fdi.ici.c2122.practica5.grupo02.ghosts.GhostsStorageManager;
 
 import pacman.game.Game;
-import pacman.game.Constants.GHOST;
 import pacman.game.Constants.MOVE;
+import pacman.game.Constants.GHOST;
 import pacman.controllers.GhostController;
 
 public class Ghosts extends GhostController {
@@ -20,6 +20,9 @@ public class Ghosts extends GhostController {
 
 	public Ghosts()
 	{		
+		this.cbrEngines = new EnumMap<GHOST, GhostsCBRengine>(GHOST.class);
+		this.storageManagers = new EnumMap<GHOST, GhostsStorageManager>(GHOST.class);
+		
 		for(GHOST ghost : GHOST.values()) {
 			GhostsStorageManager tempStrGhost = new GhostsStorageManager();
 					
@@ -60,7 +63,7 @@ public class Ghosts extends GhostController {
 		for (GHOST ghost : GHOST.values()) {
 			// This implementation only computes a new action when Ghost is in a
 			// junction. This is relevant for the case storage policy
-			if (!game.isJunction(game.getPacmanCurrentNodeIndex())) {
+			if (!game.isJunction(game.getGhostCurrentNodeIndex(ghost))) {
 				ghostMoves.put(ghost, MOVE.NEUTRAL);
 				continue;				
 			}
@@ -77,6 +80,7 @@ public class Ghosts extends GhostController {
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
+			
 			ghostMoves.put(ghost, MOVE.NEUTRAL);
 		}
 		
