@@ -20,7 +20,7 @@ public class ExecutorTest {
                 .build();
 
         PacmanController pacMan = new MsPacMan();
-        GhostController ghosts = new AggressiveGhosts();
+        GhostController ghosts = new Ghosts();
 
         executor.runGameTimedSpeedOptimised(pacMan, ghosts, false, "CBR");
         

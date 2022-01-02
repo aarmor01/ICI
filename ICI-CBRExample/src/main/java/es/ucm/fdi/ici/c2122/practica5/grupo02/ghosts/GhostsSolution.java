@@ -2,7 +2,7 @@ package es.ucm.fdi.ici.c2122.practica5.grupo02.ghosts;
 
 import es.ucm.fdi.gaia.jcolibri.cbrcore.Attribute;
 import es.ucm.fdi.gaia.jcolibri.cbrcore.CaseComponent;
-import es.ucm.fdi.ici.c2122.practica5.grupo02.mspacman.MsPacManSolution;
+
 import pacman.game.Constants.MOVE;
 
 public class GhostsSolution implements CaseComponent {

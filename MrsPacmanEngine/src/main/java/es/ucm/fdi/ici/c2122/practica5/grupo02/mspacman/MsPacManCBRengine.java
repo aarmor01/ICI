@@ -34,6 +34,8 @@ public class MsPacManCBRengine implements StandardCBRApplication {
 	NNConfig simConfig;
 	CBRCaseBase caseBase;
 	CustomPlainTextConnector connector;
+	
+	private final static String MSPACMAN_FOLDER = "mspacman" + File.separator;
 
 	public MsPacManCBRengine(MsPacManStorageManager storageManager) {
 		this.storageManager = storageManager;
@@ -48,7 +50,7 @@ public class MsPacManCBRengine implements StandardCBRApplication {
 		connector = new CustomPlainTextConnector();
 		caseBase = new CachedLinearCaseBase();
 
-		connector.initFromXMLfile(FileIO.findFile(GameConstants.CONNECTOR_FILE_PATH + "mspacman" + File.separator + "plaintextconfig.xml"));
+		connector.initFromXMLfile(FileIO.findFile(GameConstants.CONNECTOR_FILE_PATH + MSPACMAN_FOLDER + "plaintextconfig.xml"));
 		connector.setCaseBaseFile(GameConstants.CASE_BASE_PATH + "mspacman" + File.separator, opponent + ".csv");
 
 		this.storageManager.setCaseBase(caseBase);

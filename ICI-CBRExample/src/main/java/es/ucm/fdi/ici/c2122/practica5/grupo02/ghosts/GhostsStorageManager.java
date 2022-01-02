@@ -5,8 +5,7 @@ import java.util.Vector;
 import es.ucm.fdi.gaia.jcolibri.cbrcore.CBRCase;
 import es.ucm.fdi.gaia.jcolibri.cbrcore.CBRCaseBase;
 import es.ucm.fdi.gaia.jcolibri.method.retain.StoreCasesMethod;
-import es.ucm.fdi.ici.c2122.practica5.grupo02.mspacman.MsPacManDescription;
-import es.ucm.fdi.ici.c2122.practica5.grupo02.mspacman.MsPacManResult;
+
 import pacman.game.Game;
 
 public class GhostsStorageManager {
@@ -39,16 +38,15 @@ public class GhostsStorageManager {
 		CBRCase bCase = this.buffer.remove(0);
 		reviseCase(bCase);
 		retainCase(bCase);
-
 	}
 
 	private void reviseCase(CBRCase bCase) {
-		MsPacManDescription description = (MsPacManDescription) bCase.getDescription();
+		GhostsDescription description = (GhostsDescription)bCase.getDescription();
 		int oldScore = description.getScore();
 		int currentScore = game.getScore();
 		int resultValue = currentScore - oldScore;
 
-		MsPacManResult result = (MsPacManResult) bCase.getResult();
+		GhostsResult result = (GhostsResult)bCase.getResult();
 		result.setScore(resultValue);
 	}
 
@@ -67,10 +65,12 @@ public class GhostsStorageManager {
 			reviseCase(oldCase);
 			retainCase(oldCase);
 		}
+		
 		this.buffer.removeAllElements();
 	}
 
 	public int getPendingCases() {
 		return this.buffer.size();
 	}
+	
 }

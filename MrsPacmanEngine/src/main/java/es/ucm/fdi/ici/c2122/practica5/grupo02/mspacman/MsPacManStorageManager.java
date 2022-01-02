@@ -5,8 +5,7 @@ import java.util.Vector;
 import es.ucm.fdi.gaia.jcolibri.cbrcore.CBRCase;
 import es.ucm.fdi.gaia.jcolibri.cbrcore.CBRCaseBase;
 import es.ucm.fdi.gaia.jcolibri.method.retain.StoreCasesMethod;
-import es.ucm.fdi.ici.c2122.practica5.grupo02.mspacman.MsPacManDescription;
-import es.ucm.fdi.ici.c2122.practica5.grupo02.mspacman.MsPacManResult;
+
 import pacman.game.Game;
 
 public class MsPacManStorageManager {

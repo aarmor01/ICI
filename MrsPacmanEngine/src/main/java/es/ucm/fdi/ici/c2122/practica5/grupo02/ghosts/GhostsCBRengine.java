@@ -35,7 +35,9 @@ public class GhostsCBRengine implements StandardCBRApplication {
 	// colibri variables
 	NNConfig simConfig;
 	CBRCaseBase caseBase;
-	CustomPlainTextConnector connector;
+	CustomPlainTextConnector connector;	
+	
+	public final static String GHOSTS_FOLDER = "ghosts" + File.separator;
 
 	public GhostsCBRengine(GhostsStorageManager storageManager) {
 		this.storageManager = storageManager;
@@ -50,7 +52,7 @@ public class GhostsCBRengine implements StandardCBRApplication {
 		caseBase = new CachedLinearCaseBase();
 		connector = new CustomPlainTextConnector();
 
-		connector.initFromXMLfile(FileIO.findFile(GameConstants.CONNECTOR_FILE_PATH + "ghosts" + File.separator + "plaintextconfig.xml"));
+		connector.initFromXMLfile(FileIO.findFile(GameConstants.CONNECTOR_FILE_PATH + GHOSTS_FOLDER + "plaintextconfig.xml"));
 		connector.setCaseBaseFile(GameConstants.CASE_BASE_PATH + "ghosts" + File.separator, opponent + ".csv");
 
 		this.storageManager.setCaseBase(caseBase);

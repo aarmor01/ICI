@@ -27,16 +27,17 @@ import pacman.game.Constants.MOVE;
 
 public class GhostsCBRengine implements StandardCBRApplication {
 
-	private String opponent;
+	// our variables
 	private MOVE action;
+	private String opponent;
 	private GhostsStorageManager storageManager;
 
-	CustomPlainTextConnector connector;
-	CBRCaseBase caseBase;
+	// colibri variables
 	NNConfig simConfig;
-
-	final static String TEAM = "grupo02";
+	CBRCaseBase caseBase;
+	CustomPlainTextConnector connector;	
 	
+	public final static String GHOSTS_FOLDER = "ghosts" + File.separator;
 
 	public GhostsCBRengine(GhostsStorageManager storageManager) {
 		this.storageManager = storageManager;
@@ -48,16 +49,17 @@ public class GhostsCBRengine implements StandardCBRApplication {
 
 	@Override
 	public void configure() throws ExecutionException {
-		connector = new CustomPlainTextConnector();
 		caseBase = new CachedLinearCaseBase();
+		connector = new CustomPlainTextConnector();
 
-		connector.initFromXMLfile(FileIO.findFile(GameConstants.CONNECTOR_FILE_PATH + "ghosts" + File.separator + "plaintextconfig.xml"));
-		connector.setCaseBaseFile(GameConstants.CASE_BASE_PATH, opponent + ".csv");
+		connector.initFromXMLfile(FileIO.findFile(GameConstants.CONNECTOR_FILE_PATH + GHOSTS_FOLDER + "plaintextconfig.xml"));
+		connector.setCaseBaseFile(GameConstants.CASE_BASE_PATH + "ghosts" + File.separator, opponent + ".csv");
 
 		this.storageManager.setCaseBase(caseBase);
 
 		simConfig = new NNConfig();
 		simConfig.setDescriptionSimFunction(new Average());
+		
 		simConfig.addMapping(new Attribute("score", GhostsDescription.class), new Interval(15000));
 		simConfig.addMapping(new Attribute("time", GhostsDescription.class), new Interval(4000));
 		simConfig.addMapping(new Attribute("distanceNearestPPill", GhostsDescription.class), new Interval(650));
@@ -74,14 +76,19 @@ public class GhostsCBRengine implements StandardCBRApplication {
 	}
 
 	@Override
+	public void postCycle() throws ExecutionException {
+		this.storageManager.close();
+		this.caseBase.close();
+	}
+
+	@Override
 	public void cycle(CBRQuery query) throws ExecutionException {
 		if (caseBase.getCases().isEmpty()) {
 			this.action = MOVE.NEUTRAL;
 		} else {
-			// AQUI SE OPTIENEN LOS CASOS DE LA BASE DE DATOS MAS SIMILARES A LA QUERY
+			// AQUI SE OBTIENEN LOS CASOS DE LA BASE DE DATOS MAS SIMILARES A LA QUERY
 			// Compute retrieve
-			Collection<RetrievalResult> eval = NNScoringMethod.evaluateSimilarity(caseBase.getCases(), query,
-					simConfig);
+			Collection<RetrievalResult> eval = NNScoringMethod.evaluateSimilarity(caseBase.getCases(), query, simConfig);
 			// Compute reuse
 			this.action = reuse(eval);
 		}
@@ -89,13 +96,13 @@ public class GhostsCBRengine implements StandardCBRApplication {
 		// Compute revise & retain
 		CBRCase newCase = createNewCase(query);
 		this.storageManager.reviseAndRetain(newCase);
-
 	}
 
 	private MOVE reuse(Collection<RetrievalResult> eval) {
 		// This simple implementation only uses 1NN
 		// Consider using kNNs with majority voting
 		int nCases = 5;
+		
 		// Selecciona el/los mas prioritarios/CAMBIAR
 		Collection<RetrievalResult> collec = SelectCases.selectTopKRR(eval, nCases);
 
@@ -112,7 +119,6 @@ public class GhostsCBRengine implements StandardCBRApplication {
 
 			result = (GhostsResult) mostSimilarCase.getResult();
 			solution = (GhostsSolution) mostSimilarCase.getSolution();
-
 		}
 
 		// Now compute a solution for the query
@@ -137,29 +143,28 @@ public class GhostsCBRengine implements StandardCBRApplication {
 	 */
 	private CBRCase createNewCase(CBRQuery query) {
 		CBRCase newCase = new CBRCase();
-		GhostsDescription newDescription = (GhostsDescription) query.getDescription();
+		
+		GhostsDescription newDescription = (GhostsDescription)query.getDescription();
 		GhostsResult newResult = new GhostsResult();
 		GhostsSolution newSolution = new GhostsSolution();
+		
 		int newId = this.caseBase.getCases().size();
 		newId += storageManager.getPendingCases();
+		
 		newDescription.setId(newId);
 		newResult.setId(newId);
 		newSolution.setId(newId);
 		newSolution.setAction(this.action);
+		
 		newCase.setDescription(newDescription);
 		newCase.setResult(newResult);
 		newCase.setSolution(newSolution);
+		
 		return newCase;
 	}
 
 	public MOVE getSolution() {
 		return this.action;
-	}
-
-	@Override
-	public void postCycle() throws ExecutionException {
-		this.storageManager.close();
-		this.caseBase.close();
 	}
 
 }

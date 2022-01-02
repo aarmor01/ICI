@@ -1,11 +1,12 @@
 package es.ucm.fdi.ici.c2122.practica5.grupo02.mspacman;
 
 import es.ucm.fdi.gaia.jcolibri.cbrcore.CBRQuery;
+
 import es.ucm.fdi.ici.cbr.CBRInput;
-import es.ucm.fdi.ici.c2122.practica5.grupo02.mspacman.MsPacManDescription;
+
+import pacman.game.Game;
 import pacman.game.Constants.DM;
 import pacman.game.Constants.GHOST;
-import pacman.game.Game;
 
 public class MsPacManInput extends CBRInput {
 
