@@ -60,6 +60,9 @@ public class Ghosts extends GhostController {
 	public EnumMap<GHOST, MOVE> getMove(Game game, long timeDue) {
 		EnumMap<GHOST, MOVE> ghostMoves = new EnumMap<GHOST, MOVE>(GHOST.class);
 		
+		GhostsInput input = new GhostsInput(game);
+		input.parseInput();
+		
 		for (GHOST ghost : GHOST.values()) {
 			// This implementation only computes a new action when Ghost is in a
 			// junction. This is relevant for the case storage policy
@@ -69,9 +72,6 @@ public class Ghosts extends GhostController {
 			}
 
 			try {
-				GhostsInput input = new GhostsInput(game);
-				input.parseInput();
-				
 				storageManagers.get(ghost).setGame(game);
 				cbrEngines.get(ghost).cycle(input.getQuery());
 				
