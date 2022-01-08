@@ -29,6 +29,7 @@ public class MsPacManCBRengine implements StandardCBRApplication {
 
 	private MOVE action;
 	private String opponent;
+	private double similarityCase;
 	private MsPacManStorageManager storageManager;
 
 	NNConfig simConfig;
@@ -87,46 +88,56 @@ public class MsPacManCBRengine implements StandardCBRApplication {
 
 		// Compute revise & retain
 		CBRCase newCase = createNewCase(query);
+		if(similarityCase < 0.85)
 		this.storageManager.reviseAndRetain(newCase);
 
 	}
 
 	private MOVE reuse(Collection<RetrievalResult> eval) {
-		// This simple implementation only uses 1NN
-		// Consider using kNNs with majority voting
 		int nCases = 5;
-		// Selecciona el/los mas prioritarios/CAMBIAR
+		// Selecciona el/los mas prioritarios
 		Collection<RetrievalResult> collec = SelectCases.selectTopKRR(eval, nCases);
-
 		Iterator<RetrievalResult> it = collec.iterator();
 
 		double similarity = 0.0;
-		MsPacManSolution solution = null;
-		MsPacManResult result = null;
-
+		MOVE action = MOVE.NEUTRAL;
+		int[] moves = new int [5];
+		
 		for (int i = 0; i < collec.size(); i++) {
 			RetrievalResult cases = it.next();
 			CBRCase mostSimilarCase = cases.get_case();
-			similarity = cases.getEval();
+			similarity += cases.getEval();
 
-			result = (MsPacManResult) mostSimilarCase.getResult();
-			solution = (MsPacManSolution) mostSimilarCase.getSolution();
-
+			MsPacManResult result = (MsPacManResult) mostSimilarCase.getResult();
+			MsPacManSolution solution = (MsPacManSolution) mostSimilarCase.getSolution();
+			
+			moves[solution.getAction().ordinal()]++;
 		}
-
-		// Now compute a solution for the query
-
-		// Here, it simply takes the action of the 1NN
-		MOVE action = solution.getAction();
-
-		// But if not enough similarity or bad case, choose another move randomly
-		// //CAMBIAR
-		if ((similarity < 0.7) || (result.getScore() < 100)) {
-			int index = (int) Math.floor(Math.random() * 4);
-			if (MOVE.values()[index] == action)
-				index = (index + 1) % 4;
-			action = MOVE.values()[index];
+		
+		similarity = similarity / nCases; //AVARAGE 
+		
+		//TODO Pillar un caso que si esta siendo perseguido, y si tiene powerPill cercana
+		//Si ha obtenido buena puntuacion 
+		
+		//TODO Y que vaya a por las pills mas cercanas en el input o las que haya visto(copiar codigo de la practica anterior)
+		//TODO Cambiar los rangos de funciones de similitud
+		
+		if(similarity > 0.65) {
+			int index_ = 4; //Neutral
+			for(int i = 0 ; i < 5; i++)
+				if(moves[i] > moves[index_]) index_ = i; //elegimos por votacion mayoritara
+			
+			action = MOVE.values()[index_];
+			
+		}else {
+			RetrievalResult case_ = collec.iterator().next();
+			MsPacManSolution sol = (MsPacManSolution) case_.get_case().getSolution();
+			similarity = case_.getEval();
+			
+			action = sol.getAction();
 		}
+		
+		similarityCase = similarity;
 		return action;
 	}
 

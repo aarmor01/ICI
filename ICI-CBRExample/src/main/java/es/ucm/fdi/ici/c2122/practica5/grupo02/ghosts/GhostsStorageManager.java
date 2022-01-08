@@ -36,11 +36,13 @@ public class GhostsStorageManager {
 			return;
 
 		CBRCase bCase = this.buffer.remove(0);
-		reviseCase(bCase);
-		retainCase(bCase);
+		//Si dicho caso ha sido util y nos ha dado un buen resultado, lo guardamos
+		if(reviseCase(bCase)) {
+			retainCase(bCase);
+		}
 	}
 
-	private void reviseCase(CBRCase bCase) {
+	private boolean reviseCase(CBRCase bCase) {
 		GhostsDescription description = (GhostsDescription)bCase.getDescription();
 		int oldScore = description.getScore();
 		int currentScore = game.getScore();
@@ -48,6 +50,8 @@ public class GhostsStorageManager {
 
 		GhostsResult result = (GhostsResult)bCase.getResult();
 		result.setScore(resultValue);
+		
+		return resultValue > 0;
 	}
 
 	private void retainCase(CBRCase bCase) {
