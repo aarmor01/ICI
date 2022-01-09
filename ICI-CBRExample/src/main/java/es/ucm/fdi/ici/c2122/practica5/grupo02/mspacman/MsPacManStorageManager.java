@@ -39,12 +39,12 @@ public class MsPacManStorageManager {
 		
 		
 		CBRCase bCase = this.buffer.remove(0);
-		reviseCase(bCase);
-		retainCase(bCase);
-		
+		if(reviseCase(bCase)) {
+			retainCase(bCase);
+		}
 	}
 	
-	private void reviseCase(CBRCase bCase) {
+	private boolean reviseCase(CBRCase bCase) {
 		MsPacManDescription description = (MsPacManDescription)bCase.getDescription();
 		int oldScore = description.getScore();
 		int currentScore = game.getScore();
@@ -52,6 +52,8 @@ public class MsPacManStorageManager {
 		
 		MsPacManResult result = (MsPacManResult)bCase.getResult();
 		result.setScore(resultValue);	
+		
+		return resultValue > 0;
 	}
 	
 	private void retainCase(CBRCase bCase)

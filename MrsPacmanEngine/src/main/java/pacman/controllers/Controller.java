@@ -75,7 +75,7 @@ public abstract class Controller<T> implements Runnable {
             synchronized (this) {
                 while (!wasSignalled) {
                     try {
-                        wait();
+                    	wait();
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
