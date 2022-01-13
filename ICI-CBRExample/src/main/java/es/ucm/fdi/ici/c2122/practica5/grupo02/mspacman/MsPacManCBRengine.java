@@ -28,14 +28,15 @@ import pacman.game.Constants.DM;
 import pacman.game.Constants.MOVE;
 
 public class MsPacManCBRengine implements StandardCBRApplication {
-
 	
-	Game game;
 	private MOVE action;
 	private String opponent;
 	private double similarityCase;
 	private MsPacManStorageManager storageManager;
 
+	private double MAX_SIMILARITY = 0.93;
+	private double MIN_SIMILARITY = 0.66;
+		
 	NNConfig simConfig;
 	CBRCaseBase caseBase;
 	CustomPlainTextConnector connector;
@@ -44,10 +45,6 @@ public class MsPacManCBRengine implements StandardCBRApplication {
 
 	public MsPacManCBRengine(MsPacManStorageManager storageManager) {
 		this.storageManager = storageManager;
-	}
-
-	public void setGame(Game game_) {
-		this.game = game_;
 	}
 	
 	public void setOpponent(String opponent) {
@@ -83,7 +80,9 @@ public class MsPacManCBRengine implements StandardCBRApplication {
 
 	@Override
 	public void cycle(CBRQuery query) throws ExecutionException {
-		if (caseBase.getCases().isEmpty()) {
+		int nCases = 5;
+		
+		if (caseBase.getCases().isEmpty() || (caseBase.getCases().size() < nCases)) {
 			this.action = MOVE.NEUTRAL;
 		} else {
 			// Compute retrieve
@@ -95,7 +94,7 @@ public class MsPacManCBRengine implements StandardCBRApplication {
 
 		// Compute revise & retain
 		CBRCase newCase = createNewCase(query);
-		if(similarityCase < 0.93) //Si no es lo suficientemente similar, lo guardamos
+		if(similarityCase < MAX_SIMILARITY) //Si no es lo suficientemente similar, lo guardamos
 			this.storageManager.reviseAndRetain(newCase);
 
 	}
@@ -127,7 +126,7 @@ public class MsPacManCBRengine implements StandardCBRApplication {
 		//Si ha obtenido buena puntuacion 
 		
 		//VOTACION MAYORITARIA
-		if(similarity > 0.55) {
+		if(similarity > MIN_SIMILARITY) {
 			int index_ = 4; //Neutral
 			for(int i = 0 ; i < 5; i++)
 				if(moves[i] > moves[index_]) index_ = i; //elegimos por votacion mayoritara
@@ -140,26 +139,24 @@ public class MsPacManCBRengine implements StandardCBRApplication {
 			MsPacManSolution sol = (MsPacManSolution) case_.get_case().getSolution();
 			similarity = case_.getEval();
 			
+			//MOVERME ALEATORIAMENTE A
+			
 			if(result.score > 40) {
 				action = sol.getAction();
 				
 			}else {
-				MsPacManDescription descriptionReal = (MsPacManDescription) query_.getDescription();
-				if(descriptionReal.nearestNodeGhost != -1) {
-					int pcNode = game.getPacmanCurrentNodeIndex();
-					action = game.getApproximateNextMoveAwayFromTarget(pcNode, descriptionReal.nearestNodeGhost, game.getPacmanLastMoveMade(), DM.PATH);
-				}else {
-					
-//					action = game.getApproximateNextMoveTowardsTarget(pcNode, descriptionReal., action, null)
-				}
+				
+				
 			}
-			
 		}
 		
 		similarityCase = similarity;
 		return action;
 	}
-
+	
+	/*----------------------------------------------------------------------------------------------------
+	/----------------------------------------------------------------------------------------------------
+	/----------------------------------------------------------------------------------------------------*/
 	/**
 	 * Creates a new case using the query as description, storing the action into
 	 * the solution and setting the proper id number
