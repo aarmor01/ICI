@@ -22,7 +22,10 @@ import es.ucm.fdi.ici.c2122.practica5.grupo02.GameConstants;
 import es.ucm.fdi.ici.c2122.practica5.grupo02.CBRengine.Average;
 import es.ucm.fdi.ici.c2122.practica5.grupo02.CBRengine.CachedLinearCaseBase;
 import es.ucm.fdi.ici.c2122.practica5.grupo02.CBRengine.CustomPlainTextConnector;
-
+import es.ucm.fdi.ici.c2122.practica5.grupo02.mspacman.MsPacManDescription;
+import es.ucm.fdi.ici.c2122.practica5.grupo02.mspacman.MsPacManResult;
+import es.ucm.fdi.ici.c2122.practica5.grupo02.mspacman.MsPacManSolution;
+import pacman.game.Constants.DM;
 import pacman.game.Constants.MOVE;
 
 public class GhostsCBRengine implements StandardCBRApplication {
@@ -30,6 +33,7 @@ public class GhostsCBRengine implements StandardCBRApplication {
 	// our variables
 	private MOVE action;
 	private String opponent;
+	private double similarityCase;
 	private GhostsStorageManager storageManager;
 
 	// colibri variables
@@ -44,7 +48,7 @@ public class GhostsCBRengine implements StandardCBRApplication {
 	}
 
 	public void setOpponent(String opponent) {
-		this.opponent = opponent.replace("es.ucm.fdi.ici.c2122.practica5.grupo02.", "") ;
+		this.opponent = opponent.substring(opponent.length() - 8, opponent.length()) ;
 	}
 
 	@Override
@@ -62,11 +66,25 @@ public class GhostsCBRengine implements StandardCBRApplication {
 		
 		simConfig.addMapping(new Attribute("score", GhostsDescription.class), new Interval(15000));
 		simConfig.addMapping(new Attribute("time", GhostsDescription.class), new Interval(4000));
-		simConfig.addMapping(new Attribute("distanceNearestPPill", GhostsDescription.class), new Interval(650));
-		simConfig.addMapping(new Attribute("distanceNearestGhost", GhostsDescription.class), new Interval(650));
-		simConfig.addMapping(new Attribute("nearestNodeGhost", GhostsDescription.class), new Interval(650));
-		simConfig.addMapping(new Attribute("edibleGhost", GhostsDescription.class), new Equal());
-		simConfig.addMapping(new Attribute("livesLeft", GhostsDescription.class), new Interval(650));
+		simConfig.addMapping(new Attribute("lives", GhostsDescription.class), new Interval(3));
+
+		simConfig.addMapping(new Attribute("mspacmanPos", GhostsDescription.class), new Interval(25));
+		simConfig.addMapping(new Attribute("mspacmanLastMove", GhostsDescription.class), new Equal());
+		
+		simConfig.addMapping(new Attribute("nearestGhostsDistance0", GhostsDescription.class), new Interval(50));
+		simConfig.addMapping(new Attribute("nearestGhostsDistance1", GhostsDescription.class), new Interval(50));
+		simConfig.addMapping(new Attribute("nearestGhostsDistance2", GhostsDescription.class), new Interval(50));
+		simConfig.addMapping(new Attribute("nearestGhostsDistance3", GhostsDescription.class), new Interval(50));
+								
+		simConfig.addMapping(new Attribute("nearestGhostsEdible0", GhostsDescription.class), new Equal());
+		simConfig.addMapping(new Attribute("nearestGhostsEdible1", GhostsDescription.class), new Equal());
+		simConfig.addMapping(new Attribute("nearestGhostsEdible2", GhostsDescription.class), new Equal());
+		simConfig.addMapping(new Attribute("nearestGhostsEdible3", GhostsDescription.class), new Equal());
+		
+		simConfig.addMapping(new Attribute("nearestGhostsLastMoves0", GhostsDescription.class), new Equal());
+		simConfig.addMapping(new Attribute("nearestGhostsLastMoves1", GhostsDescription.class), new Equal());
+		simConfig.addMapping(new Attribute("nearestGhostsLastMoves2", GhostsDescription.class), new Equal());
+		simConfig.addMapping(new Attribute("nearestGhostsLastMoves3", GhostsDescription.class), new Equal());
 	}
 
 	@Override
@@ -83,10 +101,11 @@ public class GhostsCBRengine implements StandardCBRApplication {
 
 	@Override
 	public void cycle(CBRQuery query) throws ExecutionException {
-		if (caseBase.getCases().isEmpty()) {
+		this.similarityCase = 0;
+		
+		if (caseBase.getCases().size() < GameConstants.NUM_CASES) {
 			this.action = MOVE.NEUTRAL;
 		} else {
-			// AQUI SE OBTIENEN LOS CASOS DE LA BASE DE DATOS MAS SIMILARES A LA QUERY
 			// Compute retrieve
 			Collection<RetrievalResult> eval = NNScoringMethod.evaluateSimilarity(caseBase.getCases(), query, simConfig);
 			// Compute reuse
@@ -94,6 +113,13 @@ public class GhostsCBRengine implements StandardCBRApplication {
 		}
 
 		// Compute revise & retain
+		// Si es demasiado similar, no lo guardamos
+		if(GameConstants.DEBUG) System.out.print("SIM: " + similarityCase + "\n");
+		if(similarityCase >= GameConstants.SIM_TOO_CLOSE) {
+			if(GameConstants.DEBUG) System.out.print("TooSimilar\n");
+			return;
+		}
+		
 		CBRCase newCase = createNewCase(query);
 		this.storageManager.reviseAndRetain(newCase);
 	}
@@ -101,46 +127,59 @@ public class GhostsCBRengine implements StandardCBRApplication {
 	private MOVE reuse(Collection<RetrievalResult> eval) {
 		// This simple implementation only uses 1NN
 		// Consider using kNNs with majority voting
-		int nCases = 5;
 		
-		// Selecciona el/los mas prioritarios/CAMBIAR
-		Collection<RetrievalResult> collec = SelectCases.selectTopKRR(eval, nCases);
-
+		// Selecciona los 5 mas prioritarios
+		Collection<RetrievalResult> collec = SelectCases.selectTopKRR(eval, GameConstants.NUM_CASES);
 		Iterator<RetrievalResult> it = collec.iterator();
 
 		double similarity = 0.0;
-		GhostsSolution solution = null;
-		GhostsResult result = null;
-
-		for (int i = 0; i < collec.size(); i++) {
+		MOVE action = MOVE.NEUTRAL;
+		int[] moves = new int[5];
+		
+		for (int i = 0; i < GameConstants.NUM_CASES; i++) {
 			RetrievalResult cases = it.next();
 			CBRCase mostSimilarCase = cases.get_case();
-			similarity = cases.getEval();
+			
+			if(discard(mostSimilarCase))
+				continue;
+				
+			similarity += cases.getEval();
 
-			result = (GhostsResult) mostSimilarCase.getResult();
-			solution = (GhostsSolution) mostSimilarCase.getSolution();
+			GhostsSolution solution = (GhostsSolution) mostSimilarCase.getSolution();
+			
+			moves[solution.getAction().ordinal()]++;
 		}
-
-		// Now compute a solution for the query
-
-		// Here, it simply takes the action of the 1NN
-		MOVE action = solution.getAction();
-
-		// But if not enough similarity or bad case, choose another move randomly
-		// //CAMBIAR
-		if ((similarity < 0.7) || (result.getScore() < 100)) {
-			int index = (int) Math.floor(Math.random() * 4);
-			if (MOVE.values()[index] == action)
-				index = (index + 1) % 4;
-			action = MOVE.values()[index];
+		
+		similarity = similarity / GameConstants.NUM_CASES; //AVERAGE
+		
+		if (similarity > GameConstants.MIN_SIMILARITY) {
+			int index_ = 4; //Neutral
+			for (int i = 0 ; i < 5; i++)
+				if (moves[i] > moves[index_]) 
+					index_ = i;
+			
+			action = MOVE.values()[index_];
+			if(GameConstants.DEBUG) System.out.print("MAX_MOVE: " + action + "\n");
 		}
-		return action;
+		else {
+			action = MOVE.values()[(int)Math.floor(Math.random()*4)];
+			if(GameConstants.DEBUG) System.out.print("RANDOM_MOVE: " + action + "\n");			
+		}
+		
+		similarityCase = similarity;
+		return action;		
 	}
 
 	/**
 	 * Creates a new case using the query as description, storing the action into
 	 * the solution and setting the proper id number
 	 */
+	private boolean discard(CBRCase mostSimilarCase) {
+		GhostsResult result = (GhostsResult) mostSimilarCase.getResult();
+		
+		return result.getIsGhostEdible() && result.getGhostDst() < GameConstants.MIN_DIST;
+	}
+	
 	private CBRCase createNewCase(CBRQuery query) {
 		CBRCase newCase = new CBRCase();
 		

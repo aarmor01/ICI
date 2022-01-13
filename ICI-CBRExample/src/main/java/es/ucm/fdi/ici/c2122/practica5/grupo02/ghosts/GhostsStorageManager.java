@@ -14,7 +14,7 @@ public class GhostsStorageManager {
 	CBRCaseBase caseBase;
 	Vector<CBRCase> buffer;
 
-	private final static int TIME_WINDOW = 5;
+	private final static int TIME_WINDOW = 4;
 
 	public GhostsStorageManager() {
 		this.buffer = new Vector<CBRCase>();
@@ -36,21 +36,21 @@ public class GhostsStorageManager {
 			return;
 
 		CBRCase bCase = this.buffer.remove(0);
-		//Si dicho caso ha sido util y nos ha dado un buen resultado, lo guardamos
-		if(reviseCase(bCase)) {
+		
+		// Si al revisar nos da un resultado util
+		if (reviseCase(bCase))
 			retainCase(bCase);
-		}
 	}
 
 	private boolean reviseCase(CBRCase bCase) {
-		GhostsDescription description = (GhostsDescription)bCase.getDescription();
+		GhostsDescription description = (GhostsDescription) bCase.getDescription();
 		int oldScore = description.getScore();
 		int currentScore = game.getScore();
 		int resultValue = currentScore - oldScore;
 
-		GhostsResult result = (GhostsResult)bCase.getResult();
+		GhostsResult result = (GhostsResult) bCase.getResult();
 		result.setScore(resultValue);
-		
+
 		return resultValue > 0;
 	}
 
@@ -66,15 +66,15 @@ public class GhostsStorageManager {
 
 	public void close() {
 		for (CBRCase oldCase : this.buffer) {
-			reviseCase(oldCase);
-			retainCase(oldCase);
+			if (reviseCase(oldCase))
+				retainCase(oldCase);
 		}
-		
+
 		this.buffer.removeAllElements();
 	}
 
 	public int getPendingCases() {
 		return this.buffer.size();
 	}
-	
+
 }

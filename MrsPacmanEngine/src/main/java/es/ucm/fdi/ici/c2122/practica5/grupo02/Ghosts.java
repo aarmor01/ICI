@@ -32,7 +32,7 @@ public class Ghosts extends GhostController {
 	}
 
 	@Override
-	public void preCompute(String opponent) { // se le pasa el nombre del archivo del enemigo
+	public void preCompute(String opponent) {
 		for (GHOST ghost : GHOST.values()) {
 			cbrEngines.get(ghost).setOpponent(opponent);
 
@@ -61,17 +61,19 @@ public class Ghosts extends GhostController {
 		EnumMap<GHOST, MOVE> ghostMoves = new EnumMap<GHOST, MOVE>(GHOST.class);
 		
 		GhostsInput input = new GhostsInput(game);
-		input.parseInput();
 		
 		for (GHOST ghost : GHOST.values()) {
 			// This implementation only computes a new action when Ghost is in a
 			// junction. This is relevant for the case storage policy
-			if (!game.isJunction(game.getGhostCurrentNodeIndex(ghost))) {
+			if (!game.doesGhostRequireAction(ghost)) {
 				ghostMoves.put(ghost, MOVE.NEUTRAL);
 				continue;				
 			}
 
 			try {
+				input.setGhost(ghost);
+				input.parseInput();
+				
 				storageManagers.get(ghost).setGame(game);
 				cbrEngines.get(ghost).cycle(input.getQuery());
 				

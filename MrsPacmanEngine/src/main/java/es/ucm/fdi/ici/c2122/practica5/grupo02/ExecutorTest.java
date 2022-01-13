@@ -4,8 +4,6 @@ import pacman.Executor;
 
 import pacman.controllers.GhostController;
 import pacman.controllers.PacmanController;
-//import pacman.controllers.HumanController;
-//import pacman.controllers.KeyBoardInput;
 
 public class ExecutorTest {
 
@@ -22,7 +20,7 @@ public class ExecutorTest {
         PacmanController pacMan = new MsPacMan();
         GhostController ghosts = new Ghosts();
 
-        executor.runGameTimedSpeedOptimised(pacMan, ghosts, false, "CBR");
+        executor.runGameTimedSpeedOptimised(pacMan, ghosts, true, "CBR");
         
         //Time benchmark
 		//long time = System.currentTimeMillis();

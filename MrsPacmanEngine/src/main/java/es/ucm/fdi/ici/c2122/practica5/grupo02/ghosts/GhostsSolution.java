@@ -6,18 +6,23 @@ import es.ucm.fdi.gaia.jcolibri.cbrcore.CaseComponent;
 import pacman.game.Constants.MOVE;
 
 public class GhostsSolution implements CaseComponent {
+	
 	Integer id;
+	
 	MOVE action;
 	
 	public Integer getId() {
 		return id;
 	}
+	
 	public void setId(Integer id) {
 		this.id = id;
 	}
+	
 	public MOVE getAction() {
 		return action;
 	}
+	
 	public void setAction(MOVE action) {
 		this.action = action;
 	}
@@ -30,8 +35,6 @@ public class GhostsSolution implements CaseComponent {
 	@Override
 	public String toString() {
 		return "GhostsSolution [id=" + id + ", action=" + action + "]";
-	}  
-	
-	
+	}
 	
 }

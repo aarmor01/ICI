@@ -3,7 +3,6 @@ package es.ucm.fdi.ici.c2122.practica5.grupo02.ghosts;
 import es.ucm.fdi.gaia.jcolibri.cbrcore.CBRQuery;
 
 import es.ucm.fdi.ici.cbr.CBRInput;
-import es.ucm.fdi.ici.c2122.practica5.grupo02.ghosts.GhostsDescription;
 
 import pacman.game.Game;
 import pacman.game.Constants.DM;
@@ -12,83 +11,68 @@ import pacman.game.Constants.MOVE;
 
 public class GhostsInput extends CBRInput {
 
-	
 	Integer time;
-	Integer distanceNearestGhost;
-	Integer nearestNodeGhost;
-	Boolean edible;
-	Integer livesLeft;
-	
-	//New variables
 	Integer score;
-	Integer pillsLeft;
-	Integer powerPillsLeft;
-	Integer edibleGhosts;
+	Integer lives;
+
+	Integer mspacmanPos;
+	Integer mspacmanLastMove;
+
+	Integer[] nearestGhostsDistance;
+	Boolean[] nearestGhostsEdible;
+	MOVE[] nearestGhostsLastMoves;
+
+	Integer ghostIndex;
 	
-	Integer[] distancesToPacMan;
-	Integer[] ghostsPositions;
-	boolean[] inLair;
-	Integer distanceNearestPPill;
-	MOVE[] lastGhostsMoves;
-	Integer[] edibleTimes;
+	GHOST ghostType;
 
 	public GhostsInput(Game game) {
 		super(game);
 	}
 
+	public void setGhost(GHOST ghost) {
+		this.ghostType = ghost;
+	}
+
 	@Override
 	public void parseInput() {
-		computeNearestGhost(game);
-		computeNearestPPill(game);
-
-		score = game.getScore();
+		if (ghostType == null)
+			return;
+		
 		time = game.getTotalTime();
-		livesLeft = game.getPacmanNumberOfLivesRemaining();
-		
-		pillsLeft = game.getNumberOfActivePills();
-		powerPillsLeft = game.getNumberOfActivePowerPills();
-		edibleGhosts = 0;
-		for (GHOST ghost : GHOST.values()) {
-			if(game.isGhostEdible(ghost)) {
-				edibleGhosts++;
-			}
-		}
-		
-		distancesToPacMan = new Integer[]{0,0,0,0};
-		ghostsPositions = new Integer[]{0,0,0,0};
-		inLair = new boolean[]{false, false, false, false};
-		lastGhostsMoves = new MOVE[]{MOVE.NEUTRAL, MOVE.NEUTRAL, MOVE.NEUTRAL, MOVE.NEUTRAL};
-		edibleTimes = new Integer[]{0,0,0,0};
+		score = game.getScore();
+		lives = game.getPacmanNumberOfLivesRemaining();
+
+		mspacmanPos = game.getPacmanCurrentNodeIndex();
+		mspacmanLastMove = game.getPacmanCurrentNodeIndex();
 		
 		Integer nodePacman = game.getPacmanCurrentNodeIndex();
+		nearestGhostsDistance = new Integer[4];
+		GHOST[] ghosts = new GHOST[4];
 		
-		distancesToPacMan[0] = game.getShortestPathDistance(game.getGhostCurrentNodeIndex(GHOST.BLINKY), nodePacman, game.getGhostLastMoveMade(GHOST.BLINKY));
-		distancesToPacMan[1] = game.getShortestPathDistance(game.getGhostCurrentNodeIndex(GHOST.PINKY), nodePacman, game.getGhostLastMoveMade(GHOST.PINKY));
-		distancesToPacMan[2] = game.getShortestPathDistance(game.getGhostCurrentNodeIndex(GHOST.INKY), nodePacman, game.getGhostLastMoveMade(GHOST.INKY));
-		distancesToPacMan[3] = game.getShortestPathDistance(game.getGhostCurrentNodeIndex(GHOST.SUE), nodePacman, game.getGhostLastMoveMade(GHOST.SUE));
-		
-		Integer contadorFantasmas = 0;
-		for (GHOST ghost : GHOST.values()) {
-			ghostsPositions[contadorFantasmas] = game.getGhostCurrentNodeIndex(ghost);
-			contadorFantasmas++;
+		for(int ghostIdx = 0; ghostIdx < GHOST.values().length; ghostIdx++) {
+			if (game.getGhostLairTime(GHOST.values()[ghostIdx]) <= 0) {
+				double dst = game.getShortestPathDistance(game.getGhostCurrentNodeIndex(GHOST.values()[ghostIdx]), 
+						nodePacman, game.getGhostLastMoveMade(GHOST.values()[ghostIdx]));
+				nearestGhostsDistance[ghostIdx] = (int) dst;
+			}
+			else {
+				nearestGhostsDistance[ghostIdx] = Integer.MAX_VALUE;
+			}
+			
+			GHOST g = GHOST.values()[ghostIdx];
+			ghosts[ghostIdx] = g;
 		}
+		sort(nearestGhostsDistance, ghosts);
 		
-		contadorFantasmas = 0;
-		for (GHOST ghost : GHOST.values()) {
-			inLair[contadorFantasmas] = game.getGhostLairTime(ghost) > 0;
-			contadorFantasmas++;
-		}
-		
-		contadorFantasmas = 0;
-		for (GHOST ghost : GHOST.values()) {
-			lastGhostsMoves[contadorFantasmas] = game.getGhostLastMoveMade(ghost);
-			contadorFantasmas++;
-		}
-		
-		contadorFantasmas = 0;
-		for (GHOST ghost : GHOST.values()) {
-			edibleTimes[contadorFantasmas] = game.getGhostEdibleTime(ghost);
-			contadorFantasmas++;
+		nearestGhostsEdible = new Boolean[4];
+		nearestGhostsLastMoves = new MOVE[4];
+		for(int ghostIdx = 0; ghostIdx < GHOST.values().length; ghostIdx++) {
+			GHOST ghost = ghosts[ghostIdx];
+			if (ghost == ghostType) ghostIndex = ghostIdx;
+			
+			nearestGhostsEdible[ghostIdx] = game.isGhostEdible(ghost);
+			nearestGhostsLastMoves[ghostIdx] = game.getGhostLastMoveMade(ghost);
 		}
 	}
 
@@ -96,13 +80,18 @@ public class GhostsInput extends CBRInput {
 	public CBRQuery getQuery() {
 		GhostsDescription description = new GhostsDescription();
 
-		description.setEdibleGhost(edible);
-		description.setNearestNodeGhost(nearestNodeGhost);
-		description.setDistanceNearestGhost(distanceNearestGhost);
-		description.setDistanceNearestPPill(distanceNearestPPill);
-		description.setScore(score);
 		description.setTime(time);
-		description.setLivesLeft(livesLeft);
+		description.setScore(score);
+		description.setLives(lives);
+		
+		description.setMspacmanPos(mspacmanPos);
+		description.setMspacmanLastMove(mspacmanLastMove);
+
+		description.setNearestGhostsDistance(nearestGhostsDistance);
+		description.setNearestGhostsEdible(nearestGhostsEdible);
+		description.setNearestGhostsLastMoves(nearestGhostsLastMoves);
+
+		description.setGhostIndex(ghostIndex);
 
 		CBRQuery query = new CBRQuery();
 		query.setDescription(description);
@@ -110,35 +99,22 @@ public class GhostsInput extends CBRInput {
 		return query;
 	}
 
-	private void computeNearestGhost(Game game) {
-		nearestNodeGhost = -1;
-		distanceNearestGhost = Integer.MAX_VALUE;
-		edible = false;
-		GHOST nearest = null;
-		for (GHOST g : GHOST.values()) {
-			int pos = game.getGhostCurrentNodeIndex(g);
-			int distance;
-			if (pos != -1)
-				distance = (int) game.getDistance(game.getPacmanCurrentNodeIndex(), pos, DM.PATH);
-			else
-				distance = Integer.MAX_VALUE;
-			if (distance < nearestNodeGhost) {
-
-				nearestNodeGhost = game.getGhostCurrentNodeIndex(g);
-				distanceNearestGhost = distance;
-				nearest = g;
-			}
-		}
-		if (nearest != null)
-			edible = game.isGhostEdible(nearest);
+	private void sort(Integer[] nearestGhostsDistance, GHOST[] ghosts) {
+		int n = nearestGhostsDistance.length;
+	    for (int i = 0; i < n - 1; i++) {
+	         for (int j = 0; j < n - i - 1; j++) {
+	             if (nearestGhostsDistance[j] > nearestGhostsDistance[j + 1]){
+	                 int tempDist = nearestGhostsDistance[j];
+	                 GHOST tempGhost = ghosts[j];
+	                
+	                 nearestGhostsDistance[j] = nearestGhostsDistance[j + 1];
+	                 ghosts[j] = ghosts[j + 1];
+	                
+	                 nearestGhostsDistance[j + 1] = tempDist;
+	                 ghosts[j + 1] = tempGhost;
+	             }
+	         }
+	     }
 	}
-
-	private void computeNearestPPill(Game game) {
-		distanceNearestPPill = Integer.MAX_VALUE;
-		for (int pos : game.getPowerPillIndices()) {
-			int distance = (int) game.getDistance(game.getPacmanCurrentNodeIndex(), pos, DM.PATH);
-			if (distance < nearestNodeGhost && game.isPowerPillStillAvailable(pos))
-				distanceNearestPPill = distance;
-		}
-	}
+	
 }
