@@ -61,10 +61,12 @@ public class MsPacManStorageManager {
 		
 		int currLives = game.getPacmanNumberOfLivesRemaining();
 		
+		int livesResultLives = Math.abs(currLives - description.getLivesLeft());
+		
 		//Ahora hay que actualizar los nuevos valores para saber si ha ido bien
 		MsPacManResult result = (MsPacManResult)bCase.getResult();
 		result.setScore(resultValue);
-		result.setLives(currLives);
+		result.setLives(livesResultLives);
 		
 		liveHaveBeenLostFactor = currLives < description.getLivesLeft(); 
 		greatScoreFactor = resultValue > scoreValue;

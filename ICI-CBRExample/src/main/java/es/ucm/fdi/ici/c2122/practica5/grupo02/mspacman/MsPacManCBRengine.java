@@ -34,8 +34,13 @@ public class MsPacManCBRengine implements StandardCBRApplication {
 	private double similarityCase;
 	private MsPacManStorageManager storageManager;
 
-	private double MAX_SIMILARITY = 0.93;
+	private double MAX_SIMILARITY = 0.97;
+	private double PROMISING_SIMILARITY = 0.9;
+	private double AVARAGE_SIMILARITY = 0.85;
 	private double MIN_SIMILARITY = 0.66;
+	private int MIN_SCORE_INTERSECTIONS = 250;
+	
+	private int DISTANCE_PM_DANGER = 60;
 		
 	NNConfig simConfig;
 	CBRCaseBase caseBase;
@@ -48,7 +53,7 @@ public class MsPacManCBRengine implements StandardCBRApplication {
 	}
 	
 	public void setOpponent(String opponent) {
-		this.opponent = opponent.replace("es.ucm.fdi.ici.c2122.practica5.grupo02.", "") ;
+		this.opponent = opponent.substring(opponent.length() - 6, opponent.length()) ;
 	}
 
 	@Override
@@ -82,8 +87,11 @@ public class MsPacManCBRengine implements StandardCBRApplication {
 	public void cycle(CBRQuery query) throws ExecutionException {
 		int nCases = 5;
 		
-		if (caseBase.getCases().isEmpty() || (caseBase.getCases().size() < nCases)) {
-			this.action = MOVE.NEUTRAL;
+		
+		if (caseBase.getCases().isEmpty()) {
+			this.action = MOVE.values()[(int)Math.floor(Math.random()*4)];
+			System.out.print("NEUTRAL");
+			similarityCase = 0;
 		} else {
 			// Compute retrieve
 			Collection<RetrievalResult> eval = NNScoringMethod.evaluateSimilarity(caseBase.getCases(), query,
@@ -100,13 +108,14 @@ public class MsPacManCBRengine implements StandardCBRApplication {
 	}
 
 	private MOVE reuse(CBRQuery query_, Collection<RetrievalResult> eval) {
+		System.out.print("Hola");
+		
 		int nCases = 5;
 		// Selecciona el/los mas prioritarios
 		Collection<RetrievalResult> collec = SelectCases.selectTopKRR(eval, nCases);
 		Iterator<RetrievalResult> it = collec.iterator();
 
 		double similarity = 0.0;
-		MOVE action = MOVE.NEUTRAL;
 		int[] moves = new int [5];
 		
 		for (int i = 0; i < collec.size(); i++) {
@@ -120,39 +129,148 @@ public class MsPacManCBRengine implements StandardCBRApplication {
 			moves[solution.getAction().ordinal()]++;
 		}
 		
-		similarity = similarity / nCases; //AVARAGE 
+
+		//AVERAGE 
+		if(nCases != collec.size()) similarity = similarity / collec.size();
+		else similarity = similarity / nCases; 
 		
-		//TODO Pillar un caso que si esta siendo perseguido, y si tiene powerPill cercana
-		//Si ha obtenido buena puntuacion 
-		
-		//VOTACION MAYORITARIA
-		if(similarity > MIN_SIMILARITY) {
-			int index_ = 4; //Neutral
-			for(int i = 0 ; i < 5; i++)
-				if(moves[i] > moves[index_]) index_ = i; //elegimos por votacion mayoritara
+		//En principio esto
+		similarityCase = similarity;
+		//Si su similitud pondereada pasa del limite
+		if(similarity >= MIN_SIMILARITY) {
+			//Si existe algun caso cuya similitud sea muy alta, lo vamos a considerar antes
+			// de hacer la votacion mayoritaria
+			it = collec.iterator();
+			RetrievalResult cases = it.next();
+			if(cases.getEval() >= PROMISING_SIMILARITY) {
+				CBRCase mostSimilarCase = cases.get_case();
+				MsPacManSolution sol = (MsPacManSolution) mostSimilarCase.getSolution();
+				
+				System.out.print("1 " + sol.getAction()+ "\n");
+				return sol.getAction();
+			}
 			
-			action = MOVE.values()[index_];
+			//VOTACION MAYORITARIA, en caso de que la media sea prometedora
+			if(similarity >= AVARAGE_SIMILARITY) {
+				int index_ = 4; //Neutral
+				for(int i = 0 ; i < 5; i++)
+					if(moves[i] > moves[index_]) index_ = i; //elegimos por votacion mayoritara
+				
+				System.out.print("2 " + MOVE.values()[index_] + "\n");
+				return MOVE.values()[index_]; //La acción más común
+			}
+			
+			//Vamos a comprobar en la query si MsPacMan tiene un fantasma cerca
+			MsPacManDescription des = (MsPacManDescription) query_.getDescription();
+			if(des.getDistanceNearestGhost() < DISTANCE_PM_DANGER) {
+				//El pcMan esta en peligro
+				//Buscamos en los casos mas similares si alguno tiene una Power pill cercana
+				int[] distancesPowerPills = distancesPowerPill(collec);
+				
+				int index = getMin(distancesPowerPills);
+				
+				//Devuelve el movimiento del caso cuya powerPill estaba mas cerca
+				if(index != -1) {
+					System.out.print("3 " + getIndexMove(collec, index, true)+ "\n");
+					return getIndexMove(collec, index, true);
+				}
+				//Si no hay power Pill, va por la opcion cuya perdida de vida sea la menor
+				
+			}
+			//De lo contrario, comenzamos a descartar en funcion de los que han perdido vidas.
+			//Lives almacena la diferencias de vidas con cada caso con respecto a las actuales.
+			int[] lives = discardLivesLost(collec);
+			int index = getMin(lives);
+			//Devolvemos aquella accion del indice que caso cuya perdida de vidas a sido la menor
+			System.out.print("4 " + getIndexMove(collec, index, true)+ "\n");
+			return getIndexMove(collec, index, true);
 			
 		}else {
-			RetrievalResult case_ = collec.iterator().next();
+			//MOVERME ALEATORIAMENTE
+			MOVE auxAction = MOVE.values()[(int)Math.floor(Math.random()*4)];
+			
+			it = collec.iterator();
+			RetrievalResult case_ = it.next();
 			MsPacManResult result = (MsPacManResult) case_.get_case().getResult();
 			MsPacManSolution sol = (MsPacManSolution) case_.get_case().getSolution();
 			similarity = case_.getEval();
-			
-			//MOVERME ALEATORIAMENTE A
-			
-			if(result.score > 40) {
-				action = sol.getAction();
-				
-			}else {
-				
-				
+			//Si el caso más similar, al menos optiene una buena puntuación, se devuelve
+			similarityCase = similarity;
+			if(result.score > MIN_SCORE_INTERSECTIONS) {
+				System.out.print("5 " + sol.getAction() + "\n");
+				return sol.getAction(); //La solucion del caso más similar
+			}else { //Sino, se devuelve una dirección random
+				System.out.print("6 " + auxAction + "\n");
+				return auxAction;
+			}
+		}
+	}
+	
+	MOVE getIndexMove(Collection<RetrievalResult> collec, int index, boolean saveSimililarity) {
+		Iterator<RetrievalResult> it = collec.iterator();
+		//Devolvemos aquella accion del index
+		for(int i = 0; i < index ; i++) it.next();
+		RetrievalResult case_ = it.next();
+		CBRCase c = case_.get_case();
+		if(saveSimililarity) similarityCase = case_.getEval();
+		MsPacManSolution sol = (MsPacManSolution) c.getSolution();
+		return sol.getAction();
+	}
+	
+	int getMin(int[] array) {
+		int minValue = Integer.MAX_VALUE;
+		int index = -1;
+		for(int i = 0; i < array.length; i++) {
+			//Nos guardamos el indice de cuyo valor sea el que menor vidas haya perdido
+			if(array[i] < minValue) {
+				minValue = array[i];
+				index = i;
 			}
 		}
 		
-		similarityCase = similarity;
-		return action;
+		return index;
 	}
+	
+	int[] discardLivesLost(Collection<RetrievalResult> collec) {
+		Iterator<RetrievalResult> it = collec.iterator();
+		
+		int[] indexNotLost = new int[5];
+		
+		for (int i = 0; i < collec.size(); i++) {
+			RetrievalResult caso = it.next();
+			CBRCase mostSimilarCase = caso.get_case();
+
+			MsPacManResult result = (MsPacManResult) mostSimilarCase.getResult();
+			
+			indexNotLost[i] = result.getLives();
+		}
+		
+		return indexNotLost;
+	}
+	
+	int[] distancesPowerPill(Collection<RetrievalResult> collec) {
+		Iterator<RetrievalResult> it = collec.iterator();
+		
+		int[] distances = new int[5];
+		
+		for (int i = 0; i < collec.size(); i++) {
+			RetrievalResult caso = it.next();
+			CBRCase mostSimilarCase = caso.get_case();
+
+			MsPacManResult result = (MsPacManResult) mostSimilarCase.getResult();
+			
+			MsPacManDescription des = (MsPacManDescription) mostSimilarCase.getDescription();
+			
+			int distance =  des.getDistanceNearestPPill();
+			
+			if(distance > 0) distances[i] = distance; 
+			else distances[i] = Integer.MAX_VALUE;
+		}
+		
+		return distances;
+	}
+	
+	
 	
 	/*----------------------------------------------------------------------------------------------------
 	/----------------------------------------------------------------------------------------------------
