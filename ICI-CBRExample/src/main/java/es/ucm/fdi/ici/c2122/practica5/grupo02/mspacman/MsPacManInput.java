@@ -54,29 +54,28 @@ public class MsPacManInput extends CBRInput {
 		edible = false;
 		GHOST nearest = null;
 		for(GHOST g: GHOST.values()) {
-			int pos = game.getGhostCurrentNodeIndex(g);
-			int distance; 
-			if(pos != -1) 
-				distance = (int)game.getDistance(game.getPacmanCurrentNodeIndex(), pos, DM.PATH);
-			else
-				distance = Integer.MAX_VALUE;
-			if(distance < nearestNodeGhost){
+			if(game.getGhostLairTime(g) == 0) {
+				int pos = game.getGhostCurrentNodeIndex(g);
+				int distance = (int)game.getShortestPathDistance(game.getPacmanCurrentNodeIndex(), pos);
 				
-				nearestNodeGhost = game.getGhostCurrentNodeIndex(g);
-				distanceNearestGhost = distance;
-				nearest = g;
+				if(distance < distanceNearestGhost){
+					nearestNodeGhost = game.getGhostCurrentNodeIndex(g);
+					distanceNearestGhost = distance;
+					nearest = g;
+					edible = game.isGhostEdible(g);
+				}
 			}
 		}
-		if(nearest!=null)
-			edible = game.isGhostEdible(nearest);
 	}
 	
 	private void computeNearestPPill(Game game) {
 		distanceNearestPPill = Integer.MAX_VALUE;
-		for(int pos: game.getPowerPillIndices()) {
-			int distance = (int)game.getDistance(game.getPacmanCurrentNodeIndex(), pos, DM.PATH);
-			if(distance < nearestNodeGhost && game.isPowerPillStillAvailable(pos))
+		for(int pos: game.getActivePowerPillsIndices()) {
+			int distance = (int)game.getShortestPathDistance(game.getPacmanCurrentNodeIndex(), pos);
+			if(distance < distanceNearestPPill)
 				distanceNearestPPill = distance;
 		}
+		
+		if(distanceNearestPPill == Integer.MAX_VALUE) distanceNearestPPill = -1;
 	}
 }

@@ -21,5 +21,6 @@
 	<ResultMappings>
 		<Map>id</Map>
 		<Map>score</Map>
+		<Map>lives</Map>
 	</ResultMappings>
 </TextFileConfiguration>
