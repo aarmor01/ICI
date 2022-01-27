@@ -20,7 +20,7 @@ public class ExecutorTest {
         PacmanController pacMan = new MsPacMan();
         GhostController ghosts = new Ghosts();
 
-        executor.runGameTimedSpeedOptimised(pacMan, ghosts, true, "CBR");
+        executor.runGameTimedSpeedOptimised(pacMan, ghosts, false, "CBR");
         
         //Time benchmark
 		//long time = System.currentTimeMillis();
